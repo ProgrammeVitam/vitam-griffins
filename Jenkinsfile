@@ -11,7 +11,7 @@
 
 pipeline {
     agent {
-        label 'slaves'
+        label 'griffins'
     }
 
     environment {
@@ -73,8 +73,6 @@ pipeline {
         stage("Computing maven target") {
             when {
                 anyOf {
-                    branch "develop*"
-                    branch "master_*"
                     branch "master"
                 }
             }
@@ -97,9 +95,7 @@ pipeline {
         //     //     environment(name: 'CHANGED_VITAM', value: 'true')
         //     // }
             steps {
-                dir('sources') {
-                    sh '$MVN_COMMAND -f pom.xml clean test'
-                }
+                sh '$MVN_COMMAND -f pom.xml clean test'
             }
             post {
                 always {
@@ -121,9 +117,7 @@ pipeline {
             steps {
                 parallel(
                     "Package VITAM solution" : {
-                        dir('sources') {
-                            sh '$MVN_COMMAND -f pom.xml -Dmaven.test.skip=true -DskipTests=true clean package rpm:attached-rpm jdeb:jdeb $DEPLOY_GOAL -Drevision=${BUILD_NUMBER}'
-                        }
+                        sh '$MVN_COMMAND -f pom.xml -Dmaven.test.skip=true -DskipTests=true clean package rpm:attached-rpm jdeb:jdeb $DEPLOY_GOAL -Drevision=${BUILD_NUMBER}'
                     },
                     "Checkout publishing scripts" : {
                         checkout([$class: 'GitSCM',
@@ -147,7 +141,7 @@ pipeline {
                 parallel(
                     "Upload vitam-griffons packages": {
                         sshagent (credentials: ['jenkins_sftp_to_repository']) {
-                            sh 'vitam-build.git/push_griffons_repo.sh griffons $SERVICE_REPO_SSHURL'
+                            sh 'vitam-build.git/push_griffons_repo.sh griffins $SERVICE_REPO_SSHURL'
                         }
                     }
                 )
@@ -156,7 +150,7 @@ pipeline {
         stage("Update symlink") {
             steps {
                 sshagent (credentials: ['jenkins_sftp_to_repository']) {
-                    sh 'vitam-build.git/push_symlink_repo.sh griffons $SERVICE_REPO_SSHURL'
+                    sh 'vitam-build.git/push_symlink_repo.sh griffins $SERVICE_REPO_SSHURL'
                 }
             }
         }
