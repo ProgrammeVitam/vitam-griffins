@@ -45,21 +45,6 @@ pipeline {
         stage("Detecting changes for build") {
             steps {
                 script {
-                    // OMA : to get info from scm checkout
-                    env.GIT_REV=checkout(scm).GIT_COMMIT
-                    env.GIT_PRECEDENT_COMMIT=checkout(scm).GIT_PREVIOUS_SUCCESSFUL_COMMIT
-                }
-                sh "git --git-dir .git rev-parse HEAD > vitam_commit.txt"
-                sh '''git diff --name-only ${GIT_REV} ${GIT_PRECEDENT_COMMIT} | grep -oE '^[^/]+' | sort | uniq > .changed_roots.txt'''
-                // GIT_PREVIOUS_SUCCESSFUL_COMMIT
-                script {
-                    def changedRoots = readFile(".changed_roots.txt").tokenize('\n')
-                    // KWA Caution bis : check if the file is empty before...
-                    env.CHANGED_VITAM = changedRoots.contains("sources") || changedRoots.contains("doc")
-                    env.CHANGED_VITAM_PRODUCT = changedRoots.contains("rpm") || changedRoots.contains("deb")
-                    // KWA Caution : need to get check conditions twice
-
-                    // init default deploy_goal.txt
                     writeFile file: 'deploy_goal.txt', text: "${env.DEPLOY_GOAL}"
                 }
                 // OMA: evaluate project version ; write directly through shell as I didn't find anything else
