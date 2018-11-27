@@ -48,7 +48,7 @@ pipeline {
                     writeFile file: 'deploy_goal.txt', text: "${env.DEPLOY_GOAL}"
                 }
                 // OMA: evaluate project version ; write directly through shell as I didn't find anything else
-                sh "$MVN_BASE -q -f sources/pom.xml --non-recursive -Dexec.args='\${project.version}' -Dexec.executable=\"echo\" org.codehaus.mojo:exec-maven-plugin:1.3.1:exec > version_projet.txt"
+                sh "$MVN_BASE -q -f pom.xml --non-recursive -Dexec.args='\${project.version}' -Dexec.executable=\"echo\" org.codehaus.mojo:exec-maven-plugin:1.3.1:exec > version_projet.txt"
                 echo "Changed VITAM : ${env.CHANGED_VITAM}"
                 echo "Changed VITAM : ${env.CHANGED_VITAM_PRODUCT}"
             }
@@ -84,7 +84,7 @@ pipeline {
             }
             post {
                 always {
-                    junit 'sources/**/target/surefire-reports/*.xml'
+                    junit '**/target/surefire-reports/*.xml'
                 }
             }
         }
