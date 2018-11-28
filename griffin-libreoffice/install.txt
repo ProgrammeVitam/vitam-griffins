@@ -1,0 +1,4 @@
+il faut que les jar juh.jar, jurt.jar, unoil.jar et ridl.jar du répertoire program/classes de libreoffice
+soient mis dans le classpath
+
+a besoin de /usr/lib/libreoffice/program/libjpipe.so dans java.library.path
