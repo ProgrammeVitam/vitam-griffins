@@ -1,0 +1,31 @@
+odftoolkit
+
+cloned from https://github.com/apache/odftoolkit.git
+the 23/11/2018
+Patched files from validator
+
+to install
+in odftoolkit directory (with branch vitam checked out)
+mvn clean install
+
+odfvalidator version is 1.2.0-incubating-vitam
+adapted with a more detailed fonction for getting validation information
+and installed as a jar (rather than a war)
+
+modified classes are
+ODFDetailedResult (new)
+ODFValidator
+- add ODFDetailedResult detailedValidateFile
+- add ODFDetailedResult detailedValidateStream
+ODFPackageValidator
+- make protected boolean validateMeta
+- make protected boolean validateMathML
+- make protected String getVersion
+ODFRootPackageValidator
+- add ODFDetailedResult detailedValidate
+- add boolean PrimeAnalyseErrorHandler
+- add ODFDetailedResult _detailedValidate
+
+to install
+in odftoolkit directory
+mvn clean install
