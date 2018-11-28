@@ -138,4 +138,8 @@
     <prerequisites>
         <maven>3.3.9</maven>
     </prerequisites>
+
+    <modules>
+        <module>griffin-verapdf</module>
+    </modules>
 </project>
