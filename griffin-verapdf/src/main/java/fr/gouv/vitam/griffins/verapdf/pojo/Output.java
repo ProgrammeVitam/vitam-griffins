@@ -28,24 +28,30 @@
 package fr.gouv.vitam.griffins.verapdf.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import fr.gouv.vitam.griffins.verapdf.status.ActionType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.gouv.vitam.griffins.verapdf.status.AnalyseResult;
 import fr.gouv.vitam.griffins.verapdf.status.GriffinStatus;
+import fr.gouv.vitam.griffins.verapdf.status.ActionType;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static fr.gouv.vitam.griffins.verapdf.status.GriffinStatus.ERROR;
-import static fr.gouv.vitam.griffins.verapdf.status.GriffinStatus.OK;
-import static fr.gouv.vitam.griffins.verapdf.status.GriffinStatus.WARNING;
 
 @JsonInclude(NON_NULL)
 public class Output {
+    @JsonProperty("Result")
     private String result;
+    @JsonProperty("Error")
     private String error;
+    @JsonProperty("Executed")
     private String executed;
+    @JsonProperty("Input")
     private Input input;
+    @JsonProperty("OutputName")
     private String outputName;
+    @JsonProperty("Status")
     private GriffinStatus status;
+    @JsonProperty("AnalyseResult")
     private AnalyseResult analyseResult;
+    @JsonProperty("Action")
     private ActionType action;
 
     public Output() {
@@ -54,7 +60,7 @@ public class Output {
     public static Output error(Input input, ActionType action) {
         Output output = new Output();
         output.setInput(input);
-        output.setStatus(ERROR);
+        output.setStatus(GriffinStatus.ERROR);
         output.setAction(action);
         return output;
     }
@@ -62,7 +68,7 @@ public class Output {
     public static Output error(Input input, ActionType action, String error, String executed) {
         Output output = new Output();
         output.setInput(input);
-        output.setStatus(ERROR);
+        output.setStatus(GriffinStatus.ERROR);
         output.setAction(action);
         output.setError(error);
         output.setExecuted(executed);
@@ -73,7 +79,7 @@ public class Output {
         Output output = new Output();
         output.setInput(input);
         output.setOutputName(outputName);
-        output.setStatus(WARNING);
+        output.setStatus(GriffinStatus.WARNING);
         output.setAction(action);
         return output;
     }
@@ -82,7 +88,7 @@ public class Output {
         Output output = new Output();
         output.setInput(input);
         output.setOutputName(outputName);
-        output.setStatus(WARNING);
+        output.setStatus(GriffinStatus.WARNING);
         output.setAction(action);
         output.setError(stderr);
         output.setResult(stdout);
@@ -94,7 +100,7 @@ public class Output {
         Output output = new Output();
         output.setInput(input);
         output.setOutputName(outputName);
-        output.setStatus(OK);
+        output.setStatus(GriffinStatus.OK);
         output.setAction(action);
         return output;
     }
@@ -103,7 +109,7 @@ public class Output {
         Output output = new Output();
         output.setInput(input);
         output.setOutputName(outputName);
-        output.setStatus(OK);
+        output.setStatus(GriffinStatus.OK);
         output.setAction(action);
         output.setError(stderr);
         output.setResult(stdout);
@@ -178,14 +184,14 @@ public class Output {
     @Override
     public String toString() {
         return "Output{" +
-            "result='" + result + '\'' +
-            ", error='" + error + '\'' +
-            ", executed='" + executed + '\'' +
-            ", input=" + input +
-            ", outputName='" + outputName + '\'' +
-            ", status=" + status +
-            ", analyseResult=" + analyseResult +
-            ", action=" + action +
+            "Result='" + result + '\'' +
+            ", Error='" + error + '\'' +
+            ", Executed='" + executed + '\'' +
+            ", Input=" + input +
+            ", OutputName='" + outputName + '\'' +
+            ", Status=" + status +
+            ", AnalyseResult=" + analyseResult +
+            ", Action=" + action +
             '}';
     }
 }

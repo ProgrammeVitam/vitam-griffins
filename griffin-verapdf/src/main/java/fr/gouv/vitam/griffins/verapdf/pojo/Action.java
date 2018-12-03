@@ -27,60 +27,48 @@
 
 package fr.gouv.vitam.griffins.verapdf.pojo;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.gouv.vitam.griffins.verapdf.status.ActionType;
 
-public class Values {
-    private String extension;
-    private List<String> args;
-    private Map<String, String> dataToExtract;
+public class Action {
+    @JsonProperty("Type")
+    private ActionType type;
+    @JsonProperty("Values")
+    private Values values;
 
-    public Values() {
+    public Action() {
     }
 
-    public Values(String extension, List<String> args) {
-        this.extension = extension;
-        this.args = args;
+    public Action(ActionType type, Values values) {
+        this.type = type;
+        this.values = values;
     }
 
-    public Values(Map<String, String> dataToExtract) {
-        this.dataToExtract = dataToExtract;
+    public Action(ActionType type) {
+        this.type = type;
     }
 
-    public String getExtension() {
-        return extension;
+    public ActionType getType() {
+        return type;
     }
 
-    public void setExtension(String extension) {
-        this.extension = extension;
+    public void setType(ActionType type) {
+        this.type = type;
     }
 
-    public List<String> getArgs() {
-        if (args == null) {
-            return Collections.emptyList();
-        }
-        return args;
+    public Values getValues() {
+        return values;
     }
 
-    public void setArgs(List<String> args) {
-        this.args = args;
-    }
-
-    public Map<String, String> getDataToExtract() {
-        return dataToExtract;
-    }
-
-    public void setDataToExtract(Map<String, String> dataToExtract) {
-        this.dataToExtract = dataToExtract;
+    public void setValues(Values values) {
+        this.values = values;
     }
 
     @Override
     public String toString() {
-        return "Values{" +
-            "extension='" + extension + '\'' +
-            ", args=" + args +
-            ", dataToExtract=" + dataToExtract +
+        return "Action{" +
+            "Type=" + type +
+            ", Values=" + values +
             '}';
     }
 }

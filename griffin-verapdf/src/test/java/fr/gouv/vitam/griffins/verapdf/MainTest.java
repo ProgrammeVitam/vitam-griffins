@@ -5,9 +5,10 @@ import fr.gouv.vitam.griffins.verapdf.pojo.Action;
 import fr.gouv.vitam.griffins.verapdf.pojo.BatchStatus;
 import fr.gouv.vitam.griffins.verapdf.pojo.Input;
 import fr.gouv.vitam.griffins.verapdf.pojo.Output;
-import fr.gouv.vitam.griffins.verapdf.pojo.Outputs;
+import fr.gouv.vitam.griffins.verapdf.pojo.Result;
 import fr.gouv.vitam.griffins.verapdf.pojo.Parameters;
 import fr.gouv.vitam.griffins.verapdf.pojo.Values;
+import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -70,13 +71,13 @@ public class MainTest {
 
         // Then result is analyze in comparaison with expected result in file name
 
-        Outputs outputs = getOutputs(input.getName());
-        List<Output> actual = outputs.getOutputs().get(input.getName());
+        Result result = getResult(input.getName());
+        List<Output> actual = result.getOutputs().get(input.getName());
         System.out.println(actual);
 
-        assertThat(actual).hasSize(1);
-        assertThat(actual).extracting(Output::getAction).containsExactly(ANALYSE);
-        assertThat(actual).extracting(Output::getOutputName).containsNull();
+        Assertions.assertThat(actual).hasSize(1);
+        Assertions.assertThat(actual).extracting(Output::getAction).containsExactly(ANALYSE);
+        Assertions.assertThat(actual).extracting(Output::getOutputName).containsNull();
         if (actual.get(0).getStatus()==ERROR)
             assertThat(input.getName()).contains("WRONG_FORMAT");
         else
@@ -155,8 +156,8 @@ public class MainTest {
         assertThat(status.status).isEqualTo(ERROR);
     }
 
-    private Outputs getOutputs(String batchName) throws IOException {
-        return objectMapper.readValue(Paths.get(tmpGriffinFolder.getRoot().getPath(),batchName, resultFileName).toFile(), Outputs.class);
+    private Result getResult(String batchName) throws IOException {
+        return objectMapper.readValue(Paths.get(tmpGriffinFolder.getRoot().getPath(),batchName, resultFileName).toFile(), Result.class);
     }
 
     private Parameters generateBatch(Action action, Input input) throws Exception {

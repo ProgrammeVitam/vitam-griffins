@@ -27,48 +27,73 @@
 
 package fr.gouv.vitam.griffins.verapdf.pojo;
 
-import fr.gouv.vitam.griffins.verapdf.status.GriffinStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import static fr.gouv.vitam.griffins.verapdf.status.GriffinStatus.ERROR;
-import static fr.gouv.vitam.griffins.verapdf.status.GriffinStatus.WARNING;
-import static fr.gouv.vitam.griffins.verapdf.status.GriffinStatus.OK;
+import java.util.List;
 
-public class BatchStatus {
-    public final String batchId;
-    public final long startTime;
-    public final long endTime;
-    public final GriffinStatus status;
-    public final String error;
+public class Parameters {
+    @JsonProperty("RequestId")
+    private String requestId;
+    @JsonProperty("Id")
+    private String id;
+    @JsonProperty("Actions")
+    private List<Action> actions;
+    @JsonProperty("Inputs")
+    private List<Input> inputs;
+    @JsonProperty("Debug")
+    private boolean debug;
 
-    private BatchStatus(String batchId, long startTime, long endTime, GriffinStatus status, String error) {
-        this.batchId = batchId;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.status = status;
-        this.error = error;
+    public Parameters() {
     }
 
-    public static BatchStatus warning(String batchId, long start, String error) {
-        return new BatchStatus(batchId, start, System.currentTimeMillis(), WARNING, error);
+    public String getRequestId() {
+        return requestId;
     }
 
-    public static BatchStatus ok(String batchId, long start) {
-        return new BatchStatus(batchId, start, System.currentTimeMillis(), OK, "");
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
-    public static BatchStatus error(String batchId, long start, Throwable error) {
-        return new BatchStatus(batchId, start, System.currentTimeMillis(), ERROR, error.getMessage());
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public List<Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<Action> actions) {
+        this.actions = actions;
+    }
+
+    public List<Input> getInputs() {
+        return inputs;
+    }
+
+    public void setInputs(List<Input> inputs) {
+        this.inputs = inputs;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 
     @Override
     public String toString() {
-        return "BatchStatus{" +
-                "batchId='" + batchId + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", delta=" + (endTime - startTime)+
-                ", status=" + status +
-                ", error='" + error + '\'' +
-                '}';
+        return "Parameters{" +
+            "RequestId='" + requestId + '\'' +
+            ", Id='" + id + '\'' +
+            ", Actions=" + actions +
+            ", Inputs=" + inputs +
+            ", Debug=" + debug +
+            '}';
     }
 }

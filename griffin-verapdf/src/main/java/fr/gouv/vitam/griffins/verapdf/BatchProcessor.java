@@ -35,7 +35,7 @@ import fr.gouv.vitam.griffins.verapdf.pojo.Action;
 import fr.gouv.vitam.griffins.verapdf.pojo.BatchStatus;
 import fr.gouv.vitam.griffins.verapdf.pojo.Input;
 import fr.gouv.vitam.griffins.verapdf.pojo.Output;
-import fr.gouv.vitam.griffins.verapdf.pojo.Outputs;
+import fr.gouv.vitam.griffins.verapdf.pojo.Result;
 import fr.gouv.vitam.griffins.verapdf.pojo.Parameters;
 import fr.gouv.vitam.griffins.verapdf.status.GriffinStatus;
 import org.slf4j.Logger;
@@ -54,7 +54,6 @@ import java.util.stream.Stream;
 import static fr.gouv.vitam.griffins.verapdf.status.ActionType.ANALYSE;
 import static fr.gouv.vitam.griffins.verapdf.status.ActionType.EXTRACT;
 import static fr.gouv.vitam.griffins.verapdf.status.ActionType.GENERATE;
-import static fr.gouv.vitam.griffins.verapdf.status.GriffinStatus.OK;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -116,7 +115,7 @@ public class BatchProcessor {
     private void addToFile(List<Output> outputs, String requestId, String id) throws IOException {
         Map<String, List<Output>> outputsMap = outputs.stream()
                 .collect(toMap(o -> o.getInput().getName(), Collections::singletonList, (o, o2) -> Stream.concat(o.stream(), o2.stream()).collect(Collectors.toList())));
-        mapper.writer().writeValue(batchDirectory.resolve(resultFileName).toFile(), Outputs.of(requestId, id, outputsMap));
+        mapper.writer().writeValue(batchDirectory.resolve(resultFileName).toFile(), Result.of(requestId, id, outputsMap));
     }
 
     private Stream<Output> executeActions(Input input, Parameters parameters) {

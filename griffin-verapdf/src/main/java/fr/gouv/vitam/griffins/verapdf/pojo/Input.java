@@ -27,45 +27,43 @@
 
 package fr.gouv.vitam.griffins.verapdf.pojo;
 
-import fr.gouv.vitam.griffins.verapdf.status.ActionType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Action {
-    private ActionType type;
-    private Values values;
+public class Input {
+    @JsonProperty("Name")
+    private String name;
+    @JsonProperty("FormatId")
+    private String formatId;
 
-    public Action() {
+    public Input() {
     }
 
-    public Action(ActionType type, Values values) {
-        this.type = type;
-        this.values = values;
+    public Input(String name, String formatId) {
+        this.name = name;
+        this.formatId = formatId;
     }
 
-    public Action(ActionType type) {
-        this.type = type;
+    public String getName() {
+        return name;
     }
 
-    public ActionType getType() {
-        return type;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setType(ActionType type) {
-        this.type = type;
+    public String getFormatId() {
+        return formatId;
     }
 
-    public Values getValues() {
-        return values;
-    }
-
-    public void setValues(Values values) {
-        this.values = values;
+    public void setFormatId(String formatId) {
+        this.formatId = formatId;
     }
 
     @Override
     public String toString() {
-        return "Action{" +
-            "type=" + type +
-            ", values=" + values +
+        return "Input{" +
+            "Name='" + name + '\'' +
+            ", FormatId='" + formatId + '\'' +
             '}';
     }
 }

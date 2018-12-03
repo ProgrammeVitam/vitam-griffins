@@ -27,39 +27,51 @@
 
 package fr.gouv.vitam.griffins.verapdf.pojo;
 
-public class Input {
-    private String name;
-    private String formatId;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public Input() {
+import java.util.List;
+import java.util.Map;
+
+public class Result {
+    @JsonProperty("RequestId")
+    private String requestId;
+    @JsonProperty("Id")
+    private String id;
+    @JsonProperty("Outputs")
+    private Map<String, List<Output>> outputs;
+
+    public Result() {
     }
 
-    public Input(String name, String formatId) {
-        this.name = name;
-        this.formatId = formatId;
+    public static Result of(String requestId, String id, Map<String, List<Output>> outputList) {
+        Result result = new Result();
+        result.setId(id);
+        result.setOutputs(outputList);
+        result.setRequestId(requestId);
+        return result;
     }
 
-    public String getName() {
-        return name;
+    public String getRequestId() {
+        return requestId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
-    public String getFormatId() {
-        return formatId;
+    public String getId() {
+        return id;
     }
 
-    public void setFormatId(String formatId) {
-        this.formatId = formatId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "Input{" +
-            "name='" + name + '\'' +
-            ", formatId='" + formatId + '\'' +
-            '}';
+    public Map<String, List<Output>> getOutputs() {
+        return outputs;
+    }
+
+    public void setOutputs(Map<String, List<Output>> outputs) {
+        this.outputs = outputs;
     }
 }
