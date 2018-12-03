@@ -27,13 +27,19 @@
 
 package fr.gouv.vitam.griffins.odfvalidator.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.gouv.vitam.griffins.odfvalidator.status.GriffinStatus;
 
 public class BatchStatus {
+    @JsonProperty("BatchId")
     public final String batchId;
+    @JsonProperty("StartTime")
     public final long startTime;
+    @JsonProperty("EndTime")
     public final long endTime;
+    @JsonProperty("Status")
     public final GriffinStatus status;
+    @JsonProperty("Error")
     public final String error;
 
     private BatchStatus(String batchId, long startTime, long endTime, GriffinStatus status, String error) {
@@ -59,12 +65,12 @@ public class BatchStatus {
     @Override
     public String toString() {
         return "BatchStatus{" +
-                "batchId='" + batchId + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", delta=" + (endTime - startTime)+
-                ", status=" + status +
-                ", error='" + error + '\'' +
+                "BatchId='" + batchId + '\'' +
+                ", StartTime=" + startTime +
+                ", EndTime=" + endTime +
+                ", Delta=" + (endTime - startTime)+
+                ", Status=" + status +
+                ", Error='" + error + '\'' +
                 '}';
     }
 }

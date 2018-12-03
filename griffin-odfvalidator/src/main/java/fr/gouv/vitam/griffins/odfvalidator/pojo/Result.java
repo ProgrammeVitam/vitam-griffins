@@ -27,19 +27,24 @@
 
 package fr.gouv.vitam.griffins.odfvalidator.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 import java.util.Map;
 
 public class Result {
+    @JsonProperty("RequestId")
     private String requestId;
+    @JsonProperty("Id")
     private String id;
+    @JsonProperty("Outputs")
     private Map<String, List<Output>> outputs;
 
     public Result() {
     }
 
-    public static fr.gouv.vitam.griffins.odfvalidator.pojo.Result of(String requestId, String id, Map<String, List<Output>> outputList) {
-        fr.gouv.vitam.griffins.odfvalidator.pojo.Result result = new fr.gouv.vitam.griffins.odfvalidator.pojo.Result();
+    public static Result of(String requestId, String id, Map<String, List<Output>> outputList) {
+        Result result = new Result();
         result.setId(id);
         result.setOutputs(outputList);
         result.setRequestId(requestId);

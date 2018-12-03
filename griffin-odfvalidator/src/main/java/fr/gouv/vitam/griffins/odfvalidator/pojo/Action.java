@@ -27,10 +27,13 @@
 
 package fr.gouv.vitam.griffins.odfvalidator.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.gouv.vitam.griffins.odfvalidator.status.ActionType;
 
 public class Action {
+    @JsonProperty("Type")
     private ActionType type;
+    @JsonProperty("Values")
     private Values values;
 
     public Action() {
@@ -64,8 +67,8 @@ public class Action {
     @Override
     public String toString() {
         return "Action{" +
-            "type=" + type +
-            ", values=" + values +
+            "Type=" + type +
+            ", Values=" + values +
             '}';
     }
 }

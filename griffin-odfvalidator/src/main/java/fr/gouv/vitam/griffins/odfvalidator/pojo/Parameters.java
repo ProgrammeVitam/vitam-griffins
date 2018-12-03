@@ -27,13 +27,20 @@
 
 package fr.gouv.vitam.griffins.odfvalidator.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class Parameters {
+    @JsonProperty("RequestId")
     private String requestId;
+    @JsonProperty("Id")
     private String id;
+    @JsonProperty("Actions")
     private List<Action> actions;
+    @JsonProperty("Inputs")
     private List<Input> inputs;
+    @JsonProperty("Debug")
     private boolean debug;
 
     public Parameters() {
@@ -82,11 +89,11 @@ public class Parameters {
     @Override
     public String toString() {
         return "Parameters{" +
-            "requestId='" + requestId + '\'' +
-            ", id='" + id + '\'' +
-            ", actions=" + actions +
-            ", inputs=" + inputs +
-            ", debug=" + debug +
+            "RequestId='" + requestId + '\'' +
+            ", Id='" + id + '\'' +
+            ", Actions=" + actions +
+            ", Inputs=" + inputs +
+            ", Debug=" + debug +
             '}';
     }
 }

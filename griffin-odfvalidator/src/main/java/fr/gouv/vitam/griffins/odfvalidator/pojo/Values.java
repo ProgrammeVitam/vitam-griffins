@@ -27,13 +27,18 @@
 
 package fr.gouv.vitam.griffins.odfvalidator.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class Values {
+    @JsonProperty("Extension")
     private String extension;
+    @JsonProperty("Args")
     private List<String> args;
+    @JsonProperty("DataToExtract")
     private Map<String, String> dataToExtract;
 
     public Values() {
@@ -78,9 +83,9 @@ public class Values {
     @Override
     public String toString() {
         return "Values{" +
-            "extension='" + extension + '\'' +
-            ", args=" + args +
-            ", dataToExtract=" + dataToExtract +
+            "Extension='" + extension + '\'' +
+            ", Args=" + args +
+            ", DataToExtract=" + dataToExtract +
             '}';
     }
 }

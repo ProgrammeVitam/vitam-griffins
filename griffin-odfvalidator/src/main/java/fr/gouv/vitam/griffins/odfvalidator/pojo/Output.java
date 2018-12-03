@@ -28,6 +28,7 @@
 package fr.gouv.vitam.griffins.odfvalidator.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.gouv.vitam.griffins.odfvalidator.status.AnalyseResult;
 import fr.gouv.vitam.griffins.odfvalidator.status.GriffinStatus;
 import fr.gouv.vitam.griffins.odfvalidator.status.ActionType;
@@ -36,13 +37,21 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @JsonInclude(NON_NULL)
 public class Output {
+    @JsonProperty("Result")
     private String result;
+    @JsonProperty("Error")
     private String error;
+    @JsonProperty("Executed")
     private String executed;
+    @JsonProperty("Input")
     private Input input;
+    @JsonProperty("OutputName")
     private String outputName;
+    @JsonProperty("Status")
     private GriffinStatus status;
+    @JsonProperty("AnalyseResult")
     private AnalyseResult analyseResult;
+    @JsonProperty("Action")
     private ActionType action;
 
     public Output() {
@@ -175,14 +184,14 @@ public class Output {
     @Override
     public String toString() {
         return "Output{" +
-            "result='" + result + '\'' +
-            ", error='" + error + '\'' +
-            ", executed='" + executed + '\'' +
-            ", input=" + input +
-            ", outputName='" + outputName + '\'' +
-            ", status=" + status +
-            ", analyseResult=" + analyseResult +
-            ", action=" + action +
+            "Result='" + result + '\'' +
+            ", Error='" + error + '\'' +
+            ", Executed='" + executed + '\'' +
+            ", Input=" + input +
+            ", OutputName='" + outputName + '\'' +
+            ", Status=" + status +
+            ", AnalyseResult=" + analyseResult +
+            ", Action=" + action +
             '}';
     }
 }
