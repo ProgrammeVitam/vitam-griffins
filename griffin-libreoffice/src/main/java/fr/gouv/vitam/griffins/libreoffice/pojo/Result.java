@@ -27,12 +27,17 @@
 
 package fr.gouv.vitam.griffins.libreoffice.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 import java.util.Map;
 
 public class Result {
+    @JsonProperty("RequestId")
     private String requestId;
+    @JsonProperty("Id")
     private String id;
+    @JsonProperty("Outputs")
     private Map<String, List<Output>> outputs;
 
     public Result() {

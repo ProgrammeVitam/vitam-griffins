@@ -27,8 +27,12 @@
 
 package fr.gouv.vitam.griffins.libreoffice.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Input {
+    @JsonProperty("Name")
     private String name;
+    @JsonProperty("FormatId")
     private String formatId;
 
     public Input() {
@@ -58,8 +62,8 @@ public class Input {
     @Override
     public String toString() {
         return "Input{" +
-            "name='" + name + '\'' +
-            ", formatId='" + formatId + '\'' +
+            "Name='" + name + '\'' +
+            ", FormatId='" + formatId + '\'' +
             '}';
     }
 }

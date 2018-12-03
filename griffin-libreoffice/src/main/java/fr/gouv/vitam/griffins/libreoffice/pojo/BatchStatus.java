@@ -27,17 +27,19 @@
 
 package fr.gouv.vitam.griffins.libreoffice.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus;
 
-import static fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus.ERROR;
-import static fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus.WARNING;
-import static fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus.OK;
-
 public class BatchStatus {
+    @JsonProperty("BatchId")
     public final String batchId;
+    @JsonProperty("StartTime")
     public final long startTime;
+    @JsonProperty("EndTime")
     public final long endTime;
+    @JsonProperty("Status")
     public final GriffinStatus status;
+    @JsonProperty("Error")
     public final String error;
 
     private BatchStatus(String batchId, long startTime, long endTime, GriffinStatus status, String error) {
@@ -49,26 +51,26 @@ public class BatchStatus {
     }
 
     public static BatchStatus warning(String batchId, long start, String error) {
-        return new BatchStatus(batchId, start, System.currentTimeMillis(), WARNING, error);
+        return new BatchStatus(batchId, start, System.currentTimeMillis(), GriffinStatus.WARNING, error);
     }
 
     public static BatchStatus ok(String batchId, long start) {
-        return new BatchStatus(batchId, start, System.currentTimeMillis(), OK, "");
+        return new BatchStatus(batchId, start, System.currentTimeMillis(), GriffinStatus.OK, "");
     }
 
     public static BatchStatus error(String batchId, long start, Throwable error) {
-        return new BatchStatus(batchId, start, System.currentTimeMillis(), ERROR, error.getMessage());
+        return new BatchStatus(batchId, start, System.currentTimeMillis(), GriffinStatus.ERROR, error.getMessage());
     }
 
     @Override
     public String toString() {
         return "BatchStatus{" +
-                "batchId='" + batchId + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", delta=" + (endTime - startTime)+
-                ", status=" + status +
-                ", error='" + error + '\'' +
+                "BatchId='" + batchId + '\'' +
+                ", StartTime=" + startTime +
+                ", EndTime=" + endTime +
+                ", Delta=" + (endTime - startTime)+
+                ", Status=" + status +
+                ", Error='" + error + '\'' +
                 '}';
     }
 }
