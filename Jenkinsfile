@@ -1,14 +1,3 @@
-// https://jenkins.io/doc/book/pipeline/syntax/
-// https://jenkins.io/doc/pipeline/steps/
-// https://www.cloudbees.com/sites/default/files/declarative-pipeline-refcard.pdf
-
-// https://vetlugin.wordpress.com/2017/01/31/guide-jenkins-pipeline-merge-requests/
-
-// KWA TOOD :
-// - estimate deviation from base branch (if relevant)
-// - separate stage for the javadoc:aggregate-jar build (in order to -T 1C the packaging)
-// - fix the partial build
-
 pipeline {
     agent {
         label 'griffins'
@@ -32,11 +21,6 @@ pipeline {
 
        stage("Tools configuration") {
            steps {
-               // Maven : nothing to do, the settings.xml file is passed to maven by command arg & configured by env variables
-               // Npm : we could have chosen "npm config" command, but, using a file, we keep the same principle as for maven
-               // KWA Note : Awful outside docker...
-               // sh "cp -f .ci/.npmrc ~/"
-               // sh "rm -f ~/.m2/settings.xml"
                echo "Workspace location : ${env.WORKSPACE}"
                echo "Branch : ${env.GIT_BRANCH}"
            }
@@ -47,14 +31,12 @@ pipeline {
                 script {
                     writeFile file: 'deploy_goal.txt', text: "${env.DEPLOY_GOAL}"
                 }
-                // OMA: evaluate project version ; write directly through shell as I didn't find anything else
                 sh "$MVN_BASE -q -f pom.xml --non-recursive -Dexec.args='\${project.version}' -Dexec.executable=\"echo\" org.codehaus.mojo:exec-maven-plugin:1.3.1:exec > version_projet.txt"
                 echo "Changed VITAM : ${env.CHANGED_VITAM}"
                 echo "Changed VITAM : ${env.CHANGED_VITAM_PRODUCT}"
             }
         }
 
-        // Override the default maven deploy target when on master (publish on nexus)
         stage("Computing maven target") {
             when {
                 anyOf {
@@ -67,7 +49,6 @@ pipeline {
             }
             steps {
                 script {
-                    // overwrite file content with one more goal
                     writeFile file: 'deploy_goal.txt', text: "${env.DEPLOY_GOAL}"
                     writeFile file: 'master_branch.txt', text: "${env.MASTER_BRANCH}"
                  }
@@ -76,9 +57,6 @@ pipeline {
         }
 
         stage ("Execute unit tests") {
-         // when {
-        //     //     environment(name: 'CHANGED_VITAM', value: 'true')
-        //     // }
             steps {
                 sh '$MVN_COMMAND -f pom.xml clean test'
             }
@@ -89,13 +67,10 @@ pipeline {
             }
         }
 
+        
+
 
         stage("Build packages") {
-            // Separated for the -T 1C option (possible here, but not while executing the tests)
-            // Caution : it force us to recompile and rebuild the jar packages, but it doesn't cost that much (KWA TODO: To be verified)
-            // when {
-            //     environment(name: 'CHANGED_VITAM', value: 'true')
-            // }
             environment {
                 DEPLOY_GOAL = readFile("deploy_goal.txt")
             }
@@ -116,12 +91,28 @@ pipeline {
                 )
             }
         }
+        stage("Download internet packages") {
+            environment {
+                http_proxy = credentials("http-proxy-url")
+                https_proxy = credentials("http-proxy-url")
+            }
+            steps {
+                parallel(
+                    "Download deb packages": {
+                        dir('deb') {
+                            sh './build_repo.sh'
+                         }
+                    },
+                    "Download rpm packages": {
+                        dir('rpm') {
+                            sh './build_repo.sh'
+                         }
+                    }
+                )
+            }
 
+        }
         stage("Publish packages") {
-            // when {
-            //     //environment(name: 'CHANGED_VITAM_PRODUCT', value: 'true')
-            //     environment(name: 'MASTER_BRANCH', value: 'true')
-            // }
             steps {
                 parallel(
                     "Upload vitam-griffons packages": {
@@ -137,6 +128,12 @@ pipeline {
                 sshagent (credentials: ['jenkins_sftp_to_repository']) {
                     sh 'vitam-build.git/push_symlink_repo.sh griffins $SERVICE_REPO_SSHURL'
                 }
+            }
+        }
+
+        stage("Clean") {
+            steps {
+               deleteDir()
             }
         }
     }

@@ -2,12 +2,81 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>fr.gouv.vitam</groupId>
-    <artifactId>parent-griffins</artifactId>
+    <artifactId>vitam-griffins</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <name>vitam-griffins</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>rpm-maven-plugin</artifactId>
+                    <version>2.1.5</version>
+                    <executions>
+                        <execution>
+                            <id>rpm</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>attached-rpm</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <name>vitam-${unix.name}</name>
+                        <group>Application/Archiving</group>
+                        <disabled>true</disabled>
+                        <distribution>Vitam Project</distribution>
+                        <packager>Vitam Package Team</packager>
+                        <licence>CeCILL 2.1</licence>
+                        <defineStatements/>
+                        <targetOS>linux</targetOS>
+                        <defaultDirMode>750</defaultDirMode>
+                        <defaultFileMode>640</defaultFileMode>
+                        <defaultUsername>${unix.user}</defaultUsername>
+                        <defaultGroupname>${unix.group}</defaultGroupname>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>jdeb</artifactId>
+                    <groupId>org.vafer</groupId>
+                    <version>1.5</version>
+                    <configuration>
+                        <skip>true</skip>
+                        <name>vitam-${unix.name}</name>
+                        <deb>[[buildDir]]/vitam-${unix.name}_${project.version}_${maven.build.timestamp}.[[extension]]</deb>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>jdeb</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jdeb</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
     <packaging>pom</packaging>
-    <name>vitam-parent</name>
     <description>${project.artifactId}</description>
+
+    <modules>
+        <module>imagemagick</module>
+    </modules>
 
     <organization>
         <name>Vitam</name>
@@ -16,4 +85,53 @@
     <prerequisites>
         <maven>3.3.9</maven>
     </prerequisites>
+
+    <profiles>
+        <profile>
+            <id>vitam</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>releases</id>
+                    <url>${env.SERVICE_NEXUS_URL}/repository/maven-releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>snapshots</id>
+                    <url>${env.SERVICE_NEXUS_URL}/repository/maven-snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+
+
+            <repositories>
+                <repository>
+                    <id>vitam</id>
+                    <url>${env.SERVICE_NEXUS_URL}/repository/maven-public/</url>
+                </repository>
+            </repositories>
+
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>vitam</id>
+                    <url>${env.SERVICE_NEXUS_URL}/repository/maven-public/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+
+            <properties>
+                <nodeDownloadRoot>${env.SERVICE_NEXUS_URL}/repository/node-distrib/
+                </nodeDownloadRoot>
+            </properties>
+
+        </profile>
+
+        
+    </profiles>
+
 </project>

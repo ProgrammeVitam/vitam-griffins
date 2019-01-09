@@ -1,0 +1,8 @@
+.pki
+BUILD
+BUILDROOT
+RPMS
+SRPMS
+*.zip
+*.tar.gz
+*.rpm

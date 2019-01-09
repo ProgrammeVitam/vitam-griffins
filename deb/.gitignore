@@ -1,0 +1,5 @@
+*.deb
+*.zip
+*.tar
+*.tar.gz
+.config
