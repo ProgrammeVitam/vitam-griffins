@@ -126,7 +126,7 @@ pipeline {
         stage("Update symlink") {
             steps {
                 sshagent (credentials: ['jenkins_sftp_to_repository']) {
-                    sh 'vitam-build.git/push_symlink_repo.sh griffins $SERVICE_REPO_SSHURL'
+                    sh 'vitam-build.git/push_symlink_griffin.sh griffins $SERVICE_REPO_SSHURL'
                 }
             }
         }
