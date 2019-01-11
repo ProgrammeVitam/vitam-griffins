@@ -1,0 +1,26 @@
+{
+  "RequestId": "4f6ae8d7-cab7-4f8d-b5e1-d5c0a1ea5793",
+  "Id": "batch-reference",
+  "Debug": false,
+  "Actions": [
+    {"Type": "ANALYSE"}
+  ],
+  "Inputs": [
+    {"Name": "AIFFTestFile-VALID_ALL.aif", "FormatId": "x-fmt/136"},
+    {"Name": "GIFTestFile-VALID_ALL.gif", "FormatId": "fmt/4"},
+    {"Name": "GZIPTestFile-VALID_ALL.gz", "FormatId": "x-fmt/266"},
+    {"Name": "JPEG2000TestFile-VALID_ALL.jp2", "FormatId": "x-fmt/392"},
+    {"Name": "JPEG2000TestFile-WELL_FORMED.jp2", "FormatId": "x-fmt/392"},
+    {"Name": "JPEGTestFile-NOT_VALID.jpg", "FormatId": "fmt/41"},
+    {"Name": "JPEGTestFile-VALID_ALL.jpg", "FormatId": "fmt/43"},
+    {"Name": "PDFTestFile-VALID_ALL.pdf", "FormatId": "fmt/95"},
+    {"Name": "PNGTestFile-VALID_ALL.png", "FormatId": "fmt/11"},
+    {"Name": "TIFFTestFile-VALID_ALL.TIF", "FormatId": "fmt/353"},
+    {"Name": "UTF8TestFile-VALID_ALL.txt", "FormatId": "x-fmt/16"},
+    {"Name": "WARCTestFile-VALID_ALL.warc", "FormatId": "fmt/289"},
+    {"Name": "WAVETestFile-VALID_ALL.wav", "FormatId": "fmt/141"},
+    {"Name": "XMLTestFile-WELL_FORMED.xml", "FormatId": "fmt/101"},
+    {"Name": "ODT12TestFile-WRONG_FORMAT.odt", "FormatId": "fmt/291"}
+  ]
+}
+

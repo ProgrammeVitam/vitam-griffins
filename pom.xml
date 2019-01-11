@@ -76,6 +76,7 @@
 
     <modules>
         <module>imagemagick</module>
+        <module>jhove</module>
     </modules>
 
     <organization>
@@ -131,7 +132,7 @@
 
         </profile>
 
-        
+
     </profiles>
 
 </project>
