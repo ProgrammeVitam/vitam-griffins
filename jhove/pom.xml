@@ -145,6 +145,17 @@
                             </mapper>
                         </data>
                         <data>
+                            <src>${basedir}/config/jhove.conf</src>
+                            <type>file</type>
+                            <mapper>
+                                <type>perm</type>
+                                <user>${unix.user}</user>
+                                <group>${unix.group}</group>
+                                <filemode>750</filemode>
+                                <prefix>/vitam/bin/worker/griffins/${unix.name}</prefix>
+                            </mapper>
+                        </data>
+                        <data>
                             <src>${basedir}/griffin</src>
                             <type>file</type>
                             <mapper>
@@ -185,6 +196,9 @@
                                 </source>
                                 <source>
                                     <location>${project.build.directory}/jhove-jar-with-dependencies.jar</location>
+                                </source>
+                                <source>
+                                    <location>${project.basedir}/config/jhove.conf</location>
                                 </source>
                             </sources>
                         </mapping>

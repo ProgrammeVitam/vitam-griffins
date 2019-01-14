@@ -54,31 +54,17 @@ public class InnerTool {
     private final App jhoveAPP;
     private final JhoveBase jhoveBase;
 
-    private void getJhoveConf() throws IOException {
-        String result = null;
-
-        Path conf = Paths.get("config", "jhove.conf");
-        if (Files.isRegularFile(conf))
-            return;
-
-        // create config/jhove.conf file from resources
-        Files.createDirectories(Paths.get("config"));
-        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("jhove.conf");
-        Files.copy(is, conf, StandardCopyOption.REPLACE_EXISTING);
-    }
-
     /**
      * Instantiates a new inner tool.
      *
      * @throws Exception the exception
      */
-    public InnerTool() throws Exception {
+    public InnerTool(Path config) throws Exception {
         jhoveAPP = App.newAppWithName("Jhove");
 
-        getJhoveConf();
         jhoveBase = new JhoveBase();
         jhoveBase.setLogLevel("WARNING");
-        jhoveBase.init("config/jhove.conf", null);
+        jhoveBase.init(config.toString(), null);
         jhoveBase.setEncoding("utf-8");
         Path tempDirectory = Files.createTempDirectory(Main.ID);
         jhoveBase.setTempDirectory(tempDirectory.toString());
