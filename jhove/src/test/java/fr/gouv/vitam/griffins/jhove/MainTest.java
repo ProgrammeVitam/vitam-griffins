@@ -49,6 +49,8 @@ public class MainTest {
     @Rule
     public TemporaryFolder tmpGriffinFolder = new TemporaryFolder();
 
+    private Path jhoveConfig = Paths.get("config/jhove.conf");
+
     @Test
     @junitparams.Parameters(method = "getFilesParameters")
     public void should_ANALYZE_one_file(Input input) throws Exception {
@@ -57,7 +59,7 @@ public class MainTest {
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(input.getName());
-        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, jhoveConfig);
 
         // When
         batchProcessor.execute();
@@ -85,7 +87,7 @@ public class MainTest {
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(input.getName());
-        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, jhoveConfig);
 
         // When
         BatchStatus status = batchProcessor.execute();
@@ -103,7 +105,7 @@ public class MainTest {
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(input.getName());
-        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, jhoveConfig);
 
         // When
         BatchStatus status = batchProcessor.execute();
@@ -123,7 +125,7 @@ public class MainTest {
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(input.getName());
-        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, jhoveConfig);
 
         // When
         BatchStatus status = batchProcessor.execute();
@@ -140,7 +142,7 @@ public class MainTest {
         Files.createFile(Paths.get(batchFolder.toString() + ".ready"));
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(ID);
-        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, jhoveConfig);
 
         // When
         BatchStatus status = batchProcessor.execute();

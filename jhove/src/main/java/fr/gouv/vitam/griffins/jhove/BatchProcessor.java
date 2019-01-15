@@ -55,11 +55,9 @@ public class BatchProcessor {
     private static final Logger logger = LoggerFactory.getLogger(BatchProcessor.class);
 
     private final ObjectMapper mapper = new ObjectMapper();
-    private final Pattern fileMatch = Pattern.compile("[a-zA-Z0-9_.\\-]+");
 
     private final Path batchDirectory;
-
-    private InnerTool innerTool;
+    private final InnerTool innerTool;
 
     private Parameters parameters;
 
@@ -68,8 +66,9 @@ public class BatchProcessor {
     public static final String resultFileName = "result.json";
     public static final String inputFilesDirName = "input-files";
 
-    public BatchProcessor(Path batchDirectory) {
+    public BatchProcessor(Path batchDirectory, Path joveConfig) throws Exception {
         this.batchDirectory = batchDirectory;
+        this.innerTool = new InnerTool(joveConfig);
     }
 
     public BatchStatus execute() {
@@ -85,7 +84,6 @@ public class BatchProcessor {
 
             Files.createDirectories(batchDirectory.resolve(outputFilesDirName));
 
-            innerTool = new InnerTool();
 
             List<Output> outputs = parameters.getInputs()
                     .stream()

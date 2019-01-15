@@ -42,15 +42,20 @@ public class Main {
 
     public static final String ID = "vitam-jhove-griffin";
 
-    public static void main(String[] args) {
-        if (args.length != 1 || args[0].isEmpty() || Files.notExists(Paths.get(args[0]))) {
+    public static void main(String[] args) throws Exception {
+        if (args.length == 0 || args[0].isEmpty() || Files.notExists(Paths.get(args[0]))) {
             throw new RuntimeException(String.format("Need a batch directory in argument here: %s.", Arrays.toString(args)));
         }
         Path batchDirectory = Paths.get(args[0]);
 
-        logger.info("Start {} on batch {}.", ID, batchDirectory);
+        if (args.length == 1 || args[1].isEmpty() || Files.notExists(Paths.get(args[1]))) {
+            throw new RuntimeException(String.format("Need a jhove config in argument here: %s.", Arrays.toString(args)));
+        }
+        Path jhoveConfig = Paths.get(args[1]);
 
-        BatchProcessor processor = new BatchProcessor(batchDirectory);
+        logger.info("Start {} on batch {} with config {}.", ID, batchDirectory, jhoveConfig);
+
+        BatchProcessor processor = new BatchProcessor(batchDirectory, jhoveConfig);
         BatchStatus batch = processor.execute();
 
         logger.info("Griffin {} ends with status {}", ID, batch);
