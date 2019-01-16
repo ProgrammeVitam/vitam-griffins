@@ -28,6 +28,7 @@
 package fr.gouv.vitam.griffins.imagemagick.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.gouv.vitam.griffins.imagemagick.status.ActionType;
 import fr.gouv.vitam.griffins.imagemagick.status.AnalyseResult;
 import fr.gouv.vitam.griffins.imagemagick.status.GriffinStatus;
@@ -39,13 +40,21 @@ import static fr.gouv.vitam.griffins.imagemagick.status.GriffinStatus.WARNING;
 
 @JsonInclude(NON_NULL)
 public class Output {
+    @JsonProperty("Result")
     private String result;
+    @JsonProperty("Error")
     private String error;
+    @JsonProperty("Executed")
     private String executed;
+    @JsonProperty("Input")
     private Input input;
+    @JsonProperty("OutputName")
     private String outputName;
+    @JsonProperty("Status")
     private GriffinStatus status;
+    @JsonProperty("AnalyseResult")
     private AnalyseResult analyseResult;
+    @JsonProperty("Action")
     private ActionType action;
 
     public Output() {
