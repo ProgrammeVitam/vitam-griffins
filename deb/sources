@@ -1,10 +1,10 @@
-http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/imagemagick_6.9.10.14+dfsg-7_amd64.deb
-http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/imagemagick-6.q16_6.9.10.14+dfsg-7_amd64.deb
-http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/libmagickcore-6-arch-config_6.9.10.14+dfsg-7_amd64.deb
-http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/libmagickcore-6-headers_6.9.10.14+dfsg-7_all.deb
-http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/libmagickcore-6.q16-6_6.9.10.14+dfsg-7_amd64.deb
-http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/libmagickwand-6.q16-6_6.9.10.14+dfsg-7_amd64.deb
-http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/imagemagick-6-common_6.9.10.14+dfsg-7_all.deb
+http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/imagemagick_6.9.10.23+dfsg-2_amd64.deb
+http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/imagemagick-6.q16_6.9.10.23+dfsg-2_amd64.deb
+http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/libmagickcore-6-arch-config_6.9.10.23+dfsg-2_amd64.deb
+http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/libmagickcore-6-headers_6.9.10.23+dfsg-2_all.deb
+http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/libmagickcore-6.q16-6_6.9.10.23+dfsg-2_amd64.deb
+http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/libmagickwand-6.q16-6_6.9.10.23+dfsg-2_amd64.deb
+http://ftp.fr.debian.org/debian/pool/main/i/imagemagick/imagemagick-6-common_6.9.10.23+dfsg-2_all.deb
 http://ftp.fr.debian.org/debian/pool/main/f/fontconfig/fontconfig-config_2.13.1-2_all.deb
 http://ftp.fr.debian.org/debian/pool/main/f/fontconfig/libfontconfig1_2.13.1-2_amd64.deb
 http://ftp.fr.debian.org/debian/pool/main/libp/libpng1.6/libpng16-16_1.6.28-1_amd64.deb
