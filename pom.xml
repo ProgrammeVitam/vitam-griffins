@@ -77,7 +77,7 @@
     <modules>
         <module>imagemagick</module>
         <module>jhove</module>
-        <module>griffin-libreoffice</module>
+        <module>libreoffice</module>
     </modules>
 
     <organization>
@@ -130,10 +130,6 @@
                 <nodeDownloadRoot>${env.SERVICE_NEXUS_URL}/repository/node-distrib/
                 </nodeDownloadRoot>
             </properties>
-
         </profile>
-
-
     </profiles>
-
 </project>
