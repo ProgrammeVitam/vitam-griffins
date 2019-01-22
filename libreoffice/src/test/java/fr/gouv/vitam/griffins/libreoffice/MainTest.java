@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MainTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    static String defaultFileName="griffin-libreoffice-1.0.jar";
+    static String errorFileName ="library.jar";
     static String defaultFileFormat="fmt/136";
 
     @Rule
@@ -76,7 +76,7 @@ public class MainTest {
     @Test
     public void should_GENERATE_for_wrong_file_error() throws Exception {
         // Given
-        Input input = new Input(defaultFileName, defaultFileFormat);
+        Input input = new Input(errorFileName, defaultFileFormat);
         Values values=new Values("pdf", Arrays.asList("--format=pdf", "--export=SelectedPdfVersion=1"));
         Action action = new Action(GENERATE,values);
 
@@ -102,7 +102,7 @@ public class MainTest {
     @Test
     public void should_IDENTIFY_error() throws Exception {
         // Given
-        Input input = new Input(defaultFileName, defaultFileFormat);
+        Input input = new Input(errorFileName, defaultFileFormat);
         Action action = new Action(IDENTIFY);
         generateBatch(action, input);
 
@@ -120,7 +120,7 @@ public class MainTest {
     @Test
     public void should_ANALYZE_error() throws Exception {
         // Given
-        Input input = new Input(defaultFileName, defaultFileFormat);
+        Input input = new Input(errorFileName, defaultFileFormat);
         Action action = new Action(ANALYSE);
         generateBatch(action, input);
 
@@ -140,7 +140,7 @@ public class MainTest {
         // Given
         Map<String, String> dataToExtract = new HashMap<>();
         dataToExtract.put("AU_METADATA_DATE", "/image/properties/xmp:ModifyDate");
-        Input input = new Input(defaultFileName, defaultFileFormat);
+        Input input = new Input(errorFileName, defaultFileFormat);
         Action action = new Action(EXTRACT, new Values(dataToExtract));
         generateBatch(action, input);
 
