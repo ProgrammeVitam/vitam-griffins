@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -e
 #*******************************************************************************
 # Copyright French Prime minister Office/SGMAP/DINSIC/Vitam Program (2015-2019)
@@ -26,35 +26,15 @@ set -e
 # The fact that you are presently reading this means that you have had knowledge of the CeCILL 2.1 license and that you
 # accept its terms.
 #*******************************************************************************
-WORKING_DIR=$(dirname $0)
+WORKING_FOLDER=$(dirname $0)
 
-SOURCES_FILE=${WORKING_DIR}/sources # Contains all the urls where download rpm
-TARGET_DIR=${WORKING_DIR}/target      # Targer dir where copying rpm dowloaded
-mkdir -p ${TARGET_DIR}
-
-if [ -f "${SOURCES_FILE}" ]
-then
-	cat ${SOURCES_FILE} |  
-	while read SRC_URL   
-	do
-		echo "SRC_URL : ${SRC_URL}"
-		if [[ $(echo "${SRC_URL}" | grep -E -o '^[^#]') ]] # skip is the line is commented
-		then
-			FILE=$(echo "${SRC_URL}" | grep -E -o '[^/]+$') # get the name of the rpm file
-			if [ -f "${TARGET_DIR}/${FILE}" ]
-			then
-			 	echo "${FILE} already exists in ${TARGET_DIR} ! Skipping..." 
-			else # if [ -f "${TARGET_DIR}/${FILE}" ]
-			 	echo "Downloading ${SRC_URL} into ${TARGET_DIR}..."
-			 	curl ${SRC_URL} -o ${TARGET_DIR}/${FILE}.tmp	  
-			 	mv ${TARGET_DIR}/${FILE}.tmp ${TARGET_DIR}/${FILE}
-			 	echo "Download done."
-			fi 
-		else #if [echo "${SRC_URL}" | grep -E -o '^[^#]']
-			echo "${SRC_URL} is commented  ! Skipping..."
-		fi
-	done
-else # if [ -f "${SOURCES_FILE}" ]
-	echo "${SOURCES_FILE} doesn't exists  ! Exiting..."
+if [ ! -d ${WORKING_FOLDER}/target ]; then
+	mkdir ${WORKING_FOLDER}/target
 fi
-./build-all.sh
+
+for item in $(ls -d ${WORKING_FOLDER}/*/ | grep -v "target" | awk -F "/" '{print $(NF-1)}'); do
+	# Need to give the target folder relatively to the base folder...
+	echo $item
+	${WORKING_FOLDER}/build.sh $item target
+	
+done
