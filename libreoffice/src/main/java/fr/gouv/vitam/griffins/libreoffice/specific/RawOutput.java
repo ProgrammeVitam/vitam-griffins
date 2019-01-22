@@ -35,6 +35,8 @@ import fr.gouv.vitam.griffins.libreoffice.status.AnalyseResult;
 
 import java.io.*;
 
+import static fr.gouv.vitam.griffins.libreoffice.status.ActionType.GENERATE;
+
 /**
  * Class for the InnerTool output, this has to be converted to Output class which is the standard griffin output.
  */
@@ -202,7 +204,7 @@ public class RawOutput {
                     result = Output.ok(input, outputFileName, action.getType());
                 return result;
             default:
-                throw new IllegalStateException("Unreachable");
+                throw new IllegalStateException(String.format("Cannot post process data from action of type %s only %s is supported.", action.getType(), GENERATE));
         }
     }
 }

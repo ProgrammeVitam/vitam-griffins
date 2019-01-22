@@ -152,7 +152,7 @@ public class BatchProcessor {
         if (actionType.getType().equals(GENERATE)) {
             return String.format("%s-%s.%s", actionType.getType().name(), inputname, actionType.getValues().getExtension());
         }
-        throw new IllegalStateException("Unreachable");
+        throw new IllegalStateException(String.format("Cannot get output name for action of type %s.", actionType.getType()));
     }
 
     private List<String> getMagickParams(
@@ -201,7 +201,7 @@ public class BatchProcessor {
             case EXTRACT:
                 return extract(rawOutput, debug);
             default:
-                throw new IllegalStateException("Unreachable");
+                throw new IllegalStateException(String.format("Cannot post process data from action of type %s.", rawOutput.action.getType()));
         }
     }
 

@@ -144,7 +144,7 @@ public class BatchProcessor {
         } else if (action.getType().equals(GENERATE)) {
             outputName = String.format("%s-%s.%s", action.getType().name(), input.getName(), action.getValues().getExtension());
         } else
-            throw new IllegalStateException("Unreachable");
+            throw new IllegalStateException(String.format("Cannot get output path for action of type %s.", action.getType()));
         return batchDirectory.resolve(outputFilesDirName).resolve(outputName).toString();
     }
 
