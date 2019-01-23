@@ -10,8 +10,8 @@ Source0:       unoconv
 BuildArch:     noarch
 BuildRequires: python >= 2.0
 Requires:      python >= 2.0
-Requires:      libreoffice
-Requires:      libreoffice-pyuno
+Requires:      libreoffice = 6.0.7
+Requires:      libreoffice-pyuno = 6.0.7
 
 
 %description

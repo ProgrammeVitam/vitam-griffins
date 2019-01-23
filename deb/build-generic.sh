@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-set -e
+#!/bin/bash
 #*******************************************************************************
 # Copyright French Prime minister Office/SGMAP/DINSIC/Vitam Program (2015-2019)
 #
@@ -26,35 +25,46 @@ set -e
 # The fact that you are presently reading this means that you have had knowledge of the CeCILL 2.1 license and that you
 # accept its terms.
 #*******************************************************************************
-WORKING_DIR=$(dirname $0)
 
-SOURCES_FILE=${WORKING_DIR}/sources # Contains all the urls where download rpm
-TARGET_DIR=${WORKING_DIR}/target      # Targer dir where copying rpm dowloaded
-mkdir -p ${TARGET_DIR}
+WORKING_FOLDER=$(dirname $0)
 
-if [ -f "${SOURCES_FILE}" ]
-then
-	cat ${SOURCES_FILE} |  
-	while read SRC_URL   
-	do
-		echo "SRC_URL : ${SRC_URL}"
-		if [[ $(echo "${SRC_URL}" | grep -E -o '^[^#]') ]] # skip is the line is commented
-		then
-			FILE=$(echo "${SRC_URL}" | grep -E -o '[^/]+$') # get the name of the rpm file
-			if [ -f "${TARGET_DIR}/${FILE}" ]
-			then
-			 	echo "${FILE} already exists in ${TARGET_DIR} ! Skipping..." 
-			else # if [ -f "${TARGET_DIR}/${FILE}" ]
-			 	echo "Downloading ${SRC_URL} into ${TARGET_DIR}..."
-			 	curl -k ${SRC_URL} -o ${TARGET_DIR}/${FILE}.tmp	  
-			 	mv ${TARGET_DIR}/${FILE}.tmp ${TARGET_DIR}/${FILE}
-			 	echo "Download done."
-			fi 
-		else #if [echo "${SRC_URL}" | grep -E -o '^[^#]']
-			echo "${SRC_URL} is commented  ! Skipping..."
-		fi
-	done
-else # if [ -f "${SOURCES_FILE}" ]
-	echo "${SOURCES_FILE} doesn't exists  ! Exiting..."
-fi 
-./build-all.sh
+pushd ${WORKING_FOLDER}
+
+# Args check
+
+if [ -z "$1" ]; then
+	echo "Usage : build.sh <component> [<target_folder>]"
+	popd
+	exit 1
+fi
+
+COMPONENT=$1
+TARGET_FOLDER=$2
+
+COMPONENT_FOLDER=$(pwd)/${COMPONENT}
+
+if [ ! -d "${COMPONENT_FOLDER}" ]; then
+	echo "Folder ${COMPONENT_FOLDER} doesn't exist ! Aborting."
+	popd
+	exit 2
+fi
+
+# Default target folder definition
+if [ -z "${TARGET_FOLDER}" ]; then
+	TARGET_FOLDER=$(pwd)/target
+	if [ ! -d "${TARGET_FOLDER}" ]; then
+		mkdir -p ${TARGET_FOLDER}
+	fi
+fi
+
+if [ ! -d "${TARGET_FOLDER}" ]; then
+	echo "Target folder ${TARGET_FOLDER} doesn't exist ! Aborting."
+	popd
+	exit 2
+fi
+
+# Build DEB
+
+dpkg-deb --build ${COMPONENT} ${TARGET_FOLDER}
+
+popd
