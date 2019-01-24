@@ -142,7 +142,7 @@
                     <requires>
                         <require>java-1.8.0</require>
                         <require>vitam-user-${unix.user}</require>
-                        <require>unoconv</require>
+                        <require>vitam-unoconv</require>
                     </requires>
                     <mappings>
                         <mapping>
