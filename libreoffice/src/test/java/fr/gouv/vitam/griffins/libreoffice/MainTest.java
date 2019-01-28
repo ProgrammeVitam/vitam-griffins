@@ -1,8 +1,13 @@
 package fr.gouv.vitam.griffins.libreoffice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.gouv.vitam.griffins.libreoffice.pojo.*;
+import fr.gouv.vitam.griffins.libreoffice.pojo.Action;
+import fr.gouv.vitam.griffins.libreoffice.pojo.BatchStatus;
+import fr.gouv.vitam.griffins.libreoffice.pojo.Input;
+import fr.gouv.vitam.griffins.libreoffice.pojo.Output;
+import fr.gouv.vitam.griffins.libreoffice.pojo.Parameters;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Result;
+import fr.gouv.vitam.griffins.libreoffice.pojo.Values;
 import fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,7 +21,12 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static fr.gouv.vitam.griffins.libreoffice.BatchProcessor.inputFilesDirName;
 import static fr.gouv.vitam.griffins.libreoffice.BatchProcessor.parametersFileName;
@@ -27,6 +37,7 @@ import static fr.gouv.vitam.griffins.libreoffice.status.ActionType.EXTRACT;
 import static fr.gouv.vitam.griffins.libreoffice.status.ActionType.GENERATE;
 import static fr.gouv.vitam.griffins.libreoffice.status.ActionType.IDENTIFY;
 import static fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus.ERROR;
+import static fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus.OK;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,25 +45,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MainTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    static String errorFileName ="library.jar";
-    static String defaultFileFormat="fmt/136";
-
     @Rule
     public TemporaryFolder tmpGriffinFolder = new TemporaryFolder();
 
     @Test
-    public void should_GENERATE_all_batch_reference_files() throws Exception {
-        File file = new File("src/test/resources/batch-reference/" + parametersFileName);
-        Parameters parameters = objectMapper.readValue(file, Parameters.class);
-
-        for (Input input : parameters.getInputs())
-            should_GENERATE_one_file(input);
-    }
-
-    private void should_GENERATE_one_file(Input input) throws Exception {
+    public void should_GENERATE_DOC_file_from_odt() throws Exception {
         // Given
-        Values values=new Values("pdf", Arrays.asList("--format=pdf", "--export=SelectedPdfVersion=1"));
-        Action action = new Action(GENERATE,values);
+        Input input = new Input("test.odt", "fmt/291");
+        Values values = new Values("doc", Arrays.asList("MS Word 97", "UTF8"));
+        Action action = new Action(GENERATE, values);
 
         generateBatch(action, input);
 
@@ -62,22 +63,21 @@ public class MainTest {
         // When
         batchProcessor.execute();
 
-        // Then result is analyze in comparaison with expected result in file name
-
+        // Then
         Result result = getOutputs(input.getName());
         List<Output> actual = result.getOutputs().get(input.getName());
-        System.out.println(actual);
 
         assertThat(actual).hasSize(1);
         assertThat(actual).extracting(Output::getAction).containsExactly(GENERATE);
-        assertThat(actual.get(0).getOutputName()).endsWith(".pdf");
+        assertThat(actual).extracting(Output::getStatus).containsExactly(OK);
+        assertThat(actual.get(0).getOutputName()).endsWith(".doc");
     }
 
     @Test
     public void should_GENERATE_for_wrong_file_error() throws Exception {
         // Given
-        Input input = new Input(errorFileName, defaultFileFormat);
-        Values values=new Values("pdf", Arrays.asList("--format=pdf", "--export=SelectedPdfVersion=1"));
+        Input input = new Input("library.jar", "fmt/136");
+        Values values=new Values("pdf", Collections.emptyList());
         Action action = new Action(GENERATE,values);
 
         generateBatch(action, input);
@@ -88,8 +88,7 @@ public class MainTest {
         // When
         batchProcessor.execute();
 
-        // Then result is analyze in comparaison with expected result in file name
-
+        // Then
         Result result = getOutputs(input.getName());
         List<Output> actual = result.getOutputs().get(input.getName());
         System.out.println(actual);
@@ -102,7 +101,7 @@ public class MainTest {
     @Test
     public void should_IDENTIFY_error() throws Exception {
         // Given
-        Input input = new Input(errorFileName, defaultFileFormat);
+        Input input = new Input("test.odt", "fmt/40");
         Action action = new Action(IDENTIFY);
         generateBatch(action, input);
 
@@ -120,7 +119,7 @@ public class MainTest {
     @Test
     public void should_ANALYZE_error() throws Exception {
         // Given
-        Input input = new Input(errorFileName, defaultFileFormat);
+        Input input = new Input("test.odt", "fmt/40");
         Action action = new Action(ANALYSE);
         generateBatch(action, input);
 
@@ -140,7 +139,7 @@ public class MainTest {
         // Given
         Map<String, String> dataToExtract = new HashMap<>();
         dataToExtract.put("AU_METADATA_DATE", "/image/properties/xmp:ModifyDate");
-        Input input = new Input(errorFileName, defaultFileFormat);
+        Input input = new Input("test.odt", "fmt/40");
         Action action = new Action(EXTRACT, new Values(dataToExtract));
         generateBatch(action, input);
 

@@ -57,4 +57,3 @@ then
 else # if [ -f "${SOURCES_FILE}" ]
 	echo "${SOURCES_FILE} doesn't exists  ! Exiting..."
 fi
-./build-all.sh

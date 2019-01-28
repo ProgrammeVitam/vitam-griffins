@@ -23,171 +23,198 @@ On centos run `dnf install target/griffin-libreoffice-1.0.rpm` and on debian `dp
 
 Notes
 -----
-used version 0.8.2
-version needed to have the option [-I, --import-filter-name=string set import filter name]
-which can be used to specify import filter when needed (even if it's not the case in most cases)
+output_file_extension,Media,Filters (<filter> / output_filter_name),UI Name,Package Name,Import,Export
+txt,,Text (encoded) (StarWriter/GlobalDocument),Text - Choose Encoding (Master Document),Filter1,✓,✓
+,,writer_globaldocument_StarOffice_XML_Writer,OpenOffice.org 1.0 Text Document,Filter1,,
+,,writer_globaldocument_StarOffice_XML_Writer_GlobalDocument,OpenOffice.org 1.0 Master Document,Filter1,✓,
+,,writer_globaldocument_pdf_Export,PDF - Portable Document Format,Filter1,,✓
+,,writerglobal8,ODF Master Document,Filter1,✓,✓
+,,writerglobal8_template,ODF Master Document Template,Filter1,✓,✓
+,,writerglobal8_writer,ODF Text Document,Filter1,,✓
+,,writerglobal8_HTML,HTML (Writer/Global),Filter1,,✓
+csv,text/plain,generic_Text,Text,Types1,,
+txt,text/plain,generic_Text,Text,Types1,,
+tab,text/plain,generic_Text,Text,Types1,,
+tsv,text/plain,generic_Text,Text,Types1,,
+sxw,application/vnd.sun.xml.writer,writer_StarOffice_XML_Writer,OpenOffice.org 1.0 Text Document,Types1,,
+sxg,application/vnd.sun.xml.writer.global,writer_globaldocument_StarOffice_XML_Writer_GlobalDocument,Writer 6.0 Master Document,Types1,,
+pdf,application/pdf,pdf_Portable_Document_Format,PDF - Portable Document Format,Types1,,
+odm,application/vnd.oasis.opendocument.text-master,writerglobal8,Writer 8 Master Document,Types1,,
+otm,application/vnd.oasis.opendocument.text-master-template,writerglobal8_template,Writer 8 Master Document Template,Types1,,
+,,HTML,HTML Document,Filter2,✓,✓
+,,Text (StarWriter/Web),Text (Writer/Web),Filter2,✓,✓
+txt,,Text (encoded) (StarWriter/Web),Text - Choose Encoding (Writer/Web),Filter2,✓,✓
+,,writer_web_HTML_help,Help content,Filter2,✓,
+,,writer_web_StarOffice_XML_Writer,OpenOffice.org 1.0 Text Document (Writer/Web),Filter2,,✓
+,,writer_web_StarOffice_XML_Writer_Web_Template,OpenOffice.org 1.0 HTML Template,Filter2,✓,
+,,writer_web_pdf_Export,PDF - Portable Document Format,Filter2,,✓
+,,writerweb8_writer_template,HTML Document Template,Filter2,✓,✓
+,,writerweb8_writer,Text (Writer/Web),Filter2,,✓
+html,text/html,generic_HTML,HTML Document,Types2,,
+htm,text/html,generic_HTML,HTML Document,Types2,,
+csv,text/plain,generic_Text,Text,Types2,,
+txt,text/plain,generic_Text,Text,Types2,,
+tab,text/plain,generic_Text,Text,Types2,,
+tsv,text/plain,generic_Text,Text,Types2,,
+,,writer_web_HTML_help,Help content,Types2,,
+sxw,application/vnd.sun.xml.writer,writer_StarOffice_XML_Writer,OpenOffice.org 1.0 Text Document,Types2,,
+stw,application/vnd.sun.xml.writer.web,writer_web_StarOffice_XML_Writer_Web_Template,Writer/Web 6.0 Template,Types2,,
+pdf,application/pdf,pdf_Portable_Document_Format,PDF - Portable Document Format,Types2,,
+oth,application/vnd.oasis.opendocument.text-web,writerweb8_writer_template,Writer/Web 8 Template,Types2,,
+,,HTML (StarWriter),HTML Document (Writer),Filter3,✓,✓
+,,MS WinWord 5,Microsoft WinWord 1/2/5,Filter3,✓,
+,,MS WinWord 6.0,Microsoft Word 6.0,Filter3,✓,
+,,MS Word 95,Microsoft Word 95,Filter3,✓,
+,,MS Word 95 Vorlage,Microsoft Word 95 Template,Filter3,✓,
+,,MS Word 97,Microsoft Word 97-2003,Filter3,✓,✓
+,,MS Word 97 Vorlage,Microsoft Word 97-2003 Template,Filter3,✓,✓
+,,OpenDocument Text Flat XML,Flat XML ODF Text Document,Filter3,✓,✓
+,,Rich Text Format,Rich Text,Filter3,✓,✓
+,,StarOffice XML (Writer),OpenOffice.org 1.0 Text Document,Filter3,✓,
+,,WordPerfect,WordPerfect Document,Filter3,✓,
+,,MS_Works,Microsoft Works Document,Filter3,✓,
+,,Beagle_Works,BeagleWorks/WordPerfect Works v1 Text Document,Filter3,✓,
+,,ClarisWorks,ClarisWorks/AppleWorks Text Document,Filter3,✓,
+,,DocMaker,DOCMaker (v4) Document,Filter3,✓,
+,,eDoc_Document,eDOC (v2) Document,Filter3,✓,
+,,FullWrite_Professional,FullWrite Professional Document,Filter3,✓,
+,,Great_Works,GreatWorks Text Document,Filter3,✓,
+,,HanMac_Word_J,HanMac Word-J Document,Filter3,✓,
+,,HanMac_Word_K,HanMac Word-K Document,Filter3,✓,
+,,LightWayText,LightWayText for Mac v4.5,Filter3,✓,
+,,Mac_Acta,Acta Mac Classic Document,Filter3,✓,
+,,Mac_More,More Mac v2-3 Document,Filter3,✓,
+,,Mac_RagTime,RagTime Mac v2-3 Document,Filter3,✓,
+,,Mac_Word,Microsoft Word for Mac (v1 - v5),Filter3,✓,
+,,Mac_Works,Microsoft Works for Mac Text Document (v1 - v4),Filter3,✓,
+,,MacDoc,MacDoc v1 Document,Filter3,✓,
+,,MacWrite,MacWrite Document,Filter3,✓,
+,,MacWritePro,MacWriteII or MacWritePro Document,Filter3,✓,
+,,Mariner_Write,Mariner Write Mac Classic v1.6 - v3.5,Filter3,✓,
+,,MindWrite,MindWrite Document,Filter3,✓,
+,,Nisus_Writer,Nisus Writer Mac Classic v3.4 - 6.5,Filter3,✓,
+,,TeachText,TeachText/SimpleText v1 Document,Filter3,✓,
+,,TexEdit,Tex-Edit v2 Document,Filter3,✓,
+,,WriteNow,WriteNow Document,Filter3,✓,
+,,WriterPlus,WriterPlus Document,Filter3,✓,
+,,ZWrite,Z-Write 1.3 Document,Filter3,✓,
+,,AbiWord,AbiWord Document,Filter3,✓,
+,,T602Document,T602 Document,Filter3,✓,
+,,LotusWordPro,Lotus WordPro Document,Filter3,✓,
+txt,,Text,Text,Filter3,✓,✓
+txt,,Text (encoded),Text - Choose Encoding,Filter3,✓,✓
+,,writer_MIZI_Hwp_97,Hangul WP 97,Filter3,✓,
+,,writer_StarOffice_XML_Writer_Template,OpenOffice.org 1.0 Text Document Template,Filter3,✓,
+,,writer_pdf_Export,PDF - Portable Document Format,Filter3,,✓
+,,writer8,ODF Text Document,Filter3,✓,✓
+,,writer8_template,ODF Text Document Template,Filter3,✓,✓
+,,MS Word 2007 XML,Microsoft Word 2007-2013 XML,Filter3,✓,✓
+,,MS Word 2007 XML Template,Microsoft Word 2007-2013 XML Template,Filter3,✓,
+,,Office Open XML Text,Office Open XML Text,Filter3,✓,✓
+,,Office Open XML Text Template,Office Open XML Text Template,Filter3,✓,
+,,writer_layout_dump,Writer Layout XML,Filter3,,✓
+,,BroadBand eBook,writer_BroadBand_eBook,Filter3,✓,
+,,eReader eBook,eReader eBook,Filter3,✓,
+,,FictionBook 2,FictionBook 2.0,Filter3,✓,
+,,PalmDoc,PalmDoc eBook,Filter3,✓,
+,,Plucker eBook,Plucker eBook,Filter3,✓,
+,,TealDoc,TealDoc eBook,Filter3,✓,
+,,zTXT,zTXT eBook,Filter3,✓,
+,,Apple Pages,Apple Pages 4,Filter3,✓,
+htm,text/html,generic_HTML,HTML Document,Types3,,
+html,text/html,generic_HTML,HTML Document,Types3,,
+xls,application/vnd.ms-excel,calc_MS_Excel_40,Microsoft Excel 4.0,Types3,,
+xlw,application/vnd.ms-excel,calc_MS_Excel_40,Microsoft Excel 4.0,Types3,,
+xlc,application/vnd.ms-excel,calc_MS_Excel_40,Microsoft Excel 4.0,Types3,,
+xlm,application/vnd.ms-excel,calc_MS_Excel_40,Microsoft Excel 4.0,Types3,,
+xls,application/vnd.ms-excel,calc_MS_Excel_5095,Microsoft Excel 5.0,Types3,,
+xlc,application/vnd.ms-excel,calc_MS_Excel_5095,Microsoft Excel 5.0,Types3,,
+xlm,application/vnd.ms-excel,calc_MS_Excel_5095,Microsoft Excel 5.0,Types3,,
+xlw,application/vnd.ms-excel,calc_MS_Excel_5095,Microsoft Excel 5.0,Types3,,
+xls,application/vnd.ms-excel,calc_MS_Excel_95,Microsoft Excel 95,Types3,,
+xlc,application/vnd.ms-excel,calc_MS_Excel_95,Microsoft Excel 95,Types3,,
+xlm,application/vnd.ms-excel,calc_MS_Excel_95,Microsoft Excel 95,Types3,,
+xlw,application/vnd.ms-excel,calc_MS_Excel_95,Microsoft Excel 95,Types3,,
+doc,application/msword,writer_MS_WinWord_5,Microsoft WinWord 1/2/5,Types3,,
+doc,application/msword,writer_MS_WinWord_60,Microsoft Word 6.0,Types3,,
+doc,application/msword,writer_MS_Word_95,Microsoft Word 95,Types3,,
+dot,application/msword,writer_MS_Word_95_Vorlage,MS Word 95 Template,Types3,,
+doc,application/msword,writer_MS_Word_97,Microsoft Word 97-2003,Types3,,
+dot,application/msword,writer_MS_Word_97_Vorlage,MS Word 97/2000 Template,Types3,,
+fodt,application/vnd.oasis.opendocument.text-flat-xml,writer_ODT_FlatXML,OpenDocument Text (Flat XML),Types3,,
+odt,application/vnd.oasis.opendocument.text-flat-xml,writer_ODT_FlatXML,OpenDocument Text (Flat XML),Types3,,
+xml,application/vnd.oasis.opendocument.text-flat-xml,writer_ODT_FlatXML,OpenDocument Text (Flat XML),Types3,,
+rtf,application/rtf,writer_Rich_Text_Format,Rich Text Format,Types3,,
+sxw,application/vnd.sun.xml.writer,writer_StarOffice_XML_Writer,OpenOffice.org 1.0 Text Document,Types3,,
+wpd,application/vnd.wordperfect,writer_WordPerfect_Document,WordPerfect Document,Types3,,
+wps,application/vnd.ms-works,writer_MS_Works_Document,Microsoft Works Document,Types3,,
+-,-,writer_Beagle_Works,BeagleWorks/WordPerfect Works Document,Types3,,
+cwk,application/clarisworks,writer_ClarisWorks,ClarisWorks/AppleWorks Document,Types3,,
+hqx,-,writer_DocMaker,DOCMaker (v4) Document,Types3,,
+zip,-,writer_DocMaker,DOCMaker (v4) Document,Types3,,
+hqx,-,writer_eDoc_Document,eDOC (v2) Document,Types3,,
+zip,-,writer_eDoc_Document,eDOC (v2) Document,Types3,,
+-,-,writer_FullWrite_Professional,FullWrite Professional Document,Types3,,
+-,-,writer_Great_Works,GreatWorks Document,Types3,,
+-,-,writer_HanMac_Word_J,HanMac Word-J Document,Types3,,
+-,-,writer_HanMac_Word_K,HanMac Word-K Document,Types3,,
+hqx,-,writer_LightWayText,LightWayText for Mac v4.5,Types3,,
+zip,-,writer_LightWayText,LightWayText for Mac v4.5,Types3,,
+-,-,writer_Mac_Acta,Acta Mac v1-2 Document,Types3,,
+-,-,writer_Mac_More,More Mac v2-3 Document,Types3,,
+-,-,writer_Mac_RagTime,RagTime Mac v2-3 Document,Types3,,
+doc,application/msword,writer_Mac_Word,Microsoft Word for Mac (v1 - v5),Types3,,
+wps,application/vnd.ms-works,writer_Mac_Works,Microsoft Works for Mac Document (v1 - v4),Types3,,
+hqx,-,writer_MacDoc,MacDoc,Types3,,
+zip,-,writer_MacDoc,MacDoc,Types3,,
+mw,application/macwriteii,writer_MacWrite,MacWrite Document,Types3,,
+mcw,application/macwriteii,writer_MacWrite,MacWrite Document,Types3,,
+mw,application/macwriteii,writer_MacWritePro,MacWriteII or MacWritePro Document,Types3,,
+mcw,application/macwriteii,writer_MacWritePro,MacWriteII or MacWritePro Document,Types3,,
+mwd,-,writer_Mariner_Write,Mariner Write Mac Classic v1.6 - v3.5,Types3,,
+-,-,writer_MindWrite,MindWrite Document,Types3,,
+hqx,-,writer_Nisus_Writer,Nisus Writer Mac Classic v3.4 - 6.5,Types3,,
+zip,-,writer_Nisus_Writer,Nisus Writer Mac Classic v3.4 - 6.5,Types3,,
+hqx,-,writer_TeachText,TeachText/SimpleText v1 Document,Types3,,
+zip,-,writer_TeachText,TeachText/SimpleText v1 Document,Types3,,
+hqx,-,writer_TexEdit,Tex-Edit v2 Document,Types3,,
+zip,-,writer_TexEdit,Tex-Edit v2 Document,Types3,,
+wn,-,writer_WriteNow,WriteNow Document,Types3,,
+nx^d,-,writer_WriteNow,WriteNow Document,Types3,,
+-,-,writer_WriterPlus,Writer Plus Document,Types3,,
+hqx,-,writer_ZWrite,Z-Write 1.3 Document,Types3,,
+zip,-,writer_ZWrite,Z-Write 1.3 Document,Types3,,
+abw,application/x-abiword,writer_AbiWord_Document,AbiWord Document,Types3,,
+zabw,application/x-abiword,writer_AbiWord_Document,AbiWord Document,Types3,,
+‘602,application/x-t602,writer_T602_Document,T602 Document,Types3,,
+txt,application/x-t602,writer_T602_Document,T602 Document,Types3,,
+lwp,application/vnd.lotus-wordpro,writer_LotusWordPro_Document,LotusWordPro Document,Types3,,
+csv,text/plain,generic_Text,Text,Types3,,
+tsv,text/plain,generic_Text,Text,Types3,,
+tab,text/plain,generic_Text,Text,Types3,,
+txt,text/plain,generic_Text,Text,Types3,,
+hwp,application/x-hwp,writer_MIZI_Hwp_97,Hangul WP 97,Types3,,
+stw,application/vnd.sun.xml.writer.template,writer_StarOffice_XML_Writer_Template,Writer 6.0 Template,Types3,,
+pdf,application/pdf,pdf_Portable_Document_Format,PDF - Portable Document Format,Types3,,
+ott,application/vnd.oasis.opendocument.text-template,writer8_template,Writer 8 Template,Types3,,
+odt,application/vnd.oasis.opendocument.text,writer8,Writer 8,Types3,,
+docx,application/msword,writer_MS_Word_2007,Microsoft Word 2007-2013 XML,Types3,,
+docm,application/msword,writer_MS_Word_2007,Microsoft Word 2007-2013 XML,Types3,,
+dotx,application/msword,writer_MS_Word_2007_Template,Microsoft Word 2007-2013 XML Template,Types3,,
+dotm,application/msword,writer_MS_Word_2007_Template,Microsoft Word 2007-2013 XML Template,Types3,,
+docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,writer_OOXML,Office Open XML Text Document,Types3,,
+docm,application/vnd.openxmlformats-officedocument.wordprocessingml.document,writer_OOXML,Office Open XML Text Document,Types3,,
+dotx,application/vnd.openxmlformats-officedocument.wordprocessingml.template,writer_OOXML_Text_Template,Office Open XML Text Template,Types3,,
+dotm,application/vnd.openxmlformats-officedocument.wordprocessingml.template,writer_OOXML_Text_Template,Office Open XML Text Template,Types3,,
+xml,-,writer_layout_dump_xml,Writer Layout Dump,Types3,,
+lrf,application/x-sony-bbeb,writer_BroadBand_eBook,BroadBand eBook,Types3,,
+pdb,application/vnd.palm,writer_eReader_eBook,eReader eBook,Types3,,
+fb2,application/x-fictionbook+xml,writer_FictionBook_2,FictionBook 2.0,Types3,,
+zip,application/x-fictionbook+xml,writer_FictionBook_2,FictionBook 2.0,Types3,,
+pdb,application/x-aportisdoc,writer_PalmDoc,PalmDoc eBook,Types3,,
+pdb,application/prs.plucker,writer_Plucker_eBook,Plucker eBook,Types3,,
+pdb,application/vnd.palm,writer_TealDoc,TealDoc eBook,Types3,,
+pdb,application/vnd.palm,writer_zTXT,zTXT eBook,Types3,,
+pages,application/x-iwork-pages-sffpages,writer_ApplePages,Apple Pages,Types3,,
 
-with LibreOffice 6.1.3
-
-has to be adapted to python version installed in libreoffice (python or python3 on first line)
-
-// Export format possible values (taken from unoconv 0.8.2)
-// line format is : format name, extension, description, filter name
-
-// TextDocument
-                    "bib", "bib", "BibTeX", "BibTeX_Writer"
-                    "doc", "doc", "Microsoft Word 97/2000/XP", "MS Word 97"
-                    "doc6", "doc", "Microsoft Word 6.0", "MS WinWord 6.0"
-                    "doc95", "doc", "Microsoft Word 95", "MS Word 95"
-                    "docbook", "xml", "DocBook", "DocBook File"
-                    "docx", "docx", "Microsoft Office Open XML", "Office Open XML Text"
-                    "docx7", "docx", "Microsoft Office Open XML", "MS Word 2007 XML"
-                    "fodt", "fodt", "OpenDocument Text (Flat XML)", "OpenDocument Text Flat XML"
-                    "html", "html", "HTML Document (OpenOffice.org Writer)", "HTML (StarWriter)"
-                    "latex", "ltx", "LaTeX 2e", "LaTeX_Writer"
-                    "mediawiki", "txt", "MediaWiki", "MediaWiki"
-                    "odt", "odt", "ODF Text Document", "writer8"
-                    "ooxml", "xml", "Microsoft Office Open XML", "MS Word 2003 XML"
-                    "ott", "ott", "Open Document Text", "writer8_template"
-                    "pdb", "pdb", "AportisDoc (Palm)", "AportisDoc Palm DB"
-                    "pdf", "pdf", "Portable Document Format", "writer_pdf_Export"
-                    "psw", "psw", "Pocket Word", "PocketWord File"
-                    "rtf", "rtf", "Rich Text Format", "Rich Text Format"
-                    "sdw", "sdw", "StarWriter 5.0", "StarWriter 5.0"
-                    "sdw4", "sdw", "StarWriter 4.0", "StarWriter 4.0"
-                    "sdw3", "sdw", "StarWriter 3.0", "StarWriter 3.0"
-                    "stw", "stw", "Open Office.org 1.0 Text Document Template", "writer_StarOffice_XML_Writer_Template"
-                    "sxw", "sxw", "Open Office.org 1.0 Text Document", "StarOffice XML (Writer)"
-                    "text", "txt", "Text Encoded", "Text (encoded)"
-                    "txt", "txt", "Text", "Text"
-                    "uot", "uot", "Unified Office Format text","UOF text"
-                    "vor", "vor", "StarWriter 5.0 Template", "StarWriter 5.0 Vorlage/Template"
-                    "vor4", "vor", "StarWriter 4.0 Template", "StarWriter 4.0 Vorlage/Template"
-                    "vor3", "vor", "StarWriter 3.0 Template", "StarWriter 3.0 Vorlage/Template"
-                    "wps", "wps", "Microsoft Works", "MS_Works"
-                    "xhtml", "html", "XHTML Document", "XHTML Writer File"
-
-// WebDocument
-                    "etext", "txt", "Text Encoded (OpenOffice.org Writer/Web)", "Text (encoded)"
-                    "html10", "html", "OpenOffice.org 1.0 HTML Template", "writer_web_StarOffice_XML_Writer_Web_Template"
-                    "html", "html", "HTML Document", "HTML"
-                    "html", "html", "HTML Document Template", "writerweb8_writer_template"
-                    "mediawiki", "txt", "MediaWiki", "MediaWiki_Web"
-                    "pdf", "pdf", "PDF - Portable Document Format", "writer_web_pdf_Export"
-                    "sdw3", "sdw", "StarWriter 3.0 (OpenOffice.org Writer/Web)", "StarWriter 3.0 (StarWriter/Web)"
-                    "sdw4", "sdw", "StarWriter 4.0 (OpenOffice.org Writer/Web)", "StarWriter 4.0 (StarWriter/Web)"
-                    "sdw", "sdw", "StarWriter 5.0 (OpenOffice.org Writer/Web)", "StarWriter 5.0 (StarWriter/Web)"
-                    "txt", "txt", "OpenOffice.org Text (OpenOffice.org Writer/Web)", "writerweb8_writer"
-                    "text10", "txt", "OpenOffice.org 1.0 Text Document (OpenOffice.org Writer/Web)", "writer_web_StarOffice_XML_Writer"
-                    "text", "txt", "Text (OpenOffice.org Writer/Web)", "Text (StarWriter/Web)"
-                    "vor4", "vor", "StarWriter/Web 4.0 Template", "StarWriter/Web 4.0 Vorlage/Template"
-                    "vor", "vor", "StarWriter/Web 5.0 Template", "StarWriter/Web 5.0 Vorlage/Template"
-
-// Spreadsheet
-                    "csv", "csv", "Text CSV", "Text - txt - csv (StarCalc)"
-                    "dbf", "dbf", "dBASE", "dBase"
-                    "dif", "dif", "Data Interchange Format", "DIF"
-                    "fods", "fods", "OpenDocument Spreadsheet (Flat XML)", "OpenDocument Spreadsheet Flat XML"
-                    "html", "html", "HTML Document (OpenOffice.org Calc)", "HTML (StarCalc)"
-                    "ods", "ods", "ODF Spreadsheet", "calc8"
-                    "ooxml", "xml", "Microsoft Excel 2003 XML", "MS Excel 2003 XML"
-                    "ots", "ots", "ODF Spreadsheet Template", "calc8_template"
-                    "pdf", "pdf", "Portable Document Format", "calc_pdf_Export"
-                    "pxl", "pxl", "Pocket Excel", "Pocket Excel"
-                    "sdc", "sdc", "StarCalc 5.0", "StarCalc 5.0"
-                    "sdc4", "sdc", "StarCalc 4.0", "StarCalc 4.0"
-                    "sdc3", "sdc", "StarCalc 3.0", "StarCalc 3.0"
-                    "slk", "slk", "SYLK", "SYLK"
-                    "stc", "stc", "OpenOffice.org 1.0 Spreadsheet Template", "calc_StarOffice_XML_Calc_Template"
-                    "sxc", "sxc", "OpenOffice.org 1.0 Spreadsheet", "StarOffice XML (Calc)"
-                    "uos", "uos", "Unified Office Format spreadsheet", "UOF spreadsheet"
-                    "vor3", "vor", "StarCalc 3.0 Template", "StarCalc 3.0 Vorlage/Template"
-                    "vor4", "vor", "StarCalc 4.0 Template", "StarCalc 4.0 Vorlage/Template"
-                    "vor", "vor", "StarCalc 5.0 Template", "StarCalc 5.0 Vorlage/Template"
-                    "xhtml", "xhtml", "XHTML", "XHTML Calc File"
-                    "xls", "xls", "Microsoft Excel 97/2000/XP", "MS Excel 97"
-                    "xls5", "xls", "Microsoft Excel 5.0", "MS Excel 5.0/95"
-                    "xls95", "xls", "Microsoft Excel 95", "MS Excel 95"
-                    "xlt", "xlt", "Microsoft Excel 97/2000/XP Template", "MS Excel 97 Vorlage/Template"
-                    "xlt5", "xlt", "Microsoft Excel 5.0 Template", "MS Excel 5.0/95 Vorlage/Template"
-                    "xlt95", "xlt", "Microsoft Excel 95 Template", "MS Excel 95 Vorlage/Template"
-                    "xlsx", "xlsx", "Microsoft Excel 2007/2010 XML", "Calc MS Excel 2007 XML"
-
-// Graphics
-                    "bmp", "bmp", "Windows Bitmap", "draw_bmp_Export"
-                    "emf", "emf", "Enhanced Metafile", "draw_emf_Export"
-                    "eps", "eps", "Encapsulated PostScript", "draw_eps_Export"
-                    "fodg", "fodg", "OpenDocument Drawing (Flat XML)", "OpenDocument Drawing Flat XML"
-                    "gif", "gif", "Graphics Interchange Format", "draw_gif_Export"
-                    "html", "html", "HTML Document (OpenOffice.org Draw)", "draw_html_Export"
-                    "jpg", "jpg", "Joint Photographic Experts Group", "draw_jpg_Export"
-                    "met", "met", "OS/2 Metafile", "draw_met_Export"
-                    "odd", "odd", "OpenDocument Drawing", "draw8"
-                    "otg", "otg", "OpenDocument Drawing Template", "draw8_template"
-                    "pbm", "pbm", "Portable Bitmap", "draw_pbm_Export"
-                    "pct", "pct", "Mac Pict", "draw_pct_Export"
-                    "pdf", "pdf", "Portable Document Format", "draw_pdf_Export"
-                    "pgm", "pgm", "Portable Graymap", "draw_pgm_Export"
-                    "png", "png", "Portable Network Graphic", "draw_png_Export"
-                    "ppm", "ppm", "Portable Pixelmap", "draw_ppm_Export"
-                    "ras", "ras", "Sun Raster Image", "draw_ras_Export"
-                    "std", "std", "OpenOffice.org 1.0 Drawing Template", "draw_StarOffice_XML_Draw_Template"
-                    "svg", "svg", "Scalable Vector Graphics", "draw_svg_Export"
-                    "svm", "svm", "StarView Metafile", "draw_svm_Export"
-                    "swf", "swf", "Macromedia Flash (SWF)", "draw_flash_Export"
-                    "sxd", "sxd", "OpenOffice.org 1.0 Drawing", "StarOffice XML (Draw)"
-                    "sxd3", "sxd", "StarDraw 3.0", "StarDraw 3.0"
-                    "sxd5", "sxd", "StarDraw 5.0", "StarDraw 5.0"
-                    "sxw", "sxw", "StarOffice XML (Draw)", "StarOffice XML (Draw)"
-                    "tiff", "tiff", "Tagged Image File Format", "draw_tif_Export"
-                    "vor", "vor", "StarDraw 5.0 Template", "StarDraw 5.0 Vorlage"
-                    "vor3", "vor", "StarDraw 3.0 Template", "StarDraw 3.0 Vorlage"
-                    "wmf", "wmf", "Windows Metafile", "draw_wmf_Export"
-                    "xhtml", "xhtml", "XHTML", "XHTML Draw File"
-                    "xpm", "xpm", "X PixMap", "draw_xpm_Export"
-
-// Presentation
-                    "bmp", "bmp", "Windows Bitmap", "impress_bmp_Export"
-                    "emf", "emf", "Enhanced Metafile", "impress_emf_Export"
-                    "eps", "eps", "Encapsulated PostScript", "impress_eps_Export"
-                    "fodp", "fodp", "OpenDocument Presentation (Flat XML)", "OpenDocument Presentation Flat XML"
-                    "gif", "gif", "Graphics Interchange Format", "impress_gif_Export"
-                    "html", "html", "HTML Document (OpenOffice.org Impress)", "impress_html_Export"
-                    "jpg", "jpg", "Joint Photographic Experts Group", "impress_jpg_Export"
-                    "met", "met", "OS/2 Metafile", "impress_met_Export"
-                    "odg", "odg", "ODF Drawing (Impress)", "impress8_draw"
-                    "odp", "odp", "ODF Presentation", "impress8"
-                    "otp", "otp", "ODF Presentation Template", "impress8_template"
-                    "pbm", "pbm", "Portable Bitmap", "impress_pbm_Export"
-                    "pct", "pct", "Mac Pict", "impress_pct_Export"
-                    "pdf", "pdf", "Portable Document Format", "impress_pdf_Export"
-                    "pgm", "pgm", "Portable Graymap", "impress_pgm_Export"
-                    "png", "png", "Portable Network Graphic", "impress_png_Export"
-                    "potm", "potm", "Microsoft PowerPoint 2007/2010 XML Template", "Impress MS PowerPoint 2007 XML Template"
-                    "pot", "pot", "Microsoft PowerPoint 97/2000/XP Template", "MS PowerPoint 97 Vorlage"
-                    "ppm", "ppm", "Portable Pixelmap", "impress_ppm_Export"
-                    "pptx", "pptx", "Microsoft PowerPoint 2007/2010 XML", "Impress MS PowerPoint 2007 XML"
-                    "pps", "pps", "Microsoft PowerPoint 97/2000/XP (Autoplay)", "MS PowerPoint 97 Autoplay"
-                    "ppt", "ppt", "Microsoft PowerPoint 97/2000/XP", "MS PowerPoint 97"
-                    "pwp", "pwp", "PlaceWare", "placeware_Export"
-                    "ras", "ras", "Sun Raster Image", "impress_ras_Export"
-                    "sda", "sda", "StarDraw 5.0 (OpenOffice.org Impress)", "StarDraw 5.0 (StarImpress)"
-                    "sdd", "sdd", "StarImpress 5.0", "StarImpress 5.0"
-                    "sdd3", "sdd", "StarDraw 3.0 (OpenOffice.org Impress)", "StarDraw 3.0 (StarImpress)"
-                    "sdd4", "sdd", "StarImpress 4.0", "StarImpress 4.0"
-                    "sxd", "sxd", "OpenOffice.org 1.0 Drawing (OpenOffice.org Impress)", "impress_StarOffice_XML_Draw"
-                    "sti", "sti", "OpenOffice.org 1.0 Presentation Template", "impress_StarOffice_XML_Impress_Template"
-                    "svg", "svg", "Scalable Vector Graphics", "impress_svg_Export"
-                    "svm", "svm", "StarView Metafile", "impress_svm_Export"
-                    "swf", "swf", "Macromedia Flash (SWF)", "impress_flash_Export"
-                    "sxi", "sxi", "OpenOffice.org 1.0 Presentation", "StarOffice XML (Impress)"
-                    "tiff", "tiff", "Tagged Image File Format", "impress_tif_Export"
-                    "uop", "uop", "Unified Office Format presentation", "UOF presentation"
-                    "vor", "vor", "StarImpress 5.0 Template", "StarImpress 5.0 Vorlage"
-                    "vor3", "vor", "StarDraw 3.0 Template (OpenOffice.org Impress)", "StarDraw 3.0 Vorlage (StarImpress)"
-                    "vor4", "vor", "StarImpress 4.0 Template", "StarImpress 4.0 Vorlage"
-                    "vor5", "vor", "StarDraw 5.0 Template (OpenOffice.org Impress)", "StarDraw 5.0 Vorlage (StarImpress)"
-                    "wmf", "wmf", "Windows Metafile", "impress_wmf_Export"
-                    "xhtml", "xml", "XHTML", "XHTML Impress File"
-                    "xpm", "xpm", "X PixMap", "impress_xpm_Export"))
 

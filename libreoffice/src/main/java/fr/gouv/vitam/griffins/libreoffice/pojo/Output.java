@@ -75,27 +75,6 @@ public class Output {
         return output;
     }
 
-    public static Output warning(Input input, String outputName, ActionType action) {
-        Output output = new Output();
-        output.setInput(input);
-        output.setOutputName(outputName);
-        output.setStatus(GriffinStatus.WARNING);
-        output.setAction(action);
-        return output;
-    }
-
-    public static Output warning(Input input, String outputName, ActionType action, String stderr, String stdout, String executed) {
-        Output output = new Output();
-        output.setInput(input);
-        output.setOutputName(outputName);
-        output.setStatus(GriffinStatus.WARNING);
-        output.setAction(action);
-        output.setError(stderr);
-        output.setResult(stdout);
-        output.setExecuted(executed);
-        return output;
-    }
-
     public static Output ok(Input input, String outputName, ActionType action) {
         Output output = new Output();
         output.setInput(input);
