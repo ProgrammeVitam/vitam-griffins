@@ -53,6 +53,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static fr.gouv.vitam.griffins.libreoffice.PuidType.formatTypes;
 import static fr.gouv.vitam.griffins.libreoffice.status.ActionType.GENERATE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
@@ -192,6 +193,11 @@ public class BatchProcessor {
     }
 
     private List<String> getLibreOfficeParams(Action action, List<Input> inputs) {
+        boolean inputsIsInFormatList = inputs.stream().map(Input::getFormatId).allMatch(formatTypes::containsKey);
+        if (!inputsIsInFormatList) {
+            throw new IllegalStateException("Cannot proceed inputs");
+        }
+
         List<String> libreoffice = new ArrayList<>(Arrays.asList("libreoffice", "--nolockcheck", "--norestore", "--headless", "--convert-to"));
 
         if (action.getValues().getArgs() == null || action.getValues().getArgs().isEmpty()) {
