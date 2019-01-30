@@ -36,6 +36,8 @@ import fr.gouv.vitam.griffins.jhove.pojo.Input;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import static fr.gouv.vitam.griffins.jhove.status.ActionType.ANALYSE;
+
 /**
  * Class for the InnerTool output, this has to be converted to Output class which is the standard griffin output.
  */
@@ -129,7 +131,7 @@ public class RawOutput {
                 result.setAnalyseResult(analyseResult);
                 return result;
             default:
-                throw new IllegalStateException("Unreachable");
+                throw new IllegalStateException(String.format("Cannot post process data from action of type %s only %s is supported.", action.getType(), ANALYSE));
         }
     }
 }

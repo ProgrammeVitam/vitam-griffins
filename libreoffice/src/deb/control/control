@@ -1,0 +1,8 @@
+Package: vitam-libreoffice-griffin
+Version: [[version]]
+Section: Application/Archiving
+Priority: low
+Architecture: all
+Depends: openjdk-8-jre-headless, libreoffice6.0, vitam-user-vitam
+Maintainer: Vitam Package Team
+Description: [[description]]
