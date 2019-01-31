@@ -1,0 +1,8 @@
+Package: vitam-siegfried-griffin
+Version: [[version]]
+Section: Application/Archiving
+Priority: low
+Architecture: all
+Depends: openjdk-8-jre-headless, vitam-user-vitam, vitam-siegfried
+Maintainer: Vitam Package Team
+Description: [[description]]
