@@ -109,28 +109,41 @@
                     <snapshotExpand>true</snapshotExpand>
                     <controlDir>${basedir}/src/deb/control</controlDir>
                     <dataSet>
-                            <data>
-                                <src>${project.build.directory}/imagemagick-jar-with-dependencies.jar</src>
-                                <type>file</type>
-                                <mapper>
-                                    <type>perm</type>
-                                    <user>${unix.user}</user>
-                                    <group>${unix.group}</group>
-                                    <filemode>750</filemode>
-                                    <prefix>/vitam/bin/worker/griffins/${unix.name}</prefix>
-                                </mapper>
-                            </data>
-                            <data>
-                                <src>${basedir}/griffin</src>
-                                <type>file</type>
-                                <mapper>
-                                    <type>perm</type>
-                                    <user>${unix.user}</user>
-                                    <group>${unix.group}</group>
-                                    <filemode>750</filemode>
-                                    <prefix>/vitam/bin/worker/griffins/${unix.name}</prefix>
-                                </mapper>
-                            </data>
+                        <data>
+                            <src>${project.build.directory}/imagemagick-jar-with-dependencies.jar</src>
+                            <type>file</type>
+                            <mapper>
+                                <type>perm</type>
+                                <user>${unix.user}</user>
+                                <group>${unix.group}</group>
+                                <filemode>750</filemode>
+                                <prefix>/vitam/bin/worker/griffins/${unix.name}</prefix>
+                            </mapper>
+                        </data>
+                        <data>
+                            <type>template</type>
+                            <paths>
+                                <path>/vitam/tmp/worker/griffins/${unix.name}</path>
+                            </paths>
+                            <mapper>
+                                <type>perm</type>
+                                <user>${unix.user}</user>
+                                <group>${unix.group}</group>
+                                <filemode>750</filemode>
+                                <prefix>/vitam/tmp/worker/griffins/${unix.name}</prefix>
+                            </mapper>
+                        </data>
+                        <data>
+                            <src>${basedir}/griffin</src>
+                            <type>file</type>
+                            <mapper>
+                                <type>perm</type>
+                                <user>${unix.user}</user>
+                                <group>${unix.group}</group>
+                                <filemode>750</filemode>
+                                <prefix>/vitam/bin/worker/griffins/${unix.name}</prefix>
+                            </mapper>
+                        </data>
                     </dataSet>
                 </configuration>
             </plugin>

@@ -76,6 +76,7 @@
 
     <modules>
         <module>imagemagick</module>
+        <module>siegfried</module>
         <module>jhove</module>
         <module>libreoffice</module>
     </modules>
