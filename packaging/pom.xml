@@ -69,7 +69,8 @@
 
 	<dependencies>
 
-		<!-- VITAM dependencies -->
+		<!-- griffins -->
+		<!-- imagemagick -->
 
 		<dependency>
 			<groupId>fr.gouv.vitam</groupId>
@@ -80,6 +81,52 @@
 		<dependency>
 			<groupId>fr.gouv.vitam</groupId>
 			<artifactId>imagemagick</artifactId>
+			<version>${project.version}</version>
+			<type>deb</type>
+		</dependency>
+
+		<!-- jhove -->
+
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>jhove</artifactId>
+			<version>${project.version}</version>
+			<type>rpm</type>
+		</dependency>
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>jhove</artifactId>
+			<version>${project.version}</version>
+			<type>deb</type>
+		</dependency>
+
+
+		<!-- libreoffice -->
+
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>libreoffice</artifactId>
+			<version>${project.version}</version>
+			<type>rpm</type>
+		</dependency>
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>libreoffice</artifactId>
+			<version>${project.version}</version>
+			<type>deb</type>
+		</dependency>
+
+		<!-- siegfried -->
+
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>siegfried</artifactId>
+			<version>${project.version}</version>
+			<type>rpm</type>
+		</dependency>
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>siegfried</artifactId>
 			<version>${project.version}</version>
 			<type>deb</type>
 		</dependency>

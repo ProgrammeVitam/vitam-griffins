@@ -41,6 +41,7 @@ pipeline {
             when {
                 anyOf {
                     branch "master"
+                    tag pattern: "^[1-9]+\\.[0-9]+\\.[0-9]+-?[0-9]*\$", comparator: "REGEXP"
                 }
             }
             environment {
