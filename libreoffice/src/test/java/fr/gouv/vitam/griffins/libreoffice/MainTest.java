@@ -36,7 +36,7 @@ import static fr.gouv.vitam.griffins.libreoffice.status.ActionType.ANALYSE;
 import static fr.gouv.vitam.griffins.libreoffice.status.ActionType.EXTRACT;
 import static fr.gouv.vitam.griffins.libreoffice.status.ActionType.GENERATE;
 import static fr.gouv.vitam.griffins.libreoffice.status.ActionType.IDENTIFY;
-import static fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus.ERROR;
+import static fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus.KO;
 import static fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus.OK;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -95,7 +95,7 @@ public class MainTest {
 
         assertThat(actual).hasSize(1);
         assertThat(actual).extracting(Output::getAction).containsExactly(GENERATE);
-        assertThat(actual.get(0).getStatus()).isEqualTo(GriffinStatus.ERROR);
+        assertThat(actual.get(0).getStatus()).isEqualTo(GriffinStatus.KO);
     }
 
     @Test
@@ -112,7 +112,7 @@ public class MainTest {
         BatchStatus status = batchProcessor.execute();
 
         // Then
-        assertThat(status.status).isEqualTo(ERROR);
+        assertThat(status.status).isEqualTo(KO);
         assertThat(Paths.get(tmpGriffinFolder.getRoot().getPath(), input.getName(), resultFileName)).doesNotExist();
     }
 
@@ -130,7 +130,7 @@ public class MainTest {
         BatchStatus status = batchProcessor.execute();
 
         // Then
-        assertThat(status.status).isEqualTo(ERROR);
+        assertThat(status.status).isEqualTo(KO);
         assertThat(Paths.get(tmpGriffinFolder.getRoot().getPath(), input.getName(), resultFileName)).doesNotExist();
     }
 
@@ -150,7 +150,7 @@ public class MainTest {
         BatchStatus status = batchProcessor.execute();
 
         // Then
-        assertThat(status.status).isEqualTo(ERROR);
+        assertThat(status.status).isEqualTo(KO);
         assertThat(Paths.get(tmpGriffinFolder.getRoot().getPath(), input.getName(), resultFileName)).doesNotExist();
     }
 
@@ -167,7 +167,7 @@ public class MainTest {
         BatchStatus status = batchProcessor.execute();
 
         // Then
-        assertThat(status.status).isEqualTo(ERROR);
+        assertThat(status.status).isEqualTo(KO);
     }
 
     private Result getOutputs(String batchName) throws IOException {

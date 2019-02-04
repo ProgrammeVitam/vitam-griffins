@@ -198,7 +198,7 @@ public class BatchProcessor {
             throw new IllegalStateException("Cannot proceed inputs");
         }
 
-        List<String> libreoffice = new ArrayList<>(Arrays.asList("libreoffice", "--nolockcheck", "--norestore", "--headless", "--convert-to"));
+        List<String> libreoffice = new ArrayList<>(Arrays.asList("libreoffice6.1", "--nolockcheck", "--norestore", "--headless", "--convert-to"));
 
         if (action.getValues().getArgs() == null || action.getValues().getArgs().isEmpty()) {
             libreoffice.add(action.getValues().getExtension());
