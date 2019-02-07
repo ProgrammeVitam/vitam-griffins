@@ -59,7 +59,7 @@ public class BatchStatus {
     }
 
     public static BatchStatus error(String batchId, long start, Throwable error) {
-        return new BatchStatus(batchId, start, System.currentTimeMillis(), GriffinStatus.ERROR, error.getMessage());
+        return new BatchStatus(batchId, start, System.currentTimeMillis(), GriffinStatus.KO, error.getMessage());
     }
 
     @Override

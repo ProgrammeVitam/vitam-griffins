@@ -60,7 +60,7 @@ public class Output {
     public static Output error(Input input, ActionType action) {
         Output output = new Output();
         output.setInput(input);
-        output.setStatus(GriffinStatus.ERROR);
+        output.setStatus(GriffinStatus.KO);
         output.setAction(action);
         return output;
     }
@@ -68,7 +68,7 @@ public class Output {
     public static Output error(Input input, ActionType action, String error, String executed) {
         Output output = new Output();
         output.setInput(input);
-        output.setStatus(GriffinStatus.ERROR);
+        output.setStatus(GriffinStatus.KO);
         output.setAction(action);
         output.setError(error);
         output.setExecuted(executed);
