@@ -25,16 +25,52 @@
  * accept its terms.
  *******************************************************************************/
 
-package fr.gouv.vitam.griffins.odfvalidator.status;
+package fr.gouv.vitam.griffins.odfvalidator.pojo;
 
-public enum GriffinStatus {
-    OK(0),
-    ERROR(1),
-    WARNING(2);
+import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.gouv.vitam.griffins.odfvalidator.status.GriffinStatus;
 
-    public final int code;
+public class BatchStatus {
+    @JsonProperty("BatchId")
+    public final String batchId;
+    @JsonProperty("StartTime")
+    public final long startTime;
+    @JsonProperty("EndTime")
+    public final long endTime;
+    @JsonProperty("Status")
+    public final GriffinStatus status;
+    @JsonProperty("Error")
+    public final String error;
 
-    GriffinStatus(int code) {
-        this.code = code;
+    private BatchStatus(String batchId, long startTime, long endTime, GriffinStatus status, String error) {
+        this.batchId = batchId;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.status = status;
+        this.error = error;
+    }
+
+    public static BatchStatus warning(String batchId, long start, String error) {
+        return new BatchStatus(batchId, start, System.currentTimeMillis(), GriffinStatus.WARNING, error);
+    }
+
+    public static BatchStatus ok(String batchId, long start) {
+        return new BatchStatus(batchId, start, System.currentTimeMillis(), GriffinStatus.OK, "");
+    }
+
+    public static BatchStatus error(String batchId, long start, Throwable error) {
+        return new BatchStatus(batchId, start, System.currentTimeMillis(), GriffinStatus.KO, error.getMessage());
+    }
+
+    @Override
+    public String toString() {
+        return "BatchStatus{" +
+                "BatchId='" + batchId + '\'' +
+                ", StartTime=" + startTime +
+                ", EndTime=" + endTime +
+                ", Delta=" + (endTime - startTime)+
+                ", Status=" + status +
+                ", Error='" + error + '\'' +
+                '}';
     }
 }

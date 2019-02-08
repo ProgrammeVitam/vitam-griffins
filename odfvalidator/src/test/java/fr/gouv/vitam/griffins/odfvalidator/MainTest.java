@@ -33,7 +33,7 @@ import static fr.gouv.vitam.griffins.odfvalidator.status.ActionType.ANALYSE;
 import static fr.gouv.vitam.griffins.odfvalidator.status.ActionType.EXTRACT;
 import static fr.gouv.vitam.griffins.odfvalidator.status.ActionType.GENERATE;
 import static fr.gouv.vitam.griffins.odfvalidator.status.ActionType.IDENTIFY;
-import static fr.gouv.vitam.griffins.odfvalidator.status.GriffinStatus.ERROR;
+import static fr.gouv.vitam.griffins.odfvalidator.status.GriffinStatus.KO;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -76,7 +76,7 @@ public class MainTest {
         assertThat(actual).hasSize(1);
         assertThat(actual).extracting(Output::getAction).containsExactly(ANALYSE);
         assertThat(actual).extracting(Output::getOutputName).containsNull();
-        if (actual.get(0).getStatus()==ERROR)
+        if (actual.get(0).getStatus()==KO)
             assertThat(input.getName()).contains("WRONG_FORMAT");
         else
             assertThat(input.getName()).contains(actual.get(0).getAnalyseResult().toString());
@@ -96,7 +96,7 @@ public class MainTest {
         BatchStatus status = batchProcessor.execute();
 
         // Then
-        assertThat(status.status).isEqualTo(ERROR);
+        assertThat(status.status).isEqualTo(KO);
         assertThat(Paths.get(tmpGriffinFolder.getRoot().getPath(), input.getName(), resultFileName)).doesNotExist();
     }
 
@@ -114,7 +114,7 @@ public class MainTest {
         BatchStatus status = batchProcessor.execute();
 
         // Then
-        assertThat(status.status).isEqualTo(ERROR);
+        assertThat(status.status).isEqualTo(KO);
         assertThat(Paths.get(tmpGriffinFolder.getRoot().getPath(), input.getName(), resultFileName)).doesNotExist();
     }
 
@@ -134,7 +134,7 @@ public class MainTest {
         BatchStatus status = batchProcessor.execute();
 
         // Then
-        assertThat(status.status).isEqualTo(ERROR);
+        assertThat(status.status).isEqualTo(KO);
         assertThat(Paths.get(tmpGriffinFolder.getRoot().getPath(), input.getName(), resultFileName)).doesNotExist();
     }
 
@@ -151,7 +151,7 @@ public class MainTest {
         BatchStatus status = batchProcessor.execute();
 
         // Then
-        assertThat(status.status).isEqualTo(ERROR);
+        assertThat(status.status).isEqualTo(KO);
     }
 
     private fr.gouv.vitam.griffins.odfvalidator.pojo.Result getOutputs(String batchName) throws IOException {

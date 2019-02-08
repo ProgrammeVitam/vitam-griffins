@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+java -Dfile.encoding=UTF-8 -jar /vitam/bin/worker/griffins/odfvalidator-griffin/odfvalidator-jar-with-dependencies.jar $1

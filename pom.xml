@@ -11,7 +11,55 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <profiles>
+        <profile>
+            <!-- Profile to use for all Vitam internal developers -->
+            <id>vitam</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <!-- Dépôts Maven privés -->
+            <distributionManagement>
+                <repository>
+                    <id>releases</id>
+                    <url>${env.SERVICE_NEXUS_URL}/repository/maven-releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>snapshots</id>
+                    <url>${env.SERVICE_NEXUS_URL}/repository/maven-snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
 
+
+            <repositories>
+                <repository>
+                    <id>vitam</id>
+                    <url>${env.SERVICE_NEXUS_URL}/repository/maven-public/</url>
+                </repository>
+            </repositories>
+
+            <!-- Maven plugins repositories -->
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>vitam</id>
+                    <url>${env.SERVICE_NEXUS_URL}/repository/maven-public/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+
+            <properties>
+                <nodeDownloadRoot>${env.SERVICE_NEXUS_URL}/repository/node-distrib/
+                </nodeDownloadRoot>
+            </properties>
+
+        </profile>
+
+    </profiles>
     <build>
         <pluginManagement>
             <plugins>
@@ -79,7 +127,7 @@
         <module>siegfried</module>
         <module>jhove</module>
         <module>libreoffice</module>
-	<module>griffin-odfvalidator</module>
+	    <module>odfvalidator</module>
     </modules>
 
     <organization>

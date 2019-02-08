@@ -3,3 +3,8 @@ target/
 *.iml
 bin/
 obj/
+**/.settings
+**/.classpath
+**/.project
+**/.vscode
+
