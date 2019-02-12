@@ -1,0 +1,19 @@
+{
+  "RequestId": "4f6ae8d7-cab7-4f8d-b5e1-d5c0a1ea5793",
+  "Id": "batch-reference",
+  "Debug": false,
+  "Actions": [
+    {"Type": "ANALYSE"}
+  ],
+  "Inputs": [
+    {"Name": "ODP10TestFile-VALID_ALL.odp", "FormatId": "fmt/138"},
+    {"Name": "ODP11TestFile-VALID_ALL.odp", "FormatId": "fmt/292"},
+    {"Name": "ODP11TestFilePretendODP10-WRONG_FORMAT.odp", "FormatId": "fmt/138"},
+    {"Name": "ODP11TestFilePretendODT11-WRONG_FORMAT.odt", "FormatId": "fmt/290"},
+    {"Name": "ODP12TestFile-NOT_VALID.odp", "FormatId": "fmt/293"},
+    {"Name": "ODS10TestFile-VALID_ALL.ods", "FormatId": "fmt/137"},
+    {"Name": "ODS12TestFile-NOT_VALID.ods", "FormatId": "fmt/295"},
+    {"Name": "ODT10TestFile-NOT_VALID.odt", "FormatId": "fmt/136"},
+    {"Name": "ODT12TestFile-NOT_VALID.odt", "FormatId": "fmt/291"}
+  ]
+}

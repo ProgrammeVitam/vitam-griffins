@@ -4,8 +4,8 @@ pipeline {
     }
 
     environment {
-        MVN_BASE = "/usr/local/maven/bin/mvn --settings ${pwd()}/.ci/settings.xml"
-        MVN_COMMAND = "${MVN_BASE} --show-version --batch-mode --errors --fail-at-end -DinstallAtEnd=true -DdeployAtEnd=true "
+        MVN_BASE = "/usr/local/maven/bin/mvn "
+        MVN_COMMAND = "${MVN_BASE} --settings ${pwd()}/.ci/settings.xml --show-version --batch-mode --errors --fail-at-end -DinstallAtEnd=true -DdeployAtEnd=true "
         DEPLOY_GOAL = " " // Deploy goal used by maven ; typically "deploy" for master* branches & "" (nothing) for everything else (we don't deploy) ; keep a space so can work in other branches than develop
         CI = credentials("app-jenkins")
         SERVICE_SONAR_URL = credentials("service-sonar-url")
@@ -15,6 +15,7 @@ pipeline {
         SERVICE_GIT_URL = credentials("service-gitlab-url")
         SERVICE_PROXY_HOST = credentials("http-proxy-host")
         SERVICE_PROXY_PORT = credentials("http-proxy-port")
+        SERVICE_NOPROXY = credentials("http_nonProxyHosts")
     }
 
    stages {
@@ -59,7 +60,12 @@ pipeline {
 
         stage ("Execute unit tests") {
             steps {
-                sh '$MVN_COMMAND -f pom.xml clean test'
+                dir('/home/centos/.m2/repository') {
+                    deleteDir()
+                }
+                withEnv(["JAVA_TOOL_OPTIONS=-Dhttp.proxyHost=${env.SERVICE_PROXY_HOST} -Dhttp.proxyPort=${env.SERVICE_PROXY_PORT} -Dhttps.proxyHost=${env.SERVICE_PROXY_HOST} -Dhttps.proxyPort=${env.SERVICE_PROXY_PORT} -Dhttp.nonProxyHosts=${env.SERVICE_NOPROXY}"]) {
+                    sh '$MVN_BASE --settings .ci/settings_internet.xml -f pom.xml clean test'
+                }
             }
             post {
                 always {
@@ -68,19 +74,19 @@ pipeline {
             }
         }
 
-        
-
-
         stage("Build packages") {
             environment {
                 DEPLOY_GOAL = readFile("deploy_goal.txt")
             }
             steps {
                 parallel(
-                    "Package VITAM solution" : {
-                        sh '$MVN_COMMAND -f pom.xml -Dmaven.test.skip=true -DskipTests=true clean package rpm:attached-rpm jdeb:jdeb $DEPLOY_GOAL -Drevision=${BUILD_NUMBER}'
+                    "Package griffins" : {
+                        sh '$MVN_COMMAND -f pom.xml -Dmaven.test.skip=true -DskipTests=true package rpm:attached-rpm jdeb:jdeb $DEPLOY_GOAL -Drevision=${BUILD_NUMBER}'
                     },
                     "Checkout publishing scripts" : {
+                        dir('vitam-build.git') {
+                            deleteDir()
+                        }
                         checkout([$class: 'GitSCM',
                             branches: [[name: 'oshimae']],
                             doGenerateSubmoduleConfigurations: false,
