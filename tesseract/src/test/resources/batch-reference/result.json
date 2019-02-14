@@ -1,0 +1,105 @@
+{
+  "RequestId": "4f6ae8d7-cab7-4f8d-b5e1-d5c0a1ea5793",
+  "Id": "batch-reference",
+  "Outputs": {
+    "ODP11TestFile-VALID_ALL.odp": [
+      {
+        "Input": {
+          "Name": "ODP11TestFile-VALID_ALL.odp",
+          "FormatId": "fmt/292"
+        },
+        "Status": "OK",
+        "AnalyseResult": "VALID_ALL",
+        "Action": "ANALYSE"
+      }
+    ],
+    "ODP11TestFilePretendODP10-WRONG_FORMAT.odp": [
+      {
+        "Input": {
+          "Name": "ODP11TestFilePretendODP10-WRONG_FORMAT.odp",
+          "FormatId": "fmt/138"
+        },
+        "Status": "OK",
+        "AnalyseResult": "WRONG_FORMAT",
+        "Action": "ANALYSE"
+      }
+    ],
+    "ODP10TestFile-VALID_ALL.odp": [
+      {
+        "Input": {
+          "Name": "ODP10TestFile-VALID_ALL.odp",
+          "FormatId": "fmt/138"
+        },
+        "Status": "OK",
+        "AnalyseResult": "VALID_ALL",
+        "Action": "ANALYSE"
+      }
+    ],
+    "ODP12TestFile-NOT_VALID.odp": [
+      {
+        "Input": {
+          "Name": "ODP12TestFile-NOT_VALID.odp",
+          "FormatId": "fmt/293"
+        },
+        "Status": "OK",
+        "AnalyseResult": "NOT_VALID",
+        "Action": "ANALYSE"
+      }
+    ],
+    "ODS10TestFile-VALID_ALL.ods": [
+      {
+        "Input": {
+          "Name": "ODS10TestFile-VALID_ALL.ods",
+          "FormatId": "fmt/137"
+        },
+        "Status": "OK",
+        "AnalyseResult": "VALID_ALL",
+        "Action": "ANALYSE"
+      }
+    ],
+    "ODP11TestFilePretendODT11-WRONG_FORMAT.odt": [
+      {
+        "Input": {
+          "Name": "ODP11TestFilePretendODT11-WRONG_FORMAT.odt",
+          "FormatId": "fmt/290"
+        },
+        "Status": "OK",
+        "AnalyseResult": "WRONG_FORMAT",
+        "Action": "ANALYSE"
+      }
+    ],
+    "ODT10TestFile-NOT_VALID.odt": [
+      {
+        "Input": {
+          "Name": "ODT10TestFile-NOT_VALID.odt",
+          "FormatId": "fmt/136"
+        },
+        "Status": "OK",
+        "AnalyseResult": "NOT_VALID",
+        "Action": "ANALYSE"
+      }
+    ],
+    "ODT12TestFile-NOT_VALID.odt": [
+      {
+        "Input": {
+          "Name": "ODT12TestFile-NOT_VALID.odt",
+          "FormatId": "fmt/291"
+        },
+        "Status": "OK",
+        "AnalyseResult": "NOT_VALID",
+        "Action": "ANALYSE"
+      }
+    ],
+    "ODS12TestFile-NOT_VALID.ods": [
+      {
+        "Input": {
+          "Name": "ODS12TestFile-NOT_VALID.ods",
+          "FormatId": "fmt/295"
+        },
+        "Status": "OK",
+        "AnalyseResult": "NOT_VALID",
+        "Action": "ANALYSE"
+      }
+    ]
+  }
+}
