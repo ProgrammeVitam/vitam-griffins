@@ -3,7 +3,7 @@
   "Id": "batch-reference",
   "Debug": true,
   "Actions": [
-    {"Type": "GENERATE", "Values": {"Extension": "doc", "Args": ["MS Word 97"]}}
+    {"Type": "GENERATE", "Values": {"Extension": "pdf", "Args": ["pdf:SelectPdfVersion=1"]}}
   ],
   "Inputs": [
     {"Name": "library.jar", "FormatId": "fmt/138"},

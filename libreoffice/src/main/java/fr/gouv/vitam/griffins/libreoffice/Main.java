@@ -42,14 +42,19 @@ public class Main {
     public static final String ID = "griffin-libreoffice";
 
     public static void main(String[] args) {
-        if (args.length != 1 || args[0].isEmpty() || Files.notExists(Paths.get(args[0]))) {
+        if (args.length == 0 || args[0].isEmpty() || Files.notExists(Paths.get(args[0]))) {
             throw new RuntimeException(String.format("Need a batch directory in argument here: %s.", Arrays.toString(args)));
         }
         Path batchDirectory = Paths.get(args[0]);
 
+        if (args.length == 1 || args[1].isEmpty() || Files.notExists(Paths.get(args[1]))) {
+            throw new RuntimeException(String.format("Need a libreoffice config in argument here: %s.", Arrays.toString(args)));
+        }
+        Path libreOfficeConfig = Paths.get(args[1]);
+
         logger.info("Start {} on batch {}.", ID, batchDirectory);
 
-        BatchProcessor processor = new BatchProcessor(batchDirectory);
+        BatchProcessor processor = new BatchProcessor(batchDirectory, libreOfficeConfig);
         BatchStatus batch = processor.execute();
 
         logger.info("Griffin {} ends with status {}", ID, batch);

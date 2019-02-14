@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Action;
 import fr.gouv.vitam.griffins.libreoffice.pojo.BatchStatus;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Input;
+import fr.gouv.vitam.griffins.libreoffice.pojo.LibreOfficeRegisteryModifications;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Output;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Parameters;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Result;
@@ -52,10 +53,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import static fr.gouv.vitam.griffins.libreoffice.PuidType.formatTypes;
 import static fr.gouv.vitam.griffins.libreoffice.status.ActionType.GENERATE;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -67,10 +71,13 @@ public class BatchProcessor {
     private static final Logger logger = LoggerFactory.getLogger(BatchProcessor.class);
     private final ObjectMapper mapper = new ObjectMapper();
     private final Path batchDirectory;
+    private final Path libreOfficeConfig;
+
     private Parameters parameters;
 
-    public BatchProcessor(Path batchDirectory) {
+    public BatchProcessor(Path batchDirectory, Path libreOfficeConfig) {
         this.batchDirectory = batchDirectory;
+        this.libreOfficeConfig = libreOfficeConfig;
     }
 
     public BatchStatus execute() {
@@ -86,9 +93,12 @@ public class BatchProcessor {
 
             Files.createDirectories(batchDirectory.resolve(outputFilesDirName));
 
+            Path officeConfigZip = copyLibreOfficeConfigZip();
+            Path officeDirectory = createConfiguration(officeConfigZip);
+
             List<Output> outputs = parameters.getActions()
                 .stream()
-                .flatMap(a -> executeAll(a, parameters).stream())
+                .flatMap(a -> executeAll(a, parameters, officeDirectory).stream())
                 .collect(toList());
 
             addToFile(outputs, parameters.getRequestId(), parameters.getId());
@@ -104,6 +114,23 @@ public class BatchProcessor {
         }
     }
 
+    private Path copyLibreOfficeConfigZip() throws IOException {
+        return Files.copy(libreOfficeConfig, batchDirectory.resolve(libreOfficeConfig.getFileName()));
+    }
+
+    private Path createConfiguration(Path officeConfigZip) throws IOException {
+        try (ZipFile zipFile = new ZipFile(officeConfigZip.toFile())) {
+            for (ZipEntry zipEntry : Collections.list(zipFile.entries())) {
+                if (zipEntry.isDirectory()) {
+                    Files.createDirectory(batchDirectory.resolve(zipEntry.getName()));
+                } else {
+                    Files.copy(zipFile.getInputStream(zipEntry), batchDirectory.resolve(zipEntry.getName()), REPLACE_EXISTING);
+                }
+            }
+        }
+        return batchDirectory.resolve("user");
+    }
+
     private void addToFile(List<Output> outputs, String requestId, String id) throws IOException {
         Map<String, List<Output>> outputsMap = outputs.stream()
             .collect(
@@ -111,12 +138,15 @@ public class BatchProcessor {
         mapper.writer().writeValue(batchDirectory.resolve(resultFileName).toFile(), Result.of(requestId, id, outputsMap));
     }
 
-    private List<Output> executeAll(Action action, Parameters parameters) {
+    private List<Output> executeAll(Action action, Parameters parameters, Path officeDirectory) {
         if (!GENERATE.equals(action.getType())) {
             throw new IllegalStateException(String.format("Cannot execute libreoffice for action of type %s.", action.getType()));
         }
+
         ProcessBuilder processBuilder = new ProcessBuilder(getLibreOfficeParams(action, parameters.getInputs()));
         try {
+            createLibreOfficeConfigRegistry(officeDirectory, action);
+
             Process libreoffice = processBuilder.start();
             libreoffice.waitFor();
             return getOutputFrom(libreoffice, processBuilder, parameters, action);
@@ -124,6 +154,11 @@ public class BatchProcessor {
             logger.error("{}", e);
             return getOutputFromException(e, processBuilder, parameters, action);
         }
+    }
+
+    private void createLibreOfficeConfigRegistry(Path libreOfficeDirectory, Action action) throws IOException {
+        LibreOfficeRegisteryModifications libreOfficeRegisteryModifications = new LibreOfficeRegisteryModifications(action.getValues().getArgs());
+        libreOfficeRegisteryModifications.toFile(libreOfficeDirectory);
     }
 
     private List<Output> getOutputFrom(Process libreoffice, ProcessBuilder processBuilder, Parameters parameters, Action action) throws IOException {
@@ -198,12 +233,18 @@ public class BatchProcessor {
             throw new IllegalStateException("Cannot proceed inputs");
         }
 
-        List<String> libreoffice = new ArrayList<>(Arrays.asList("libreoffice6.1", "--nolockcheck", "--norestore", "--headless", "--convert-to"));
+        List<String> libreoffice = new ArrayList<>(Arrays.asList("libreoffice6.1", "-env:UserInstallation=file://"+batchDirectory.toString(), "--nolockcheck", "--norestore", "--headless", "--convert-to"));
 
-        if (action.getValues().getArgs() == null || action.getValues().getArgs().isEmpty()) {
+        List<String> args = action.getValues()
+            .getArgs()
+            .stream()
+            .filter(arg -> !arg.toLowerCase().startsWith("pdf:"))
+            .collect(toList());
+
+        if (args.isEmpty()) {
             libreoffice.add(action.getValues().getExtension());
         } else {
-            libreoffice.add(String.format("%s:%s", action.getValues().getExtension(), String.join(":", action.getValues().getArgs())));
+            libreoffice.add(String.format("%s:%s", action.getValues().getExtension(), String.join(":", args)));
         }
 
         libreoffice.add("--outdir");
