@@ -37,7 +37,7 @@ public class Values {
     @JsonProperty("Extension")
     private String extension;
     @JsonProperty("Args")
-    private List<String> args;
+    private List<String> args = Collections.emptyList();
     @JsonProperty("DataToExtract")
     private Map<String, String> dataToExtract;
 
@@ -69,7 +69,9 @@ public class Values {
     }
 
     public void setArgs(List<String> args) {
-        this.args = args;
+        if (args != null) {
+            this.args = args;
+        }
     }
 
     public Map<String, String> getDataToExtract() {

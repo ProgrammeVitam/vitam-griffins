@@ -121,6 +121,18 @@
                             </mapper>
                         </data>
                         <data>
+                            <src>${basedir}/config/user.zip</src>
+                            <type>file</type>
+                            <mapper>
+                                <type>perm</type>
+                                <user>${unix.user}</user>
+                                <group>${unix.group}</group>
+                                <filemode>750</filemode>
+                                <prefix>/vitam/bin/worker/griffins/${unix.name}</prefix>
+                            </mapper>
+                        </data>
+
+                        <data>
                             <type>template</type>
                             <paths>
                                 <path>/vitam/tmp/worker/griffins/${unix.name}</path>
@@ -155,7 +167,47 @@
                     <requires>
                         <require>java-1.8.0</require>
                         <require>vitam-user-${unix.user}</require>
-                            <require>libreoffice6.1*</require>
+                        <require>cups-libs</require>
+                        <require>cairo</require>
+                        <require>libreoffice6.1-base</require>
+                        <require>libreoffice6.1-calc</require>
+                        <require>libreoffice6.1-dict-en</require>
+                        <require>libreoffice6.1-dict-es</require>
+                        <require>libreoffice6.1-dict-fr</require>
+                        <require>libreoffice6.1-draw</require>
+                        <require>libreoffice6.1-en-US</require>
+                        <require>libreoffice6.1-freedesktop-menus</require>
+                        <require>libreoffice6.1-impress</require>
+                        <require>libreoffice6.1-math</require>
+                        <require>libobasis6.1-base</require>
+                        <require>libobasis6.1-calc</require>
+                        <require>libobasis6.1-core</require>
+                        <require>libobasis6.1-draw</require>
+                        <require>libobasis6.1-en-US</require>
+                        <require>libobasis6.1-extension-beanshell-script-provider</require>
+                        <require>libobasis6.1-extension-javascript-script-provider</require>
+                        <require>libobasis6.1-extension-mediawiki-publisher</require>
+                        <require>libobasis6.1-extension-nlpsolver</require>
+                        <require>libobasis6.1-extension-pdf-import</require>
+                        <require>libobasis6.1-extension-report-builder</require>
+                        <require>libobasis6.1-firebird</require>
+                        <require>libobasis6.1-gnome-integration</require>
+                        <require>libobasis6.1-graphicfilter</require>
+                        <require>libobasis6.1-images</require>
+                        <require>libobasis6.1-impress</require>
+                        <require>libobasis6.1-kde-integration</require>
+                        <require>libobasis6.1-librelogo</require>
+                        <require>libobasis6.1-libreofficekit-data</require>
+                        <require>libobasis6.1-math</require>
+                        <require>libobasis6.1-ogltrans</require>
+                        <require>libobasis6.1-onlineupdate</require>
+                        <require>libobasis6.1-ooofonts</require>
+                        <require>libobasis6.1-ooolinguistic</require>
+                        <require>libobasis6.1-postgresql-sdbc</require>
+                        <require>libobasis6.1-python-script-provider</require>
+                        <require>libobasis6.1-pyuno</require>
+                        <require>libobasis6.1-writer</require>
+                        <require>libobasis6.1-xsltfilter</require>
                     </requires>
                     <mappings>
                         <mapping>
@@ -175,6 +227,9 @@
                                 </source>
                                 <source>
                                     <location>${project.build.directory}/libreoffice-jar-with-dependencies.jar</location>
+                                </source>
+                                <source>
+                                    <location>${project.basedir}/config/user.zip</location>
                                 </source>
                             </sources>
                         </mapping>

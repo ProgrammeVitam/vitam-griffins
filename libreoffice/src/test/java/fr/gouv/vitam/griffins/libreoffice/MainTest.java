@@ -38,12 +38,15 @@ import static fr.gouv.vitam.griffins.libreoffice.status.ActionType.GENERATE;
 import static fr.gouv.vitam.griffins.libreoffice.status.ActionType.IDENTIFY;
 import static fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus.KO;
 import static fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus.OK;
+import static fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus.WARNING;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MainTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private Path libreOfficeConfig = Paths.get("config/user.zip");
 
     @Rule
     public TemporaryFolder tmpGriffinFolder = new TemporaryFolder();
@@ -58,7 +61,7 @@ public class MainTest {
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(input.getName());
-        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, libreOfficeConfig);
 
         // When
         batchProcessor.execute();
@@ -74,6 +77,69 @@ public class MainTest {
     }
 
     @Test
+    public void should_GENERATE_PDF_1A_file_from_odt() throws Exception {
+        // Given
+        Input input = new Input("test.odt", "fmt/291");
+        Values values = new Values("pdf", Collections.singletonList("pdf:SelectPdfVersion=1"));
+        Action action = new Action(GENERATE, values);
+
+        generateBatch(action, input);
+
+        Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(input.getName());
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, libreOfficeConfig);
+
+        // When
+        batchProcessor.execute();
+
+        // Then
+        Result result = getOutputs(input.getName());
+        List<Output> actual = result.getOutputs().get(input.getName());
+
+        assertThat(actual).hasSize(1);
+        assertThat(actual).extracting(Output::getAction).containsExactly(GENERATE);
+        assertThat(actual).extracting(Output::getStatus).containsExactly(OK);
+        assertThat(actual.get(0).getOutputName()).endsWith(".pdf");
+    }
+
+    @Test
+    public void should_not_GENERATE_file_with_wrong_argument_int() throws Exception {
+        // Given
+        Input input = new Input("test.odt", "fmt/291");
+        Values values = new Values("pdf", Collections.singletonList("pdf:SelectPdfVersion=false"));
+        Action action = new Action(GENERATE, values);
+
+        generateBatch(action, input);
+
+        Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(input.getName());
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, libreOfficeConfig);
+
+        // When
+        BatchStatus execute = batchProcessor.execute();
+
+        // Then
+        assertThat(execute.status).isEqualTo(WARNING);
+    }
+
+    @Test
+    public void should_not_GENERATE_file_with_wrong_argument_boolean() throws Exception {
+        // Given
+        Input input = new Input("test.odt", "fmt/291");
+        Values values = new Values("pdf", Collections.singletonList("pdf:UseLosslessCompression=4242"));
+        Action action = new Action(GENERATE, values);
+
+        generateBatch(action, input);
+
+        Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(input.getName());
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, libreOfficeConfig);
+
+        // When
+        BatchStatus execute = batchProcessor.execute();
+
+        // Then
+        assertThat(execute.status).isEqualTo(WARNING);
+    }
+
+    @Test
     public void should_GENERATE_for_wrong_file_error() throws Exception {
         // Given
         Input input = new Input("library.jar", "fmt/136");
@@ -83,7 +149,7 @@ public class MainTest {
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(input.getName());
-        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, libreOfficeConfig);
 
         // When
         batchProcessor.execute();
@@ -106,7 +172,7 @@ public class MainTest {
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(input.getName());
-        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, libreOfficeConfig);
 
         // When
         BatchStatus status = batchProcessor.execute();
@@ -124,7 +190,7 @@ public class MainTest {
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(input.getName());
-        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, libreOfficeConfig);
 
         // When
         BatchStatus status = batchProcessor.execute();
@@ -144,7 +210,7 @@ public class MainTest {
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(input.getName());
-        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, libreOfficeConfig);
 
         // When
         BatchStatus status = batchProcessor.execute();
@@ -161,7 +227,7 @@ public class MainTest {
         Files.createFile(Paths.get(batchFolder.toString() + ".ready"));
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(ID);
-        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory, libreOfficeConfig);
 
         // When
         BatchStatus status = batchProcessor.execute();
