@@ -17,6 +17,27 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeGroupIds>fr.gouv.vitam</includeGroupIds>
+							<includeTypes>rpm</includeTypes>
+							<outputDirectory>${basedir}/rpm_signed/</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.6.0</version>
@@ -24,7 +45,7 @@
 					<!-- rpm -->
 					<execution>
 						<id>Build external rpm</id>
-						<phase>compile</phase>
+						<phase>process-resources</phase>
 						<goals>
 							<goal>exec</goal>
 						</goals>
@@ -36,13 +57,46 @@
 					<!-- debian -->
 					<execution>
 						<id>Build external deb</id>
-						<phase>compile</phase>
+						<phase>process-resources</phase>
 						<goals>
 							<goal>exec</goal>
 						</goals>
 						<configuration>
 							<executable>../deb/build_repo.sh</executable>
 						</configuration>
+					</execution>
+					<!-- sign rpm -->
+					<execution>
+						<id>Create signed rpm</id>
+						<phase>test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>./create_rpm_signed.sh</executable>
+						</configuration>
+					</execution>
+					
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-resources-external</id>
+						<phase>compile</phase>
+						<goals>
+						<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+						<outputDirectory>${basedir}/rpm_signed/</outputDirectory>
+						<resources>          
+							<resource>
+							<directory>../rpm/target/</directory>
+							<!-- <filtering>true</filtering> -->
+							</resource>
+						</resources>              
+						</configuration>            
 					</execution>
 				</executions>
 			</plugin>
@@ -56,6 +110,7 @@
 							<appendAssemblyId>true</appendAssemblyId>
 							<descriptors>
 								<descriptor>${basedir}/assembly.xml</descriptor>
+								<descriptor>${basedir}/assembly-rpm-signed.xml</descriptor>
 							</descriptors>
 						</configuration>
 						<goals>
@@ -71,7 +126,6 @@
 
 		<!-- griffins -->
 		<!-- imagemagick -->
-
 		<dependency>
 			<groupId>fr.gouv.vitam</groupId>
 			<artifactId>imagemagick</artifactId>
@@ -84,9 +138,7 @@
 			<version>${project.version}</version>
 			<type>deb</type>
 		</dependency>
-
 		<!-- jhove -->
-
 		<dependency>
 			<groupId>fr.gouv.vitam</groupId>
 			<artifactId>jhove</artifactId>
@@ -99,10 +151,7 @@
 			<version>${project.version}</version>
 			<type>deb</type>
 		</dependency>
-
-
 		<!-- libreoffice -->
-
 		<dependency>
 			<groupId>fr.gouv.vitam</groupId>
 			<artifactId>libreoffice</artifactId>
@@ -115,9 +164,7 @@
 			<version>${project.version}</version>
 			<type>deb</type>
 		</dependency>
-
 		<!-- siegfried -->
-
 		<dependency>
 			<groupId>fr.gouv.vitam</groupId>
 			<artifactId>siegfried</artifactId>
@@ -130,6 +177,31 @@
 			<version>${project.version}</version>
 			<type>deb</type>
 		</dependency>
-
+		<!-- odfvalidator -->
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>odfvalidator</artifactId>
+			<version>${project.version}</version>
+			<type>rpm</type>
+		</dependency>
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>odfvalidator</artifactId>
+			<version>${project.version}</version>
+			<type>deb</type>
+		</dependency>
+		<!-- tesseract -->
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>tesseract</artifactId>
+			<version>${project.version}</version>
+			<type>rpm</type>
+		</dependency>
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>tesseract</artifactId>
+			<version>${project.version}</version>
+			<type>deb</type>
+		</dependency>
 	</dependencies>
 </project>
