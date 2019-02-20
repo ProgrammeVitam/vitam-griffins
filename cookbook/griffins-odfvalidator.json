@@ -1,0 +1,11 @@
+[
+  {
+    "Identifier": "GRI-000005",
+    "Name": "Griffon Odfvalidator",
+    "Description": "A jhove griffin",
+    "CreationDate": "2018-11-16T15:55:30.721",
+    "LastUpdate": "2018-11-20T15:34:21.542",
+    "ExecutableName": "odfvalidator-griffin",
+    "ExecutableVersion": "V1.0.0"
+  }
+]
