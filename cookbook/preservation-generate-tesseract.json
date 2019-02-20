@@ -1,0 +1,40 @@
+[
+  {
+    "Identifier": "PSC-00001",
+    "Name": "Transformation en DOC",
+    "Description": "Ce scénarion transforme des fichiers en .doc version MS word 97",
+    "CreationDate": "2018-11-16T15:55:30.721",
+    "LastUpdate": "2018-11-20T15:34:21.542",
+    "ActionList": [
+      "GENERATE"
+    ],
+    "MetadataFilter": null,
+    "GriffinByFormat": [
+      {
+        "FormatList": [
+          "fmt/152",
+          "fmt/367",
+          "x-fmt/399",
+          "x-fmt/388",
+          "x-fmt/387",
+          "fmt/156",
+          "fmt/155",
+          "fmt/353",
+          "fmt/154",
+          "fmt/153"
+        ],
+        "GriffinIdentifier": "GRI-000001",
+        "Timeout": 20,
+        "MaxSize": 10000000,
+        "Debug":true,
+        "ActionDetail": [
+          {
+            "Type": "GENERATE",
+            "Values": {"Extension": "txt", "Args": ["-psm","3"]}
+          }
+        ]
+      }
+    ],
+    "DefaultGriffin": null
+  }
+]
