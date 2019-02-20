@@ -129,12 +129,10 @@ public class MainTest {
     }
 
     @Test
-    public void should_EXTRACT_metadata_error() throws Exception {
+    public void should_NOT_EXTRACT_metadata_error() throws Exception {
         // Given
-        Map<String, String> dataToExtract = new HashMap<>();
-        dataToExtract.put("AU_METADATA_DATE", "/image/properties/xmp:ModifyDate");
         Input input = new Input(defaultFileName, defaultFileFormat);
-        Action action = new Action(EXTRACT_GOT, new Values(dataToExtract));
+        Action action = new Action(EXTRACT_GOT, new Values(Arrays.asList("test")));
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffonFolder.getRoot().toPath().resolve(input.getName());

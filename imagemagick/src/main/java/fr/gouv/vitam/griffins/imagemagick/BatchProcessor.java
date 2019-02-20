@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright French Prime minister Office/SGMAP/DINSIC/Vitam Program (2015-2019)
  *
  * contact.vitam@culture.gouv.fr
@@ -23,7 +23,7 @@
  *
  * The fact that you are presently reading this means that you have had knowledge of the CeCILL 2.1 license and that you
  * accept its terms.
- *******************************************************************************/
+ */
 
 package fr.gouv.vitam.griffins.imagemagick;
 
@@ -41,20 +41,23 @@ import java.nio.file.Path;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import fr.gouv.vitam.griffins.imagemagick.pojo.Action;
 import fr.gouv.vitam.griffins.imagemagick.pojo.BatchStatus;
+import fr.gouv.vitam.griffins.imagemagick.pojo.ExtractedMetadata;
 import fr.gouv.vitam.griffins.imagemagick.pojo.Input;
 import fr.gouv.vitam.griffins.imagemagick.pojo.Output;
 import fr.gouv.vitam.griffins.imagemagick.pojo.Outputs;
@@ -238,35 +241,50 @@ public class BatchProcessor {
         return rawOutput.toOk(debug);
     }
 
-    private  Output extract(
-         RawOutput rawOutput, boolean debug) {
+    private  Output extract(RawOutput rawOutput, boolean debug) {
         if (rawOutput.exception != null || rawOutput.exitCode > 0) {
             return rawOutput.toError(debug);
         }
         try {
-            final ArrayNode metadata = (ArrayNode) this.mapper.readTree(rawOutput.stdout);
-            Set<Entry<String, String>> dataToExtract = rawOutput.action.getValues()
-                .getDataToExtract()
-                .entrySet();
-            Map<String, JsonNode> dataToExtractByMetadata = dataToExtract.stream()
-                .map(e -> new SimpleImmutableEntry<>(e.getKey(), metadata.get(0).at(e.getValue())))
-                .collect(toMap(SimpleImmutableEntry::getKey, SimpleImmutableEntry::getValue));
+            ArrayNode metadata = (ArrayNode) this.mapper.readTree(rawOutput.stdout);
 
-            ObjectWriter writer = this.mapper.writer();
-            Path outputPath = batchDirectory.resolve(outputFilesDirName);
+            Iterator<Entry<String, JsonNode>> image = metadata.get(0).get("image").fields();
+            Map<String, String> otherMetadata = StreamSupport.stream(Spliterators.spliteratorUnknownSize(image, Spliterator.ORDERED), false)
+                .flatMap(this::flattenJsonElements)
+                .flatMap(this::flattenJsonElements)
+                .map(j -> new SimpleImmutableEntry<>(j.getKey(), j.getValue().asText()))
+                .collect(toMap(Entry::getKey, Entry::getValue));
 
-            File file = outputPath.resolve(rawOutput.outputName).toFile();
-            writer.writeValue(file, dataToExtractByMetadata);
+            Output output = rawOutput.toOk(debug);
+            output.setExtractedMetadata(new ExtractedMetadata(otherMetadata, null, rawOutput.stdout));
 
-            String warning = GriffinStatus.WARNING.name().toLowerCase();
-            boolean outputContainsWarnings = rawOutput.stdout.toLowerCase().contains(warning) || rawOutput.stderr.toLowerCase().contains(warning);
-            if (outputContainsWarnings) {
-                return rawOutput.toWarning(debug);
-            }
-            return rawOutput.toOk(debug);
+            return output;
         } catch (IOException e) {
             logger.error("{}", e);
             return rawOutput.toError(debug, e.getMessage());
         }
+    }
+
+    private Stream<Entry<String, JsonNode>> flattenJsonElements(Entry<String, JsonNode> entry) {
+        return entry.getValue().isArray() || entry.getValue().isObject()
+            ? StreamSupport.stream(Spliterators.spliteratorUnknownSize(entry.getValue().fields(), Spliterator.ORDERED), false).map(subEntry -> fieldFrom(entry, subEntry))
+            : Stream.of(new SimpleImmutableEntry<>(capitalize(entry.getKey()), entry.getValue()));
+    }
+
+    private Entry<String, JsonNode> fieldFrom(Entry<String, JsonNode> entry, Entry<String, JsonNode> subEntry) {
+        return new SimpleImmutableEntry<>(getAndUpdateKey(entry, subEntry), subEntry.getValue());
+    }
+
+    private String getAndUpdateKey(Entry<String, JsonNode> entry, Entry<String, JsonNode> subEntry) {
+        String format = String.format("%s:%s", entry.getKey(), subEntry.getKey())
+            .replaceAll("-", ":");
+
+        return Stream.of(format.split(":"))
+            .map(this::capitalize)
+            .collect(Collectors.joining());
+    }
+
+    private String capitalize(String v) {
+        return v.substring(0, 1).toUpperCase() + v.substring(1);
     }
 }
