@@ -31,15 +31,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class Values {
     @JsonProperty("Extension")
     private String extension;
+
     @JsonProperty("Args")
-    private List<String> args = Collections.emptyList();
-    @JsonProperty("DataToExtract")
-    private Map<String, String> dataToExtract;
+    private List<String> args;
+
+    @JsonProperty("FilteredExtractedData")
+    private List<String> filteredExtractedData;
 
     public Values() {
     }
@@ -49,8 +50,8 @@ public class Values {
         this.args = args;
     }
 
-    public Values(Map<String, String> dataToExtract) {
-        this.dataToExtract = dataToExtract;
+    public Values(List<String> filteredExtractedData) {
+        this.filteredExtractedData = filteredExtractedData;
     }
 
     public String getExtension() {
@@ -69,25 +70,23 @@ public class Values {
     }
 
     public void setArgs(List<String> args) {
-        if (args != null) {
-            this.args = args;
-        }
+        this.args = args;
     }
 
-    public Map<String, String> getDataToExtract() {
-        return dataToExtract;
+    public List<String> getFilteredExtractedData() {
+        return filteredExtractedData;
     }
 
-    public void setDataToExtract(Map<String, String> dataToExtract) {
-        this.dataToExtract = dataToExtract;
+    public void setFilteredExtractedData(List<String> filteredExtractedData) {
+        this.filteredExtractedData = filteredExtractedData;
     }
 
     @Override
     public String toString() {
-        return "Values{" +
-            "Extension='" + extension + '\'' +
-            ", Args=" + args +
-            ", DataToExtract=" + dataToExtract +
+        return "ValuesPreservation{" +
+            "extension='" + extension + '\'' +
+            ", args=" + args +
+            ", filteredExtractedData=" + filteredExtractedData +
             '}';
     }
 }

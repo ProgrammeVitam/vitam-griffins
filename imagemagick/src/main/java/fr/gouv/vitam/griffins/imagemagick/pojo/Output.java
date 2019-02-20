@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright French Prime minister Office/SGMAP/DINSIC/Vitam Program (2015-2019)
  *
  * contact.vitam@culture.gouv.fr
@@ -23,7 +23,7 @@
  *
  * The fact that you are presently reading this means that you have had knowledge of the CeCILL 2.1 license and that you
  * accept its terms.
- *******************************************************************************/
+ */
 
 package fr.gouv.vitam.griffins.imagemagick.pojo;
 
@@ -56,6 +56,8 @@ public class Output {
     private AnalyseResult analyseResult;
     @JsonProperty("Action")
     private ActionType action;
+    @JsonProperty("ExtractedMetadata")
+    private ExtractedMetadata extractedMetadata;
 
     public Output() {
     }
@@ -184,6 +186,14 @@ public class Output {
         this.analyseResult = analyseResult;
     }
 
+    public ExtractedMetadata getExtractedMetadata() {
+        return extractedMetadata;
+    }
+
+    public void setExtractedMetadata(ExtractedMetadata extractedMetadata) {
+        this.extractedMetadata = extractedMetadata;
+    }
+
     @Override
     public String toString() {
         return "Output{" +
@@ -195,6 +205,7 @@ public class Output {
             ", status=" + status +
             ", analyseResult=" + analyseResult +
             ", action=" + action +
+            ", extractedMetadata=" + extractedMetadata +
             '}';
     }
 }

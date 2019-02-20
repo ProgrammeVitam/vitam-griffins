@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright French Prime minister Office/SGMAP/DINSIC/Vitam Program (2015-2019)
  *
  * contact.vitam@culture.gouv.fr
@@ -23,7 +23,7 @@
  *
  * The fact that you are presently reading this means that you have had knowledge of the CeCILL 2.1 license and that you
  * accept its terms.
- *******************************************************************************/
+ */
 
 package fr.gouv.vitam.griffins.siegfried.pojo;
 
@@ -31,15 +31,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class Values {
     @JsonProperty("Extension")
     private String extension;
+
     @JsonProperty("Args")
     private List<String> args;
-    @JsonProperty("DataToExtract")
-    private Map<String, String> dataToExtract;
+
+    @JsonProperty("FilteredExtractedData")
+    private List<String> filteredExtractedData;
 
     public Values() {
     }
@@ -49,8 +50,8 @@ public class Values {
         this.args = args;
     }
 
-    public Values(Map<String, String> dataToExtract) {
-        this.dataToExtract = dataToExtract;
+    public Values(List<String> filteredExtractedData) {
+        this.filteredExtractedData = filteredExtractedData;
     }
 
     public String getExtension() {
@@ -72,20 +73,20 @@ public class Values {
         this.args = args;
     }
 
-    public Map<String, String> getDataToExtract() {
-        return dataToExtract;
+    public List<String> getFilteredExtractedData() {
+        return filteredExtractedData;
     }
 
-    public void setDataToExtract(Map<String, String> dataToExtract) {
-        this.dataToExtract = dataToExtract;
+    public void setFilteredExtractedData(List<String> filteredExtractedData) {
+        this.filteredExtractedData = filteredExtractedData;
     }
 
     @Override
     public String toString() {
-        return "Values{" +
+        return "ValuesPreservation{" +
             "extension='" + extension + '\'' +
             ", args=" + args +
-            ", dataToExtract=" + dataToExtract +
+            ", filteredExtractedData=" + filteredExtractedData +
             '}';
     }
 }

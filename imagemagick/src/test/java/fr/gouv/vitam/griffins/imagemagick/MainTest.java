@@ -3,6 +3,7 @@ package fr.gouv.vitam.griffins.imagemagick;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.gouv.vitam.griffins.imagemagick.pojo.Action;
 import fr.gouv.vitam.griffins.imagemagick.pojo.BatchStatus;
+import fr.gouv.vitam.griffins.imagemagick.pojo.ExtractedMetadata;
 import fr.gouv.vitam.griffins.imagemagick.pojo.Input;
 import fr.gouv.vitam.griffins.imagemagick.pojo.Output;
 import fr.gouv.vitam.griffins.imagemagick.pojo.Outputs;
@@ -21,9 +22,7 @@ import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static fr.gouv.vitam.griffins.imagemagick.BatchProcessor.inputFilesDirName;
@@ -41,6 +40,7 @@ import static fr.gouv.vitam.griffins.imagemagick.status.GriffinStatus.OK;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 
 public class MainTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -68,7 +68,8 @@ public class MainTest {
 
         assertThat(actual).hasSize(1);
         assertThat(actual).extracting(Output::getAction).containsExactly(GENERATE);
-        assertThat(actual).extracting(Output::getOutputName).containsExactly(String.format("%s-%s.%s", GENERATE.name(), input.getName(), action.getValues().getExtension()));
+        assertThat(actual).extracting(Output::getOutputName)
+            .containsExactly(String.format("%s-%s.%s", GENERATE.name(), input.getName(), action.getValues().getExtension()));
         assertThat(actual).extracting(Output::getStatus).containsExactly(OK);
     }
 
@@ -139,12 +140,10 @@ public class MainTest {
     }
 
     @Test
-    public void should_EXTRACT_metadata_picture() throws Exception {
+    public void should_EXTRACT_metadata() throws Exception {
         // Given
-        Map<String, String> dataToExtract = new HashMap<>();
-        dataToExtract.put("AU_METADATA_DATE", "/image/properties/xmp:ModifyDate");
         Input input = new Input("picture.jpg", "fmt/41");
-        Action action = new Action(EXTRACT, new Values(dataToExtract));
+        Action action = new Action(EXTRACT, null);
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(ID).resolve(batchName);
@@ -159,8 +158,9 @@ public class MainTest {
 
         assertThat(actual).hasSize(1);
         assertThat(actual).extracting(Output::getAction).containsExactly(EXTRACT);
-        assertThat(actual).extracting(Output::getOutputName).containsExactly(String.format("%s-%s.%s", EXTRACT.name(), input.getName(), "json"));
         assertThat(actual).extracting(Output::getStatus).containsExactly(OK);
+        assertThat(actual.get(0).getExtractedMetadata().getMetadataToReplace())
+            .contains(entry("PropertiesExifPixelXDimension", "1024"), entry("ChannelDepthRed", "8"));
     }
 
     @Test
@@ -200,7 +200,8 @@ public class MainTest {
         parameters.setActions(Collections.singletonList(action));
         parameters.setInputs(Collections.singletonList(input));
 
-        FileAttribute<Set<PosixFilePermission>> setFileAttribute = PosixFilePermissions.asFileAttribute(Files.getPosixFilePermissions(batchFolder, NOFOLLOW_LINKS));
+        FileAttribute<Set<PosixFilePermission>> setFileAttribute =
+            PosixFilePermissions.asFileAttribute(Files.getPosixFilePermissions(batchFolder, NOFOLLOW_LINKS));
         File parametersFile = Files.createFile(Paths.get(batchFolder.toString(), parametersFileName), setFileAttribute).toFile();
 
         objectMapper.writer().writeValue(parametersFile, parameters);

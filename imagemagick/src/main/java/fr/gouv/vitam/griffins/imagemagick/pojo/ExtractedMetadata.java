@@ -25,68 +25,61 @@
  * accept its terms.
  */
 
-package fr.gouv.vitam.griffins.odfvalidator.pojo;
+package fr.gouv.vitam.griffins.imagemagick.pojo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class Values {
-    @JsonProperty("Extension")
-    private String extension;
+public class ExtractedMetadata {
+    @JsonProperty("MetadataToReplace")
+    private Map<String, String> metadataToReplace;
 
-    @JsonProperty("Args")
-    private List<String> args;
+    @JsonProperty("MetadataToAdd")
+    private Map<String, List<String>> metadataToAdd;
 
-    @JsonProperty("FilteredExtractedData")
-    private List<String> filteredExtractedData;
+    @JsonProperty("RawMetadata")
+    private String rawMetadata;
 
-    public Values() {
+    public ExtractedMetadata() {
+        // Empty constructor for deserialization
     }
 
-    public Values(String extension, List<String> args) {
-        this.extension = extension;
-        this.args = args;
+    public ExtractedMetadata(Map<String, String> metadataToReplace, Map<String, List<String>> metadataToAdd, String rawMetadata) {
+        this.metadataToReplace = metadataToReplace;
+        this.metadataToAdd = metadataToAdd;
+        this.rawMetadata = rawMetadata;
     }
 
-    public Values(List<String> filteredExtractedData) {
-        this.filteredExtractedData = filteredExtractedData;
-    }
-
-    public String getExtension() {
-        return extension;
-    }
-
-    public void setExtension(String extension) {
-        this.extension = extension;
-    }
-
-    public List<String> getArgs() {
-        if (args == null) {
-            return Collections.emptyList();
+    public Map<String, String> getMetadataToReplace() {
+        if (metadataToReplace == null) {
+            return new HashMap<>();
         }
-        return args;
+        return metadataToReplace;
     }
 
-    public void setArgs(List<String> args) {
-        this.args = args;
+    public void setMetadataToReplace(Map<String, String> metadataToReplace) {
+        this.metadataToReplace = metadataToReplace;
     }
 
-    public List<String> getFilteredExtractedData() {
-        return filteredExtractedData;
+    public Map<String, List<String>> getMetadataToAdd() {
+        if (metadataToAdd == null) {
+            return new HashMap<>();
+        }
+        return metadataToAdd;
     }
 
-    public void setFilteredExtractedData(List<String> filteredExtractedData) {
-        this.filteredExtractedData = filteredExtractedData;
+    public void setMetadataToAdd(Map<String, List<String>> metadataToAdd) {
+        this.metadataToAdd = metadataToAdd;
     }
 
-    @Override
-    public String toString() {
-        return "ValuesPreservation{" +
-            "extension='" + extension + '\'' +
-            ", args=" + args +
-            ", filteredExtractedData=" + filteredExtractedData +
-            '}';
+    public String getRawMetadata() {
+        return rawMetadata;
+    }
+
+    public void setRawMetadata(String rawMetadata) {
+        this.rawMetadata = rawMetadata;
     }
 }

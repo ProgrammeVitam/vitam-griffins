@@ -201,12 +201,10 @@ public class MainTest {
     }
 
     @Test
-    public void should_EXTRACT_metadata_error() throws Exception {
+    public void should_NOT_EXTRACT_metadata_error() throws Exception {
         // Given
-        Map<String, String> dataToExtract = new HashMap<>();
-        dataToExtract.put("AU_METADATA_DATE", "/image/properties/xmp:ModifyDate");
         Input input = new Input("test.odt", "fmt/40");
-        Action action = new Action(EXTRACT, new Values(dataToExtract));
+        Action action = new Action(EXTRACT, new Values(Arrays.asList("test")));
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(input.getName());
