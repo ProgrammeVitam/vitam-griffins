@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -161,6 +162,30 @@ public class MainTest {
         assertThat(actual).extracting(Output::getStatus).containsExactly(OK);
         assertThat(actual.get(0).getExtractedMetadata().getMetadataToReplace())
             .contains(entry("PropertiesExifPixelXDimension", "1024"), entry("ChannelDepthRed", "8"));
+    }
+
+    @Test
+    public void should_EXTRACT_metadata_and_filter() throws Exception {
+        // Given
+        Input input = new Input("picture.jpg", "fmt/41");
+        Action action = new Action(EXTRACT, new Values(Arrays.asList("PropertiesExifPixelXDimension", "ChannelDepthRed")));
+        generateBatch(action, input);
+
+        Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(ID).resolve(batchName);
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+
+        // When
+        batchProcessor.execute();
+
+        // Then
+        Outputs outputs = getOutputs();
+        List<Output> actual = outputs.getOutputs().get(input.getName());
+
+        assertThat(actual).hasSize(1);
+        assertThat(actual).extracting(Output::getAction).containsExactly(EXTRACT);
+        assertThat(actual).extracting(Output::getStatus).containsExactly(OK);
+        assertThat(actual.get(0).getExtractedMetadata().getMetadataToReplace())
+            .containsOnly(entry("PropertiesExifPixelXDimension", "1024"), entry("ChannelDepthRed", "8"));
     }
 
     @Test

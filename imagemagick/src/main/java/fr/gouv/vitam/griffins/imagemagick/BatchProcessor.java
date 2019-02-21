@@ -253,6 +253,7 @@ public class BatchProcessor {
                 .flatMap(this::flattenJsonElements)
                 .flatMap(this::flattenJsonElements)
                 .map(j -> new SimpleImmutableEntry<>(j.getKey(), j.getValue().asText()))
+                .filter(entry -> rawOutput.action.getValues().getFilteredExtractedData().contains(entry.getKey()))
                 .collect(toMap(Entry::getKey, Entry::getValue));
 
             Output output = rawOutput.toOk(debug);
