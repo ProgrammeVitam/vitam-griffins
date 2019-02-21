@@ -76,6 +76,8 @@ public class BatchProcessor {
 
     private final Path batchDirectory;
 
+    public static final String ALL_METADATA = "ALL_METADATA";
+
     public static final String outputFilesDirName = "output-files";
     public static final String parametersFileName = "parameters.json";
     public static final String resultFileName = "result.json";
@@ -253,7 +255,7 @@ public class BatchProcessor {
                 .flatMap(this::flattenJsonElements)
                 .flatMap(this::flattenJsonElements)
                 .map(j -> new SimpleImmutableEntry<>(j.getKey(), j.getValue().asText()))
-                .filter(entry -> rawOutput.action.getValues().getFilteredExtractedData().contains(entry.getKey()))
+                .filter(entry -> isMetadataSelected(rawOutput, entry))
                 .collect(toMap(Entry::getKey, Entry::getValue));
 
             Output output = rawOutput.toOk(debug);
@@ -264,6 +266,14 @@ public class BatchProcessor {
             logger.error("{}", e);
             return rawOutput.toError(debug, e.getMessage());
         }
+    }
+
+    private boolean isMetadataSelected(RawOutput rawOutput, SimpleImmutableEntry<String, String> entry) {
+        List<String> filters = rawOutput.action.getValues().getFilteredExtractedData();
+        if(filters != null && filters.size() == 1 && filters.get(0).equals(ALL_METADATA)) {
+            return true;
+        }
+        return filters.contains(entry.getKey());
     }
 
     private Stream<Entry<String, JsonNode>> flattenJsonElements(Entry<String, JsonNode> entry) {

@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static fr.gouv.vitam.griffins.imagemagick.BatchProcessor.ALL_METADATA;
 import static fr.gouv.vitam.griffins.imagemagick.BatchProcessor.inputFilesDirName;
 import static fr.gouv.vitam.griffins.imagemagick.BatchProcessor.parametersFileName;
 import static fr.gouv.vitam.griffins.imagemagick.BatchProcessor.resultFileName;
@@ -144,7 +145,7 @@ public class MainTest {
     public void should_EXTRACT_metadata() throws Exception {
         // Given
         Input input = new Input("picture.jpg", "fmt/41");
-        Action action = new Action(EXTRACT, null);
+        Action action = new Action(EXTRACT, new Values(Collections.singletonList(ALL_METADATA)));
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(ID).resolve(batchName);
