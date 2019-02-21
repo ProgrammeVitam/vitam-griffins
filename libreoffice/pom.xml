@@ -19,6 +19,7 @@
         <junit.version>4.12</junit.version>
         <assertj.version>3.11.1</assertj.version>
         <mockito.version>2.23.4</mockito.version>
+        <jodconverter-local.version>4.2.2</jodconverter-local.version>
     </properties>
     <dependencies>
         <dependency>
@@ -45,6 +46,11 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jodconverter</groupId>
+            <artifactId>jodconverter-local</artifactId>
+            <version>${jodconverter-local.version}</version>
         </dependency>
 
         <dependency>
@@ -120,18 +126,6 @@
                                 <prefix>/vitam/bin/worker/griffins/${unix.name}</prefix>
                             </mapper>
                         </data>
-                        <data>
-                            <src>${basedir}/config/user.zip</src>
-                            <type>file</type>
-                            <mapper>
-                                <type>perm</type>
-                                <user>${unix.user}</user>
-                                <group>${unix.group}</group>
-                                <filemode>750</filemode>
-                                <prefix>/vitam/bin/worker/griffins/${unix.name}</prefix>
-                            </mapper>
-                        </data>
-
                         <data>
                             <type>template</type>
                             <paths>
@@ -227,9 +221,6 @@
                                 </source>
                                 <source>
                                     <location>${project.build.directory}/libreoffice-jar-with-dependencies.jar</location>
-                                </source>
-                                <source>
-                                    <location>${project.basedir}/config/user.zip</location>
                                 </source>
                             </sources>
                         </mapping>

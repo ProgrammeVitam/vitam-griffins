@@ -31,58 +31,60 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Action;
 import fr.gouv.vitam.griffins.libreoffice.pojo.BatchStatus;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Input;
-import fr.gouv.vitam.griffins.libreoffice.pojo.LibreOfficeRegisteryModifications;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Output;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Parameters;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Result;
 import fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus;
+import org.jodconverter.LocalConverter;
+import org.jodconverter.office.LocalOfficeManager;
+import org.jodconverter.office.OfficeException;
+import org.jodconverter.office.OfficeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
-import static fr.gouv.vitam.griffins.libreoffice.PuidType.formatTypes;
 import static fr.gouv.vitam.griffins.libreoffice.status.ActionType.GENERATE;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 public class BatchProcessor {
+    private static final Logger logger = LoggerFactory.getLogger(BatchProcessor.class);
+
     public static final String outputFilesDirName = "output-files";
     public static final String parametersFileName = "parameters.json";
     public static final String resultFileName = "result.json";
     public static final String inputFilesDirName = "input-files";
-    private static final Logger logger = LoggerFactory.getLogger(BatchProcessor.class);
+
+    private static final String FILTER_DATA = "FilterData";
+    private static final String FILTER_NAME = "FilterName";
+    private static final String FILTER_OPTIONS = "FilterOptions";
+
     private final ObjectMapper mapper = new ObjectMapper();
     private final Path batchDirectory;
-    private final Path libreOfficeConfig;
 
     private Parameters parameters;
 
-    public BatchProcessor(Path batchDirectory, Path libreOfficeConfig) {
+    public BatchProcessor(Path batchDirectory) {
         this.batchDirectory = batchDirectory;
-        this.libreOfficeConfig = libreOfficeConfig;
     }
 
     public BatchStatus execute() {
         long startTime = System.currentTimeMillis();
         String batchProcessingId = batchDirectory.getFileName().toString();
+
+        LocalOfficeManager officeManager = LocalOfficeManager.install();
         try {
             File file = batchDirectory.resolve(parametersFileName).toFile();
             parameters = mapper.readValue(file, Parameters.class);
@@ -92,13 +94,11 @@ public class BatchProcessor {
             }
 
             Files.createDirectories(batchDirectory.resolve(outputFilesDirName));
-
-            Path officeConfigZip = copyLibreOfficeConfigZip();
-            Path officeDirectory = createConfiguration(officeConfigZip);
+            officeManager.start();
 
             List<Output> outputs = parameters.getActions()
                 .stream()
-                .flatMap(a -> executeAll(a, parameters, officeDirectory).stream())
+                .flatMap(a -> parameters.getInputs().stream().map(i -> execute(a, i, parameters.isDebug())))
                 .collect(toList());
 
             addToFile(outputs, parameters.getRequestId(), parameters.getId());
@@ -111,24 +111,9 @@ public class BatchProcessor {
         } catch (Exception e) {
             logger.error("{}", e);
             return BatchStatus.error(batchProcessingId, startTime, e);
+        } finally {
+            stopOfficeManager(officeManager);
         }
-    }
-
-    private Path copyLibreOfficeConfigZip() throws IOException {
-        return Files.copy(libreOfficeConfig, batchDirectory.resolve(libreOfficeConfig.getFileName()));
-    }
-
-    private Path createConfiguration(Path officeConfigZip) throws IOException {
-        try (ZipFile zipFile = new ZipFile(officeConfigZip.toFile())) {
-            for (ZipEntry zipEntry : Collections.list(zipFile.entries())) {
-                if (zipEntry.isDirectory()) {
-                    Files.createDirectory(batchDirectory.resolve(zipEntry.getName()));
-                } else {
-                    Files.copy(zipFile.getInputStream(zipEntry), batchDirectory.resolve(zipEntry.getName()), REPLACE_EXISTING);
-                }
-            }
-        }
-        return batchDirectory.resolve("user");
     }
 
     private void addToFile(List<Output> outputs, String requestId, String id) throws IOException {
@@ -138,118 +123,104 @@ public class BatchProcessor {
         mapper.writer().writeValue(batchDirectory.resolve(resultFileName).toFile(), Result.of(requestId, id, outputsMap));
     }
 
-    private List<Output> executeAll(Action action, Parameters parameters, Path officeDirectory) {
+    private Output execute(Action action, Input input, boolean debug) {
         if (!GENERATE.equals(action.getType())) {
             throw new IllegalStateException(String.format("Cannot execute libreoffice for action of type %s.", action.getType()));
         }
 
-        ProcessBuilder processBuilder = new ProcessBuilder(getLibreOfficeParams(action, parameters.getInputs()));
-        try {
-            createLibreOfficeConfigRegistry(officeDirectory, action);
+        File inputFile = batchDirectory.resolve(inputFilesDirName).resolve(input.getName()).toFile();
 
-            Process libreoffice = processBuilder.start();
-            libreoffice.waitFor();
-            return getOutputFrom(libreoffice, processBuilder, parameters, action);
-        } catch (Exception e) {
-            logger.error("{}", e);
-            return getOutputFromException(e, processBuilder, parameters, action);
-        }
-    }
+        String outputName = String.format("%s.%s", input.getName(), action.getValues().getExtension());
+        File outputFile = batchDirectory.resolve(outputFilesDirName).resolve(outputName).toFile();
 
-    private void createLibreOfficeConfigRegistry(Path libreOfficeDirectory, Action action) throws IOException {
-        LibreOfficeRegisteryModifications libreOfficeRegisteryModifications = new LibreOfficeRegisteryModifications(action.getValues().getArgs());
-        libreOfficeRegisteryModifications.toFile(libreOfficeDirectory);
-    }
-
-    private List<Output> getOutputFrom(Process libreoffice, ProcessBuilder processBuilder, Parameters parameters, Action action) throws IOException {
-        List<String> outputFiles = Files.list(batchDirectory.resolve(outputFilesDirName))
-            .map(f -> f.getFileName().toString())
-            .map(f -> f.contains(".")
-                ? f.substring(0, f.lastIndexOf("."))
-                : f)
-            .collect(toList());
-
-        String libreofficeStdErr = stdToString(libreoffice.getErrorStream());
-
-        return parameters.getInputs()
+        Map<String, Object> customPropertiesFrom = getCustomPropertiesFrom(action);
+        String commands = customPropertiesFrom.entrySet()
             .stream()
-            .map(input -> getOutput(libreofficeStdErr, processBuilder, action, outputFiles, input, parameters.isDebug()))
-            .collect(Collectors.toList());
-    }
+            .map(Object::toString)
+            .collect(Collectors.joining("&"));
 
-    private Output getOutput(String libreofficeStdErr, ProcessBuilder processBuilder, Action action, List<String> outputFiles, Input input, boolean debug) {
-        String inputName = input.getName().contains(".")
-            ? input.getName().substring(0, input.getName().lastIndexOf("."))
-            : input.getName();
+        try {
+            LocalConverter.builder()
+                .storeProperties(customPropertiesFrom)
+                .build()
+                .convert(inputFile)
+                .to(outputFile)
+                .execute();
 
-        String commands = String.join(" ", processBuilder.command());
-        if (outputFiles.contains(inputName)) {
-            String outputName = inputName + "." + action.getValues().getExtension();
             return debug
                 ? Output.ok(input, outputName, action.getType(), "", "", commands)
                 : Output.ok(input, outputName, action.getType());
-        }
-        return debug
-            ? Output.error(input, action.getType(), libreofficeStdErr, commands)
-            : Output.error(input, action.getType());
-    }
-
-    private String stdToString(InputStream std) {
-        try {
-            StringBuilder textBuilder = new StringBuilder();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(std, UTF_8))) {
-                String c;
-                while ((c = reader.readLine()) != null) {
-                    textBuilder.append(c);
-                }
-            }
-            return textBuilder.toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private List<Output> getOutputFromException(Exception exception, ProcessBuilder processBuilder, Parameters parameters, Action action) {
-        try {
-            List<String> outputFiles = Files.list(batchDirectory.resolve(outputFilesDirName))
-                .map(f -> f.getFileName().toString())
-                .map(f -> f.contains(".")
-                    ? f.substring(0, f.lastIndexOf("."))
-                    : f)
-                .collect(toList());
-
-            return parameters.getInputs()
-                .stream()
-                .map(input -> getOutput(exception.getMessage(), processBuilder, action, outputFiles, input, parameters.isDebug()))
-                .collect(Collectors.toList());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.error("{}", e);
+            return debug
+                ? Output.error(input, action.getType(), e.getMessage(), commands)
+                : Output.error(input, action.getType());
         }
     }
 
-    private List<String> getLibreOfficeParams(Action action, List<Input> inputs) {
-        boolean inputsIsInFormatList = inputs.stream().map(Input::getFormatId).allMatch(formatTypes::containsKey);
-        if (!inputsIsInFormatList) {
-            throw new IllegalStateException("Cannot proceed inputs");
+    private Map<String, Object> getCustomPropertiesFrom(Action action) {
+        Map<String, Object> customProperties = new HashMap<>();
+        HashMap<String, Object> filterData = new HashMap<>();
+
+        for (String arg : action.getValues().getArgs()) {
+            String[] typeKeyValue = arg.split(":");
+
+            String type = typeKeyValue[0];
+            String value = typeKeyValue[1];
+            if (type.equals(FILTER_NAME)) {
+                customProperties.put(FILTER_NAME, value);
+                continue;
+            }
+
+            if (type.equals(FILTER_OPTIONS)) {
+                customProperties.put(FILTER_OPTIONS, value);
+                continue;
+            }
+
+            if (type.equals(FILTER_DATA)) {
+                String[] keyValue = value.split("=");
+
+                String filterDataKey = keyValue[0];
+                String filterDataValue = keyValue[1];
+                filterData.put(filterDataKey, convertType(filterDataValue));
+            }
         }
 
-        List<String> libreoffice = new ArrayList<>(Arrays.asList("libreoffice6.1", "-env:UserInstallation=file://"+batchDirectory.toString(), "--nolockcheck", "--norestore", "--headless", "--convert-to"));
-
-        List<String> args = action.getValues()
-            .getArgs()
-            .stream()
-            .filter(arg -> !arg.toLowerCase().startsWith("pdf:"))
-            .collect(toList());
-
-        if (args.isEmpty()) {
-            libreoffice.add(action.getValues().getExtension());
-        } else {
-            libreoffice.add(String.format("%s:%s", action.getValues().getExtension(), String.join(":", args)));
+        if (!filterData.isEmpty()) {
+            customProperties.put(FILTER_DATA, filterData);
         }
+        return customProperties;
+    }
 
-        libreoffice.add("--outdir");
-        libreoffice.add(batchDirectory.resolve(outputFilesDirName).toString());
-        libreoffice.addAll(inputs.stream().map(i -> batchDirectory.resolve(inputFilesDirName).resolve(i.getName()).toString()).collect(toList()));
-        return libreoffice;
+    private Object convertType(String value) {
+        if (isInteger(value)) {
+            return Integer.valueOf(value);
+        }
+        if (value.equalsIgnoreCase(TRUE.toString())) {
+            return TRUE;
+        }
+        if (value.equalsIgnoreCase(FALSE.toString())) {
+            return FALSE;
+        }
+        return value;
+    }
+
+    private boolean isInteger(String value) {
+        try {
+            Integer.valueOf(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private void stopOfficeManager(OfficeManager manager) {
+        try {
+            if (manager != null && manager.isRunning()) {
+                manager.stop();
+            }
+        } catch (OfficeException ex) {
+            // ignore
+        }
     }
 }
