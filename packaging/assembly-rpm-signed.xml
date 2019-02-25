@@ -3,7 +3,7 @@
     <!-- <id>GRIFFINS</id> -->
     <id>rpm-signed</id>
     <formats>
-        <format>tar.gz</format>
+        <format>zip</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
@@ -14,6 +14,11 @@
             <includes>
                 <include>RPM-GPG-KEY-vitam</include>
             </includes>
+        </fileSet>
+        <!-- add doc -->
+        <fileSet>
+            <directory>../cookbook</directory>
+            <outputDirectory>testing/</outputDirectory>
         </fileSet>
         <!-- Add "signed" rpm -->
         <fileSet>
