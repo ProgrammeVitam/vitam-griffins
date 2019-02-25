@@ -37,7 +37,7 @@ echo ""
 echo "Signature des paquets rpm..."
 if [ -d ${CURDIR}/rpm_signed ]
 then
-    for i in `ls -d ${CURDIR}/rpm_signed/vitam-*/*`
+    for i in `ls ${CURDIR}/rpm_signed/*.rpm`
     do
         echo "Paquet : $i";
         # pushd ${i}
@@ -47,9 +47,6 @@ then
     done
 fi
 # popd
-
-echo "Suppression du .rpmmacros"
-rm -f ${HOME}/.rpmmacros
 
 echo "Purge de la variable GPG_PASSPHRASE..."
 unset GPG_PASSPHRASE

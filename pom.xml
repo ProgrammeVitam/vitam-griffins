@@ -128,7 +128,7 @@
         <module>jhove</module>
         <module>libreoffice</module>
         <module>odfvalidator</module>
-	    <module>tesseract</module>
+	<module>tesseract</module>
     </modules>
 
     <organization>
