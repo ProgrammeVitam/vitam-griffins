@@ -3,7 +3,10 @@
   "Id": "batch-reference",
   "Debug": true,
   "Actions": [
-    {"Type": "GENERATE", "Values": {"Extension": "pdf", "Args": ["pdf:SelectPdfVersion=1"]}}
+    {"Type": "GENERATE", "Values": {"Extension": "pdf", "Args": ["FilterData:SelectPdfVersion=1", "FilterData:Zoom=100", "FilterData:UseLosslessCompression=true"]}},
+    {"Type": "GENERATE", "Values": {"Extension": "csv", "Args": ["FilterName=Text___txt___csv__StarCalc", "FilterOptions:45,34,UTF8"]}},
+    {"Type": "GENERATE", "Values": {"Extension": "jpg", "Args": ["FilterName=writer_jpg_Export", "FilterData:ColorMode=0", "FilterData:Quality=50"]}},
+    {"Type": "GENERATE", "Values": {"Extension": "pdf", "Args": ["FilterName=writer_pdf_Export", "FilterData:SelectPdfVersion=1", "FilterData:Zoom=100"]}}
   ],
   "Inputs": [
     {"Name": "library.jar", "FormatId": "fmt/138"},

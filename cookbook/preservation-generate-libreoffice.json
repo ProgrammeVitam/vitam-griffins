@@ -16,11 +16,7 @@
         "Timeout": 20,
         "MaxSize": 10000000,
         "Debug":true,
-        "ActionDetail": [
-          {
-            "Type": "GENERATE",
-            "Values": {"Extension": "pdf", "Args": ["pdf:SelectPdfVersion=1"]}
-          }
+        "ActionDetail": [{"Type": "GENERATE", "Values": {"Extension": "pdf", "Args": ["FilterData:SelectPdfVersion=1"]}}
         ]
       }
     ],
