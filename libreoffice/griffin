@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-java -Dfile.encoding=UTF-8 -jar /vitam/bin/worker/griffins/libreoffice-griffin/libreoffice-jar-with-dependencies.jar $1
+LIBREOFFICE_HOME=$(dirname $(dirname $(readlink -f $(which $(compgen -c | grep libreoffice | head -1)))))
+
+java -Doffice.home="$LIBREOFFICE_HOME" -Dfile.encoding=UTF-8 -jar /vitam/bin/worker/griffins/libreoffice-griffin/libreoffice-jar-with-dependencies.jar $1
