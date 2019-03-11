@@ -1,6 +1,6 @@
 [
   {
-    "Identifier": "PSC-000003",
+    "Identifier": "PSC-000004",
     "Name": "Extract technical metadata",
     "Description": "This scenario extract some technical metadata for JPG",
     "CreationDate": "2018-11-16T15:55:30.721",
@@ -11,16 +11,21 @@
     "MetadataFilter": null,
     "GriffinByFormat": [
       {
-        "FormatList": ["fmt/43"],
+        "FormatList": [
+          "fmt/43"
+        ],
         "GriffinIdentifier": "GRI-000004",
         "Timeout": 20,
         "MaxSize": 10000000,
-        "Debug":true,
+        "Debug": true,
         "ActionDetail": [
           {
-            "FilteredExtractedData": [""],
             "Type": "EXTRACT",
-            "Values": null
+            "Values": {
+              "FilteredExtractedData": [
+                "ALL_METADATA"
+              ]
+            }
           }
         ]
       }
