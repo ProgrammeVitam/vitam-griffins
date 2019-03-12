@@ -203,5 +203,18 @@
 			<version>${project.version}</version>
 			<type>deb</type>
 		</dependency>
+		<!-- verapdf -->
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>verapdf</artifactId>
+			<version>${project.version}</version>
+			<type>rpm</type>
+		</dependency>
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>verapdf</artifactId>
+			<version>${project.version}</version>
+			<type>deb</type>
+		</dependency>
 	</dependencies>
 </project>

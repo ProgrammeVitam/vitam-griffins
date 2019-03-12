@@ -127,7 +127,8 @@
         <module>siegfried</module>
         <module>jhove</module>
         <module>libreoffice</module>
-        <module>odfvalidator</module>
+        <module>verapdf</module>
+	<module>odfvalidator</module>
 	<module>tesseract</module>
     </modules>
 
@@ -138,4 +139,5 @@
     <prerequisites>
         <maven>3.3.9</maven>
     </prerequisites>
+
 </project>
