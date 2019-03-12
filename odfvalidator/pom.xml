@@ -107,7 +107,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <finalName>griffin-odfvalidator</finalName>
+                    <finalName>odfvalidator</finalName>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
@@ -136,7 +136,7 @@
                     <controlDir>${basedir}/src/deb/control</controlDir>
                     <dataSet>
                         <data>
-                            <src>${project.build.directory}/griffin-odfvalidator-jar-with-dependencies.jar</src>
+                            <src>${project.build.directory}/odfvalidator-jar-with-dependencies.jar</src>
                             <type>file</type>
                             <mapper>
                                 <type>perm</type>
@@ -199,7 +199,7 @@
                                     <location>${project.basedir}/griffin</location>
                                 </source>
                                 <source>
-                                    <location>${project.build.directory}/griffin-odfvalidator-jar-with-dependencies.jar</location>
+                                    <location>${project.build.directory}/odfvalidator-jar-with-dependencies.jar</location>
                                 </source>
                             </sources>
                         </mapping>
