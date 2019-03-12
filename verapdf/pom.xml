@@ -169,6 +169,11 @@
                     </requires>
                     <mappings>
                         <mapping>
+                            <directory>/vitam/tmp/worker/griffins/${unix.name}</directory>
+                            <username>${unix.user}</username>
+                            <groupname>${unix.group}</groupname>
+                        </mapping>
+                        <mapping>
                             <directory>/vitam/bin/worker/griffins/${unix.name}</directory>
                             <filemode>750</filemode>
                             <username>${unix.user}</username>
