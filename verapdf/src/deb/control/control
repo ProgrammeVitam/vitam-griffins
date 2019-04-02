@@ -1,4 +1,4 @@
-Package: vitam-${unix.name}
+Package: vitam-verapdf-griffin
 Version: [[version]]
 Section: Application/Archiving
 Priority: low
