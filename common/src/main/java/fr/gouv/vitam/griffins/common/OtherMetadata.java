@@ -1,4 +1,4 @@
-/*
+package fr.gouv.vitam.griffins.common; /*******************************************************************************
  * Copyright French Prime minister Office/SGMAP/DINSIC/Vitam Program (2015-2019)
  *
  * contact.vitam@culture.gouv.fr
@@ -23,47 +23,19 @@
  *
  * The fact that you are presently reading this means that you have had knowledge of the CeCILL 2.1 license and that you
  * accept its terms.
- */
+ *******************************************************************************/
 
-package fr.gouv.vitam.griffins.imagemagick.pojo;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import fr.gouv.vitam.griffins.common.OtherMetadata;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ExtractedMetadata {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    @JsonProperty("OtherMetadata")
-    private OtherMetadata otherMetadata;
+public class OtherMetadata extends HashMap<String, List<Object>> {
 
-    @JsonProperty("RawMetadata")
-    private String rawMetadata;
-
-    public ExtractedMetadata() {
+    public OtherMetadata() {
         // Empty constructor for deserialization
     }
 
-    public ExtractedMetadata(OtherMetadata otherMetadata, String rawMetadata) {
-        this.otherMetadata = otherMetadata;
-        this.rawMetadata = rawMetadata;
-    }
-
-    public String getRawMetadata() {
-        return rawMetadata;
-    }
-
-    public void setRawMetadata(String rawMetadata) {
-        this.rawMetadata = rawMetadata;
-    }
-
-    public OtherMetadata getOtherMetadata() {
-        return otherMetadata;
-    }
-
-    public void setOtherMetadata(OtherMetadata otherMetadata) {
-        this.otherMetadata = otherMetadata;
-    }
 }
