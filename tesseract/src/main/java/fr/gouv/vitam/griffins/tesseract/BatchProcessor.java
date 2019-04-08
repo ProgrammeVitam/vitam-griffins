@@ -87,9 +87,9 @@ public class BatchProcessor {
             innerTool = new InnerTool();
 
             List<Output> outputs = parameters.getInputs()
-                    .stream()
-                    .flatMap(input -> executeActions(input, parameters))
-                    .collect(toList());
+                .stream()
+                .flatMap(input -> executeActions(input, parameters))
+                .collect(toList());
 
             addToFile(outputs, parameters.getRequestId(), parameters.getId());
 
@@ -106,26 +106,28 @@ public class BatchProcessor {
 
     private void addToFile(List<Output> outputs, String requestId, String id) throws IOException {
         Map<String, List<Output>> outputsMap = outputs.stream()
-                .collect(toMap(o -> o.getInput().getName(), Collections::singletonList, (o, o2) -> Stream.concat(o.stream(), o2.stream()).collect(Collectors.toList())));
+            .collect(toMap(o -> o.getInput().getName(), Collections::singletonList,
+                (o, o2) -> Stream.concat(o.stream(), o2.stream()).collect(Collectors.toList())));
         mapper.writer().writeValue(batchDirectory.resolve(resultFileName).toFile(), Result.of(requestId, id, outputsMap));
     }
 
     private Stream<Output> executeActions(Input input, Parameters parameters) {
-        if (PuidType.formatTypes.get(input.getFormatId()) == null)
+        if (PuidType.formatTypes.get(input.getFormatId()) == null) {
             return parameters.getActions()
-                    .stream()
-                    .map(action -> Output.error(input, action.getType(), "Can't apply to this format", Main.ID));
-
-        return parameters.getActions()
                 .stream()
-                .map(action -> apply(action, input))
-                .map(raw -> raw.postProcess(parameters.isDebug()));
+                .map(action -> Output.error(input, action.getType(), "Can't apply to this format", Main.ID));
+        }
+        return parameters.getActions()
+            .stream()
+            .map(action -> apply(action, input))
+            .map(raw -> raw.postProcess(parameters.isDebug()));
     }
 
     private RawOutput apply(Action action, Input input) {
         try {
-            RawOutput result = innerTool.apply(action, getInputPath(input), input.getFormatId(), getOutputPath(input, action), parameters.isDebug());
-            if (result!=null)
+            RawOutput result =
+                innerTool.apply(action, getInputPath(input), input.getFormatId(), getOutputPath(input, action), parameters.isDebug());
+            if (result != null)
                 return result.setContext(input, action);
             else
                 return new RawOutput().setContext(input, action);

@@ -1,0 +1,136 @@
+[
+  {
+    "image": {
+      "name": "vaadin-booth.jpg",
+      "format": "JPEG",
+      "formatDescription": "Joint Photographic Experts Group JFIF format",
+      "mimeType": "image/jpeg",
+      "class": "DirectClass",
+      "geometry": {
+        "width": 510,
+        "height": 341,
+        "x": 0,
+        "y": 0
+      },
+      "units": "Undefined",
+      "type": "TrueColor",
+      "endianess": "Undefined",
+      "colorspace": "sRGB",
+      "depth": 8,
+      "baseDepth": 8,
+      "channelDepthTab": [
+        {
+          "red": 8,
+          "green": 8,
+          "blue": 8
+        },
+        {
+          "red": 6,
+          "green": 6,
+          "blue": 6
+        }
+      ],
+      "channelDepth": {
+        "red": 8,
+        "green": 8,
+        "blue": 8
+      },
+      "pixels": 173910,
+      "imageStatistics": {
+        "all": {
+          "min": 0,
+          "max": 255,
+          "mean": 73.0963,
+          "standardDeviation": 15107.3,
+          "kurtosis": 0.332235,
+          "skewness": 1.05892,
+          "entropy": 0.92808
+        }
+      },
+      "channelStatistics": {
+        "red": {
+          "min": 0,
+          "max": 255,
+          "mean": 99.2027,
+          "standardDeviation": 18117.4,
+          "kurtosis": -0.683702,
+          "skewness": 0.580893,
+          "entropy": 0.970184
+        },
+        "green": {
+          "min": 0,
+          "max": 255,
+          "mean": 72.3454,
+          "standardDeviation": 15310.4,
+          "kurtosis": 0.396631,
+          "skewness": 1.03187,
+          "entropy": 0.938156
+        },
+        "blue": {
+          "min": 0,
+          "max": 255,
+          "mean": 47.7409,
+          "standardDeviation": 11894.3,
+          "kurtosis": 2.62524,
+          "skewness": 1.62165,
+          "entropy": 0.875899
+        }
+      },
+      "renderingIntent": "Perceptual",
+      "gamma": 0.454545,
+      "chromaticity": {
+        "redPrimary": {
+          "x": 0.64,
+          "y": 0.33
+        },
+        "greenPrimary": {
+          "x": 0.3,
+          "y": 0.6
+        },
+        "bluePrimary": {
+          "x": 0.15,
+          "y": 0.06
+        },
+        "whitePrimary": {
+          "x": 0.3127,
+          "y": 0.329
+        }
+      },
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#DFDFDF",
+      "matteColor": "#BDBDBD",
+      "transparentColor": "#000000",
+      "interlace": "JPEG",
+      "intensity": "Undefined",
+      "compose": "Over",
+      "pageGeometry": {
+        "width": 510,
+        "height": 341,
+        "x": 0,
+        "y": 0
+      },
+      "dispose": "Undefined",
+      "iterations": 0,
+      "compression": "JPEG",
+      "quality": 85,
+      "orientation": "Undefined",
+      "properties": {
+        "date:create": "2018-04-24T16:02:16+02:00",
+        "date:modify": "2018-04-24T16:02:16+02:00",
+        "jpeg:colorspace": "2",
+        "jpeg:sampling-factor": "2x2,1x1,1x1",
+        "signature": "d2f3bf7c67d07c958afe8cc79f8b7d6f477fd8132a5a6ebb7691b7fb66211f7e"
+      },
+      "artifacts": {
+        "filename": "vaadin-booth.jpg"
+      },
+      "tainted": false,
+      "filesize": "36359B",
+      "numberPixels": "173910",
+      "pixelsPerSecond": "17.391MB",
+      "userTime": "0.000u",
+      "elapsedTime": "0:01.009",
+      "version": "ImageMagick 6.9.10-8 Q16 x86_64 2018-12-11 https://www.imagemagick.org"
+    }
+  }
+]

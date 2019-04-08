@@ -39,8 +39,11 @@ public class Values {
     @JsonProperty("Args")
     private List<String> args;
 
-    @JsonProperty("FilteredExtractedData")
-    private List<String> filteredExtractedData;
+    @JsonProperty("FilteredExtractedObjectGroupData")
+    private List<String> filteredExtractedDataObjectGroup;
+
+    @JsonProperty("FilteredExtractedUnitData")
+    private List<String> filteredExtractedUnitData;
 
     public Values() {
     }
@@ -50,8 +53,13 @@ public class Values {
         this.args = args;
     }
 
-    public Values(List<String> filteredExtractedData) {
-        this.filteredExtractedData = filteredExtractedData;
+    public Values(List<String> filteredExtractedDataObjectGroup) {
+        this.filteredExtractedDataObjectGroup = filteredExtractedDataObjectGroup;
+    }
+
+    public Values(List<String> args, List<String> filteredExtractedDataObjectGroup) {
+        this.args = args;
+        this.filteredExtractedDataObjectGroup = filteredExtractedDataObjectGroup;
     }
 
     public String getExtension() {
@@ -73,12 +81,20 @@ public class Values {
         this.args = args;
     }
 
-    public List<String> getFilteredExtractedData() {
-        return filteredExtractedData;
+    public List<String> getFilteredExtractedDataObjectGroup() {
+        return filteredExtractedDataObjectGroup;
     }
 
-    public void setFilteredExtractedData(List<String> filteredExtractedData) {
-        this.filteredExtractedData = filteredExtractedData;
+    public void setFilteredExtractedDataObjectGroup(List<String> filteredExtractedDataObjectGroup) {
+        this.filteredExtractedDataObjectGroup = filteredExtractedDataObjectGroup;
+    }
+
+    public List<String> getFilteredExtractedUnitData() {
+        return filteredExtractedUnitData;
+    }
+
+    public void setFilteredExtractedUnitData(List<String> filteredExtractedUnitData) {
+        this.filteredExtractedUnitData = filteredExtractedUnitData;
     }
 
     @Override
@@ -86,7 +102,7 @@ public class Values {
         return "ValuesPreservation{" +
             "extension='" + extension + '\'' +
             ", args=" + args +
-            ", filteredExtractedData=" + filteredExtractedData +
+            ", filteredExtractedDataObjectGroup=" + filteredExtractedDataObjectGroup +
             '}';
     }
 }

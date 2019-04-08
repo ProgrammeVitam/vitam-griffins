@@ -147,6 +147,24 @@ public class MainTest {
     }
 
     @Test
+    public void should_extract_metadata() throws Exception {
+        // Given
+        Input input = new Input(defaultFileName, defaultFileFormat);
+        Action action = new Action(EXTRACT_GOT, new Values(Arrays.asList("high-level", "trated")));
+        generateBatch(action, input);
+
+        Path batchDirectory = tmpGriffonFolder.getRoot().toPath().resolve(input.getName());
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+
+        // When
+        BatchStatus status = batchProcessor.execute();
+
+        // Then
+        assertThat(status.status).isEqualTo(WARNING);
+        assertThat(Paths.get(tmpGriffonFolder.getRoot().getPath(), input.getName(), BatchProcessor.resultFileName)).exists();
+    }
+
+    @Test
     public void should_return_error_if_no_parameters_file_in_batch_status() throws Exception {
         // Given
         Path batchFolder = tmpGriffonFolder.newFolder(Main.ID).toPath();

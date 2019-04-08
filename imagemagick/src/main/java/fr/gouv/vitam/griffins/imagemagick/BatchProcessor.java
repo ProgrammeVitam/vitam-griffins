@@ -38,7 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -48,6 +48,7 @@ import java.util.Map.Entry;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -55,6 +56,7 @@ import java.util.stream.StreamSupport;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import fr.gouv.vitam.griffins.common.OtherMetadata;
 import fr.gouv.vitam.griffins.imagemagick.pojo.Action;
 import fr.gouv.vitam.griffins.imagemagick.pojo.BatchStatus;
 import fr.gouv.vitam.griffins.imagemagick.pojo.ExtractedMetadata;
@@ -119,14 +121,16 @@ public class BatchProcessor {
         }
     }
 
-    private void addToFile(List< Output> outputs, String requestId, String id) throws IOException {
-        Map<String, List< Output>> outputsMap = outputs.stream()
-            .collect(toMap(o -> o.getInput().getName(), Collections::singletonList, (o, o2) -> Stream.concat(o.stream(), o2.stream()).collect(Collectors.toList())));
+    private void addToFile(List<Output> outputs, String requestId, String id) throws IOException {
+        Map<String, List<Output>> outputsMap = outputs.stream()
+            .collect(toMap(o -> o.getInput().getName(), Collections::singletonList,
+                (o, o2) -> Stream.concat(o.stream(), o2.stream()).collect(Collectors.toList())));
+
         mapper.writer().writeValue(batchDirectory.resolve(resultFileName).toFile(), Outputs
             .of(requestId, id, outputsMap));
     }
 
-    private Stream< Output> executeActions(
+    private Stream<Output> executeActions(
         Input input, Parameters parameters) {
         return parameters.getActions()
             .stream()
@@ -134,16 +138,15 @@ public class BatchProcessor {
             .map(raw -> postProcess(raw, parameters.isDebug()));
     }
 
-    private  RawOutput apply(
-        Action action, Input input) {
+    private RawOutput apply(Action action, Input input) {
         ProcessBuilder processBuilder = new ProcessBuilder(getMagickParams(input, action));
         try {
             Process magick = processBuilder.start();
             magick.waitFor();
-            return new  RawOutput(magick, processBuilder, input, getOutputname(input.getName(), action), action);
+            return new RawOutput(magick, processBuilder, input, getOutputname(input.getName(), action), action);
         } catch (Exception e) {
             logger.error("{}", e);
-            return new  RawOutput(e, processBuilder, input, getOutputname(input.getName(), action), action);
+            return new RawOutput(e, processBuilder, input, getOutputname(input.getName(), action), action);
         }
     }
 
@@ -176,7 +179,9 @@ public class BatchProcessor {
 
         actionCommand.replaceAll(c -> c.equals("%inputname%") ? getInputPath(input) : c);
         actionCommand.replaceAll(c -> c.equals("%outputname%") ? getOutputPath(input, actionType) : c);
-        actionCommand.replaceAll(c -> c.equals("%format%:%inputname%") ? String.format("%s:%s", PuidImageType.formatTypes.get(input.getFormatId()), getInputPath(input)) : c);
+        actionCommand.replaceAll(c -> c.equals("%format%:%inputname%") ?
+            String.format("%s:%s", PuidImageType.formatTypes.get(input.getFormatId()), getInputPath(input)) :
+            c);
 
         int indexOf = actionCommand.indexOf("%args%");
         if (indexOf != -1) {
@@ -196,8 +201,7 @@ public class BatchProcessor {
         return batchDirectory.resolve(outputFilesDirName).resolve(getOutputname(input.getName(), actionType)).toString();
     }
 
-    private Output postProcess(
-        RawOutput rawOutput, boolean debug) throws RuntimeException {
+    private Output postProcess(RawOutput rawOutput, boolean debug) throws RuntimeException {
         switch (rawOutput.action.getType()) {
             case GENERATE:
                 return generate(rawOutput, debug);
@@ -210,7 +214,7 @@ public class BatchProcessor {
         }
     }
 
-    private  Output analyze(
+    private Output analyze(
         RawOutput rawOutput, boolean debug) {
         if (rawOutput.exception != null) {
             return rawOutput.toError(debug);
@@ -230,8 +234,7 @@ public class BatchProcessor {
         return output;
     }
 
-    private Output generate(
-        RawOutput rawOutput, boolean debug) {
+    private Output generate(RawOutput rawOutput, boolean debug) {
         if (rawOutput.exception != null || rawOutput.exitCode > 0) {
             return rawOutput.toError(debug);
         }
@@ -243,7 +246,7 @@ public class BatchProcessor {
         return rawOutput.toOk(debug);
     }
 
-    private  Output extract(RawOutput rawOutput, boolean debug) {
+    private Output extract(RawOutput rawOutput, boolean debug) {
         if (rawOutput.exception != null || rawOutput.exitCode > 0) {
             return rawOutput.toError(debug);
         }
@@ -251,16 +254,18 @@ public class BatchProcessor {
             ArrayNode metadata = (ArrayNode) this.mapper.readTree(rawOutput.stdout);
 
             Iterator<Entry<String, JsonNode>> image = metadata.get(0).get("image").fields();
-            Map<String, String> otherMetadata = StreamSupport.stream(Spliterators.spliteratorUnknownSize(image, Spliterator.ORDERED), false)
-                .flatMap(this::flattenJsonElements)
-                .flatMap(this::flattenJsonElements)
-                .map(j -> new SimpleImmutableEntry<>(j.getKey(), j.getValue().asText()))
-                .filter(entry -> isMetadataSelected(rawOutput, entry))
-                .collect(toMap(Entry::getKey, Entry::getValue));
+            OtherMetadata result =
+                StreamSupport.stream(Spliterators.spliteratorUnknownSize(image, Spliterator.ORDERED), false)
+                    .map(this::transformJsonElementsToArray)
+                    .map(this::transformJsonNodeToListOfObject)
+                    .filter(entry -> isMetadataSelected(rawOutput, entry))
+                    .collect(Collector.of(OtherMetadata::new, (acc, entry) -> acc.put(entry.getKey(), entry.getValue()), (o1, o2) -> {
+                        o1.putAll(o2);
+                        return o1;
+                    }));
 
             Output output = rawOutput.toOk(debug);
-            output.setExtractedMetadata(new ExtractedMetadata(otherMetadata, null, rawOutput.stdout));
-
+            output.setExtractedMetadata(new ExtractedMetadata(result, rawOutput.stdout));
             return output;
         } catch (IOException e) {
             logger.error("{}", e);
@@ -268,34 +273,53 @@ public class BatchProcessor {
         }
     }
 
-    private boolean isMetadataSelected(RawOutput rawOutput, SimpleImmutableEntry<String, String> entry) {
-        List<String> filters = rawOutput.action.getValues().getFilteredExtractedData();
-        if(filters != null && filters.size() == 1 && filters.get(0).equals(ALL_METADATA)) {
+    private boolean isMetadataSelected(RawOutput rawOutput, Entry<String, List<Object>> entry) {
+        List<String> filters = rawOutput.action.getValues().getFilteredExtractedDataObjectGroup();
+        if (filters != null && filters.size() == 1 && filters.get(0).equals(ALL_METADATA)) {
             return true;
         }
         return filters.contains(entry.getKey());
     }
 
-    private Stream<Entry<String, JsonNode>> flattenJsonElements(Entry<String, JsonNode> entry) {
-        return entry.getValue().isArray() || entry.getValue().isObject()
-            ? StreamSupport.stream(Spliterators.spliteratorUnknownSize(entry.getValue().fields(), Spliterator.ORDERED), false).map(subEntry -> fieldFrom(entry, subEntry))
-            : Stream.of(new SimpleImmutableEntry<>(capitalize(entry.getKey()), entry.getValue()));
+    protected Entry<String, List<Object>> transformJsonNodeToListOfObject(Entry<String, JsonNode> entry) {
+        ArrayList<Object> objects1 = new ArrayList<>();
+        entry.getValue().forEach(objects1::add);
+        return new AbstractMap.SimpleEntry<>(entry.getKey(), objects1);
     }
 
-    private Entry<String, JsonNode> fieldFrom(Entry<String, JsonNode> entry, Entry<String, JsonNode> subEntry) {
-        return new SimpleImmutableEntry<>(getAndUpdateKey(entry, subEntry), subEntry.getValue());
+    protected Entry<String, JsonNode> transformJsonElementsToArray(Entry<String, JsonNode> entry) {
+        JsonNode afterParsing = parseRecursiveJsonNode(entry.getValue(), entry.getValue().isArray());
+        return new AbstractMap.SimpleEntry<>(entry.getKey(), afterParsing);
     }
 
-    private String getAndUpdateKey(Entry<String, JsonNode> entry, Entry<String, JsonNode> subEntry) {
-        String format = String.format("%s:%s", entry.getKey(), subEntry.getKey())
-            .replaceAll("-", ":");
-
-        return Stream.of(format.split(":"))
-            .map(this::capitalize)
-            .collect(Collectors.joining());
+    private JsonNode parseRecursiveJsonNode(JsonNode value, boolean parentIsArray) {
+        if (value.isObject()) {
+            setValueRecursively(value);
+        } else if (value.isArray()) {
+            for (JsonNode arrayElement : value) {
+                setValueRecursively(arrayElement);
+            }
+        }
+        if (!parentIsArray) {
+            return processValueToArray(value);
+        } else {
+            return value;
+        }
     }
 
-    private String capitalize(String v) {
-        return v.substring(0, 1).toUpperCase() + v.substring(1);
+    private void setValueRecursively(JsonNode value) {
+        value.fields().forEachRemaining(field ->
+            field.setValue(parseRecursiveJsonNode(field.getValue(), value.isArray())));
     }
+
+    private JsonNode processValueToArray(JsonNode value) {
+        if (value.isContainerNode()) {
+            return mapper.createArrayNode().add(value);
+        } else if (!value.isTextual()) {
+            return mapper.createArrayNode().add(value.asText());
+        }
+        return mapper.createArrayNode().add(value);
+
+    }
+
 }

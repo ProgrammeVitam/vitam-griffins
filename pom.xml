@@ -128,8 +128,9 @@
         <module>jhove</module>
         <module>libreoffice</module>
         <module>verapdf</module>
-	<module>odfvalidator</module>
-	<module>tesseract</module>
+        <module>odfvalidator</module>
+        <module>tesseract</module>
+        <module>common</module>
     </modules>
 
     <organization>
