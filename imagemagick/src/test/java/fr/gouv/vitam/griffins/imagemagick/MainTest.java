@@ -1,6 +1,7 @@
 package fr.gouv.vitam.griffins.imagemagick;
 
 import static fr.gouv.vitam.griffins.imagemagick.BatchProcessor.ALL_METADATA;
+import static fr.gouv.vitam.griffins.imagemagick.BatchProcessor.RAW_METADATA;
 import static fr.gouv.vitam.griffins.imagemagick.BatchProcessor.inputFilesDirName;
 import static fr.gouv.vitam.griffins.imagemagick.BatchProcessor.parametersFileName;
 import static fr.gouv.vitam.griffins.imagemagick.BatchProcessor.resultFileName;
@@ -200,6 +201,29 @@ public class MainTest {
         JsonNode expected = mapper.readValue(expectedJson, JsonNode.class);
         JsonNode geometryNode = mapper.convertValue(geometry, JsonNode.class);
         assertThat(geometryNode).isEqualTo(expected);
+    }
+
+    @Test
+    public void should_EXTRACT_metadata_with_raw_metadata() throws Exception {
+        // Given
+        Input input = new Input("picture.jpg", "fmt/41");
+        Action action = new Action(EXTRACT, new Values(Collections.singletonList(RAW_METADATA)));
+        generateBatch(action, input);
+
+        Path batchDirectory = tmpGriffinFolder.getRoot().toPath().resolve(ID).resolve(batchName);
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+
+        // When
+        batchProcessor.execute();
+
+        // Then
+        Outputs outputs = getOutputs();
+        List<Output> actual = outputs.getOutputs().get(input.getName());
+        assertThat(actual).hasSize(1);
+        assertThat(actual).extracting(Output::getAction).containsExactly(EXTRACT);
+        assertThat(actual).extracting(Output::getStatus).containsExactly(OK);
+        String rawMetadata = actual.get(0).getExtractedMetadata().getRawMetadata();
+        assertThat(rawMetadata).contains("\"format\": \"JPEG\"");
     }
 
     @Test

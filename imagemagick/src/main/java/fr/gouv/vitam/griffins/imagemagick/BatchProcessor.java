@@ -79,6 +79,7 @@ public class BatchProcessor {
     private final Path batchDirectory;
 
     public static final String ALL_METADATA = "ALL_METADATA";
+    public static final String RAW_METADATA = "RAW_METADATA";
 
     public static final String outputFilesDirName = "output-files";
     public static final String parametersFileName = "parameters.json";
@@ -263,10 +264,13 @@ public class BatchProcessor {
                         o1.putAll(o2);
                         return o1;
                     }));
-
             Output output = rawOutput.toOk(debug);
-            output.setExtractedMetadata(new ExtractedMetadata(result, rawOutput.stdout));
-            return output;
+
+                String stdout = rawOutput.action.getValues().getFilteredExtractedDataObjectGroup().contains(RAW_METADATA)
+                ? rawOutput.stdout
+                : null ;
+                output.setExtractedMetadata(new ExtractedMetadata(result, stdout));
+                return output;
         } catch (IOException e) {
             logger.error("{}", e);
             return rawOutput.toError(debug, e.getMessage());
@@ -275,7 +279,7 @@ public class BatchProcessor {
 
     private boolean isMetadataSelected(RawOutput rawOutput, Entry<String, List<Object>> entry) {
         List<String> filters = rawOutput.action.getValues().getFilteredExtractedDataObjectGroup();
-        if (filters != null && filters.size() == 1 && filters.get(0).equals(ALL_METADATA)) {
+        if (filters != null && filters.contains(ALL_METADATA)) {
             return true;
         }
         return filters.contains(entry.getKey());
