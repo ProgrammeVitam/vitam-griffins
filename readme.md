@@ -66,16 +66,18 @@ Here `f5a5f253-04a5-4567-b88a-c5af7df633df` is the batch id.
 ### `parameters.json` example
 ```json
 {
-  "requestId": "4f6ae8d7-cab7-4f8d-b5e1-d5c0a1ea5793",
-  "id": "1479591e-d325-456f-8409-697f3a757bf7",
-  "debug": false,
-  "actions": [
-    {"type": "GENERATE", "values": {"extension": "GIF", "args": ["-thumbnail", "100x100"]}},
-    {"type": "ANALYSE"},
-    {"type": "EXTRACT", "values": {"dataToExtract": {"AU_METADATA_RESOLUTION": "/image/properties/exif:ResolutionUnit", "GOT_METADATA_METHOD": "/image/properties/exif:SensingMethod", "AU_METADATA_DATE": "/image/properties/xmp:ModifyDate"}}}
+  "RequestId": "4f6ae8d7-cab7-4f8d-b5e1-d5c0a1ea5793",
+  "Id": "1479591e-d325-456f-8409-697f3a757bf7",
+  "Debug": false,
+  "Actions": [
+    {"Type": "GENERATE", "Values": {"extension": "GIF", "Args": ["-thumbnail", "100x100"]}},
+    {"Type": "ANALYSE"},
+    {"Type": "EXTRACT", "Values": { "Args": [], "FilteredExtractedObjectGroupData" : [ "ALL_METADATA" ], "FilteredExtractedUnitData" : ["ALL_METADATA"]    }},
+    {"Type": "EXTRACT", "Values": { "Args": [], "FilteredExtractedObjectGroupData" : [ "geometry", "compression", "resolution" ], "FilteredExtractedUnitData" : ["ALL_METADATA"]    }},
+    {"Type": "EXTRACT", "Values": { "Args": [], "FilteredExtractedObjectGroupData" : [ "RAW_METADATA" ], "FilteredExtractedUnitData" : ["ALL_METADATA"]    }}
   ],
-  "inputs": [
-    {"name": "test.jpg", "formatId": "fmt/41"}
+  "Inputs": [
+    {"Name": "test.jpg", "FormatId": "fmt/41"}
   ]
 }
 ```
@@ -83,28 +85,36 @@ Here `f5a5f253-04a5-4567-b88a-c5af7df633df` is the batch id.
 ### `result.json` example
 ```json
 {
-  "requestId": "4f6ae8d7-cab7-4f8d-b5e1-d5c0a1ea5793",
-  "id": "1479591e-d325-456f-8409-697f3a757bf7",
-  "outputs": {
-    "test.jpg": [
+  "RequestId": "4f6ae8d7-cab7-4f8d-b5e1-d5c0a1ea5793",
+  "Id": "1479591e-d325-456f-8409-697f3a757bf7",
+  "Outputs": {
+    "Test.jpg": [
       {
-        "input": {"name": "test.jpg", "formatId": "fmt/41"},
-        "outputName": "GENERATE-test.jpg.GIF",
-        "status": "OK",
-        "action": "GENERATE"
+        "Input": {"name": "test.jpg", "formatId": "fmt/41"},
+        "OutputName": "GENERATE-test.jpg.GIF",
+        "Status": "OK",
+        "Action": "GENERATE"
       },
       {
-        "input": {"name": "test.jpg", "formatId": "fmt/41"},
-        "status": "OK",
-        "analyseResult": "VALID_ALL",
-        "action": "ANALYSE"
+        "Input": {"name": "test.jpg", "formatId": "fmt/41"},
+        "Status": "OK",
+        "AnalyseResult": "VALID_ALL",
+        "Action": "ANALYSE"
       },
       {
-        "input": {"name": "test.jpg", "formatId": "fmt/41"},
-        "outputName": "EXTRACT-test.jpg.json",
-        "status": "OK",
-        "action": "EXTRACT"
-      }
+        "Input": {"name": "test.jpg", "formatId": "fmt/41"},
+        "OutputName": "EXTRACT-test.jpg.json",
+        "Status": "OK",
+        "Action": "EXTRACT",
+        "ExtractedMetadata": {
+            "OtherMetadata": {
+              "name": [
+                "test.jpg"
+              ]
+            },
+            "RawMetadata": "[{\"image\": { \"name\": \"test.jpg\"}]"
+          }
+        }
     ]
   }
 }

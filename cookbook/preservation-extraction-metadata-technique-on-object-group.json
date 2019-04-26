@@ -22,7 +22,10 @@
           {
             "Type": "EXTRACT",
             "Values": {
-              "FilteredExtractedData": [
+              "FilteredExtractedObjectGroupData": [
+                "ALL_METADATA"
+              ],
+              "FilteredExtractedUnitData": [
                 "ALL_METADATA"
               ]
             }
