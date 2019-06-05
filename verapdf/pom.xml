@@ -16,10 +16,6 @@
         <unix.name>verapdf-griffin</unix.name>
         <unix.user>vitam</unix.user>
         <unix.group>vitam</unix.group>
-        <slf4j.version>1.7.25</slf4j.version>
-        <junit.version>4.12</junit.version>
-        <assertj.version>3.11.1</assertj.version>
-        <mockito.version>2.23.4</mockito.version>
         <verapdf.version>1.12.1</verapdf.version>
     </properties>
 
@@ -163,7 +159,7 @@
                 <configuration>
                     <disabled>false</disabled>
                     <requires>
-                        <require>java-1.8.0</require>
+                        <require>${java.version}</require>
                         <require>vitam-user-${unix.user}</require>
                     </requires>
                     <mappings>

@@ -12,9 +12,6 @@
 
     <artifactId>common</artifactId>
     <name>Vitam griffins common</name>
-    <properties>
-        <slf4j.version>1.7.25</slf4j.version>
-    </properties>
 
     <dependencies>
         <dependency>
