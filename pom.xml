@@ -5,7 +5,7 @@
 
     <groupId>fr.gouv.vitam</groupId>
     <artifactId>vitam-griffins</artifactId>
-    <version>1.9.0-SNAPSHOT</version>
+    <version>1.10.0-SNAPSHOT</version>
     <name>vitam-griffins</name>
 
     <modules>
