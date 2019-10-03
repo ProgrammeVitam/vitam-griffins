@@ -1,0 +1,33 @@
+[
+    {
+      "Identifier": "PSC-000015",
+      "Name": "Tranformation vidéo en vignette",
+      "Description": "Ce scenario transforme un fichier vidéo en vignette PNG",
+      "CreationDate": "2018-11-16T15:55:30.721",
+      "LastUpdate": "2018-11-20T15:34:21.542",
+      "ActionList": [
+        "GENERATE"
+      ],
+      "MetadataFilter": null,
+      "GriffinByFormat": [
+        {
+          "FormatList": ["fmt/199"],
+          "GriffinIdentifier": "GRI-000007",
+          "Timeout": 20,
+          "MaxSize": 100000000,
+          "Debug":true,
+          "ActionDetail": [
+            {
+              "Type": "GENERATE",
+              "Values": {
+                "Extension": "PNG",
+                "Args": ["-vf", "thumbnail,scale=640:480", "-frames:v", "1"]
+              }
+            }
+          ]
+        }
+      ],
+      "DefaultGriffin": null
+    }
+  ]
+  
