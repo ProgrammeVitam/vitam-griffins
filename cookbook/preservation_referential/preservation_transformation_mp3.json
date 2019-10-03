@@ -1,0 +1,33 @@
+[
+    {
+      "Identifier": "PSC-000013",
+      "Name": "Tranformation en MP3",
+      "Description": "Ce scenario transforme un fichier audio WMA en MP3",
+      "CreationDate": "2018-11-16T15:55:30.721",
+      "LastUpdate": "2018-11-20T15:34:21.542",
+      "ActionList": [
+        "GENERATE"
+      ],
+      "MetadataFilter": null,
+      "GriffinByFormat": [
+        {
+          "FormatList": ["fmt/132"],
+          "GriffinIdentifier": "GRI-000007",
+          "Timeout": 200,
+          "MaxSize": 10000000,
+          "Debug":true,
+          "ActionDetail": [
+            {
+              "Type": "GENERATE",
+              "Values": {
+                "Extension": "MP3",
+                "Args": ["-codec:a", "libmp3lame"]
+              }
+            }
+          ]
+        }
+      ],
+      "DefaultGriffin": null
+    }
+  ]
+  
