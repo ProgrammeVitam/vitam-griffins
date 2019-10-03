@@ -16,6 +16,7 @@ pipeline {
         SERVICE_PROXY_HOST = credentials("http-proxy-host")
         SERVICE_PROXY_PORT = credentials("http-proxy-port")
         SERVICE_NOPROXY = credentials("http_nonProxyHosts")
+        GITHUB_ACCOUNT_TOKEN = credentials("vitam-prg-token")
     }
 
    stages {
@@ -70,6 +71,41 @@ pipeline {
             post {
                 always {
                     junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage ("Execute unit tests when Pull Request") {
+            when {
+                branch "PR*"
+            }
+            steps {
+                githubNotify status: "PENDING", description: "Building & testing", credentialsId: "vitam-prg-token"
+                dir('/home/centos/.m2/repository') {
+                    deleteDir()
+                }
+                withEnv(["JAVA_TOOL_OPTIONS=-Dhttp.proxyHost=${env.SERVICE_PROXY_HOST} -Dhttp.proxyPort=${env.SERVICE_PROXY_PORT} -Dhttps.proxyHost=${env.SERVICE_PROXY_HOST} -Dhttps.proxyPort=${env.SERVICE_PROXY_PORT} -Dhttp.nonProxyHosts=${env.SERVICE_NOPROXY}"]) {
+                    sh '$MVN_BASE --settings .ci/settings_internet.xml -f pom.xml clean test'
+                }
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
+                success {
+                    githubNotify status: "SUCCESS", description: "Build successul", credentialsId: "vitam-prg-token"
+                }
+                failure {
+                    githubNotify status: "FAILURE", description: "Build failed", credentialsId: "vitam-prg-token"
+                }
+                unstable {
+                    githubNotify status: "ERROR", description: "Build unstable", credentialsId: "vitam-prg-token"
+                }
+                aborted {
+                    githubNotify status: "FAILURE", description: "Build canceled", credentialsId: "vitam-prg-token"
+                }
+                unsuccessful {
+                    githubNotify status: "ERROR", description: "Build unsuccessful", credentialsId: "vitam-prg-token"
                 }
             }
         }
