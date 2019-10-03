@@ -24,7 +24,6 @@
  * The fact that you are presently reading this means that you have had knowledge of the CeCILL 2.1 license and that you
  * accept its terms.
  */
-
 package fr.gouv.vitam.griffins.libreoffice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +35,7 @@ import fr.gouv.vitam.griffins.libreoffice.pojo.Parameters;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Result;
 import fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus;
 import org.jodconverter.LocalConverter;
-import org.jodconverter.office.LocalOfficeManager;
+import org.jodconverter.office.ExternalOfficeManagerBuilder;
 import org.jodconverter.office.OfficeException;
 import org.jodconverter.office.OfficeManager;
 import org.slf4j.Logger;
@@ -84,7 +83,8 @@ public class BatchProcessor {
         long startTime = System.currentTimeMillis();
         String batchProcessingId = batchDirectory.getFileName().toString();
 
-        LocalOfficeManager officeManager = LocalOfficeManager.install();
+        OfficeManager officeManager = new ExternalOfficeManagerBuilder().build();
+
         try {
             File file = batchDirectory.resolve(parametersFileName).toFile();
             parameters = mapper.readValue(file, Parameters.class);
@@ -94,11 +94,12 @@ public class BatchProcessor {
             }
 
             Files.createDirectories(batchDirectory.resolve(outputFilesDirName));
+
             officeManager.start();
 
             List<Output> outputs = parameters.getActions()
                 .stream()
-                .flatMap(a -> parameters.getInputs().stream().map(i -> execute(a, i, parameters.isDebug())))
+                .flatMap(a -> parameters.getInputs().stream().map(i -> execute(a, i, parameters.isDebug(), officeManager)))
                 .collect(toList());
 
             addToFile(outputs, parameters.getRequestId(), parameters.getId());
@@ -123,7 +124,7 @@ public class BatchProcessor {
         mapper.writer().writeValue(batchDirectory.resolve(resultFileName).toFile(), Result.of(requestId, id, outputsMap));
     }
 
-    private Output execute(Action action, Input input, boolean debug) {
+    private Output execute(Action action, Input input, boolean debug, OfficeManager manager) {
         if (!GENERATE.equals(action.getType())) {
             throw new IllegalStateException(String.format("Cannot execute libreoffice for action of type %s.", action.getType()));
         }
@@ -141,6 +142,7 @@ public class BatchProcessor {
 
         try {
             LocalConverter.builder()
+                .officeManager(manager)
                 .storeProperties(customPropertiesFrom)
                 .build()
                 .convert(inputFile)
@@ -216,11 +218,9 @@ public class BatchProcessor {
 
     private void stopOfficeManager(OfficeManager manager) {
         try {
-            if (manager != null && manager.isRunning()) {
-                manager.stop();
-            }
+            manager.stop();
         } catch (OfficeException ex) {
-            // ignore
+            logger.error("{}", ex);
         }
     }
 }
