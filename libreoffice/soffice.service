@@ -1,0 +1,13 @@
+[Unit]
+Description=Control headless soffice instance
+After=network.target
+
+[Service]
+User=vitam
+Group=vitam
+Type=simple
+ExecStart=/vitam/bin/worker/griffins/libreoffice-griffin/libreoffice
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
