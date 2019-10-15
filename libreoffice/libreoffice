@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-$(compgen -c | grep libreoffice | head -1) --accept="socket,host=127.0.0.1,port=2002,tcpNoDelay=1;urp;StarOffice.ServiceManager" --headless --invisible --nodefault --nofirststartwizard --nolockcheck --nologo --norestore
