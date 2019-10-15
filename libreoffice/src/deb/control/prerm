@@ -1,6 +1,0 @@
-#!/bin/sh
-
-if [ -x /bin/systemctl ]; then
-   systemctl stop soffice.service
-   systemctl disable soffice.service
-fi

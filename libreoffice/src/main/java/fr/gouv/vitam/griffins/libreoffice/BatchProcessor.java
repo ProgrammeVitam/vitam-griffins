@@ -35,8 +35,6 @@ import fr.gouv.vitam.griffins.libreoffice.pojo.Parameters;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Result;
 import fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus;
 import org.jodconverter.LocalConverter;
-import org.jodconverter.office.ExternalOfficeManagerBuilder;
-import org.jodconverter.office.OfficeException;
 import org.jodconverter.office.OfficeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +63,6 @@ public class BatchProcessor {
     public static final String parametersFileName = "parameters.json";
     public static final String resultFileName = "result.json";
     public static final String inputFilesDirName = "input-files";
-
     private static final String FILTER_DATA = "FilterData";
     private static final String FILTER_NAME = "FilterName";
     private static final String FILTER_OPTIONS = "FilterOptions";
@@ -83,9 +80,9 @@ public class BatchProcessor {
         long startTime = System.currentTimeMillis();
         String batchProcessingId = batchDirectory.getFileName().toString();
 
-        OfficeManager officeManager = new ExternalOfficeManagerBuilder().build();
+        try (PortReserver portReserver = new PortReserver();
+             AutoClosableOfficeManager officeManager = new AutoClosableOfficeManager(portReserver.getLibreOfficePort())) {
 
-        try {
             File file = batchDirectory.resolve(parametersFileName).toFile();
             parameters = mapper.readValue(file, Parameters.class);
 
@@ -112,8 +109,6 @@ public class BatchProcessor {
         } catch (Exception e) {
             logger.error("{}", e);
             return BatchStatus.error(batchProcessingId, startTime, e);
-        } finally {
-            stopOfficeManager(officeManager);
         }
     }
 
@@ -213,14 +208,6 @@ public class BatchProcessor {
             return true;
         } catch (NumberFormatException e) {
             return false;
-        }
-    }
-
-    private void stopOfficeManager(OfficeManager manager) {
-        try {
-            manager.stop();
-        } catch (OfficeException ex) {
-            logger.error("{}", ex);
         }
     }
 }

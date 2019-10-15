@@ -35,10 +35,6 @@ import fr.gouv.vitam.griffins.libreoffice.pojo.Parameters;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Result;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Values;
 import fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus;
-import org.jodconverter.office.LocalOfficeManager;
-import org.jodconverter.office.OfficeException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -77,19 +73,6 @@ public class MainTest {
 
     @Rule
     public TemporaryFolder tmpGriffinFolder = new TemporaryFolder();
-
-    private static LocalOfficeManager officeManager;
-
-    @BeforeClass
-    public static void setup() throws OfficeException {
-        officeManager = LocalOfficeManager.install();
-        officeManager.start();
-    }
-
-    @AfterClass
-    public static void clean() throws OfficeException {
-        officeManager.stop();
-    }
 
     @Test
     public void should_GENERATE_DOC_file_from_odt() {
@@ -174,13 +157,14 @@ public class MainTest {
         assertThat(actual).hasSize(4);
         assertThat(actual).extracting(Output::getAction).allMatch(a -> a.equals(GENERATE));
         assertThat(actual).extracting(Output::getStatus).allMatch(s -> s.equals(OK));
-        assertThat(actual).extracting(Output::getOutputName).containsExactlyElementsOf(names.stream().map(s -> String.format("%s.pdf", s)).collect(Collectors.toList()));
+        assertThat(actual).extracting(Output::getOutputName)
+            .containsExactlyElementsOf(names.stream().map(s -> String.format("%s.pdf", s)).collect(Collectors.toList()));
     }
 
     @Test
     public void should_GENERATE_for_big_number_of_file() {
         String sourceName = "test.odt";
-        List<String> names = IntStream.range(0, 400)
+        List<String> names = IntStream.range(0, 30)
             .mapToObj(i -> String.format("%d_%s", i, sourceName))
             .collect(Collectors.toList());
 
@@ -207,7 +191,7 @@ public class MainTest {
         // Then
         assertThat(actual).extracting(Output::getAction).allMatch(a -> a.equals(GENERATE));
         assertThat(actual).extracting(Output::getStatus).allMatch(s -> s.equals(OK));
-        assertThat(actual).hasSize(400);
+        assertThat(actual).hasSize(names.size());
     }
 
     @Test
@@ -336,7 +320,8 @@ public class MainTest {
             parameters.setActions(Collections.singletonList(action));
             parameters.setInputs(Collections.singletonList(input));
 
-            FileAttribute<Set<PosixFilePermission>> setFileAttribute = PosixFilePermissions.asFileAttribute(Files.getPosixFilePermissions(batchFolder, NOFOLLOW_LINKS));
+            FileAttribute<Set<PosixFilePermission>> setFileAttribute =
+                PosixFilePermissions.asFileAttribute(Files.getPosixFilePermissions(batchFolder, NOFOLLOW_LINKS));
             File parametersFile = Files.createFile(Paths.get(batchFolder.toString(), parametersFileName), setFileAttribute).toFile();
 
             objectMapper.writer().writeValue(parametersFile, parameters);

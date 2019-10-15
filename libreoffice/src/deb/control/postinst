@@ -1,7 +1,0 @@
-#!/bin/sh
-
-if [ -x /bin/systemctl ]; then
-   systemctl daemon-reload
-   systemctl enable soffice.service
-   systemctl start soffice.service
-fi
