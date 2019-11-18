@@ -19,6 +19,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
+				<version>${maven.dependency.version}</version>
 				<executions>
 					<execution>
 						<id>copy-dependencies</id>
@@ -40,7 +41,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.6.0</version>
+				<version>${maven.exec.version}</version>
 				<executions>
 					<!-- rpm -->
 					<execution>
@@ -53,7 +54,21 @@
 							<executable>../rpm/build_repo.sh</executable>
 						</configuration>
 					</execution>
-					
+					<execution>
+						<id>create yum repodata</id>
+						<phase>package</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>/usr/bin/createrepo</executable>
+							<arguments>
+            					<argument>.</argument>
+							</arguments>
+							<workingDirectory>${TARGET_DIR}/</workingDirectory>
+						</configuration>
+					</execution>
+				
 					<!-- debian -->
 					<execution>
 						<id>Build external deb</id>
@@ -63,6 +78,38 @@
 						</goals>
 						<configuration>
 							<executable>../deb/build_repo.sh</executable>
+						</configuration>
+					</execution>
+					<execution>
+						<id>Create Packages</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>/usr/bin/dpkg-scanpackages</executable>
+							<arguments>
+            					<argument>-m</argument>
+								<argument>.</argument>
+							</arguments>
+							<workingDirectory>${TARGET_DIR}/</workingDirectory>
+							<outputFile>${TARGET_DIR}/Packages</outputFile>
+						</configuration>
+					</execution>
+					<execution>
+						<id>deb Packages.gz</id>
+						<phase>package</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>/usr/bin/gzip</executable>
+							<arguments>
+            					<argument>-9c</argument>
+								<argument>Packages</argument>
+							</arguments>
+							<workingDirectory>${TARGET_DIR}/</workingDirectory>
+ 							<outputFile>${TARGET_DIR}/Packages.gz</outputFile>
 						</configuration>
 					</execution>
 					<!-- sign rpm -->
@@ -81,6 +128,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven.resources.version}</version>
 				<executions>
 					<execution>
 						<id>copy-resources-external</id>
@@ -102,6 +150,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<version>${assembly.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>assembly</id>
