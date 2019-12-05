@@ -265,5 +265,18 @@
 			<version>${project.version}</version>
 			<type>deb</type>
 		</dependency>
+		<!-- ffmpeg -->
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>ffmpeg</artifactId>
+			<version>${project.version}</version>
+			<type>rpm</type>
+		</dependency>
+		<dependency>
+			<groupId>fr.gouv.vitam</groupId>
+			<artifactId>ffmpeg</artifactId>
+			<version>${project.version}</version>
+			<type>deb</type>
+		</dependency>
 	</dependencies>
 </project>
