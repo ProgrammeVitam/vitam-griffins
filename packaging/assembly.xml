@@ -28,6 +28,7 @@
             <outputDirectory>rpm/</outputDirectory>
             <includes>
                 <include>**/*.rpm</include>
+                <include>**/repodata/*.*</include>
             </includes>
         </fileSet>
         <!-- Add "external" deb -->
@@ -36,6 +37,7 @@
             <outputDirectory>deb/</outputDirectory>
             <includes>
                 <include>**/*.deb</include>
+                 <include>**/Packages.gz</include>
             </includes>
         </fileSet>
     </fileSets>
