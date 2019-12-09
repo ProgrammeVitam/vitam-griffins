@@ -65,7 +65,7 @@
 							<arguments>
             					<argument>.</argument>
 							</arguments>
-							<workingDirectory>${TARGET_DIR}/</workingDirectory>
+							<workingDirectory>../rpm/target/</workingDirectory>
 						</configuration>
 					</execution>
 				
@@ -92,8 +92,8 @@
             					<argument>-m</argument>
 								<argument>.</argument>
 							</arguments>
-							<workingDirectory>${TARGET_DIR}/</workingDirectory>
-							<outputFile>${TARGET_DIR}/Packages</outputFile>
+							<workingDirectory>../deb/target/</workingDirectory>
+							<outputFile>../deb/target/Packages</outputFile>
 						</configuration>
 					</execution>
 					<execution>
@@ -108,8 +108,8 @@
             					<argument>-9c</argument>
 								<argument>Packages</argument>
 							</arguments>
-							<workingDirectory>${TARGET_DIR}/</workingDirectory>
- 							<outputFile>${TARGET_DIR}/Packages.gz</outputFile>
+							<workingDirectory>../deb/target/</workingDirectory>
+ 							<outputFile>../deb/target/Packages.gz</outputFile>
 						</configuration>
 					</execution>
 					<!-- sign rpm -->

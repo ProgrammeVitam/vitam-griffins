@@ -26,6 +26,7 @@
             <outputDirectory>rpm_signed/</outputDirectory>
             <includes>
                 <include>**/*.rpm</include>
+                <include>**/repodata/*.*</include>
             </includes>
         </fileSet>
     </fileSets>
