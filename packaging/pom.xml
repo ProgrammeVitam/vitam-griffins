@@ -45,6 +45,16 @@
 				<executions>
 					<!-- rpm -->
 					<execution>
+						<id>Build native selinux rpm</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>../selinux/build-all.sh</executable>
+						</configuration>
+					</execution>					
+					<execution>
 						<id>Build external rpm</id>
 						<phase>process-resources</phase>
 						<goals>

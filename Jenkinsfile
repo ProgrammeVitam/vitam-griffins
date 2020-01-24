@@ -155,6 +155,51 @@ pipeline {
             }
 
         }
+
+        stage("Prepare selinux packages building") {
+            // when {
+            //     anyOf {
+            //         branch "develop*"
+            //         branch "master_*"
+            //         branch "master"
+            //         tag pattern: "^[1-9]+\\.[0-9]+\\.[0-9]+-?[0-9]*\$", comparator: "REGEXP"
+            //     }
+            // }
+            // when {
+            //     environment(name: 'CHANGED_VITAM_PRODUCT', value: 'true')
+            // }
+            steps {
+                sh 'rm -rf selinux/target'
+            }
+        }
+
+        stage("Build selinux packages") {
+            // when {
+            //     anyOf {
+            //         branch "develop*"
+            //         branch "master_*"
+            //         branch "master"
+            //         tag pattern: "^[1-9]+\\.[0-9]+\\.[0-9]+-?[0-9]*\$", comparator: "REGEXP"
+            //     }
+            // }
+            // when {
+            //     environment(name: 'CHANGED_VITAM_PRODUCT', value: 'true')
+            // }
+            environment {
+                http_proxy = credentials("http-proxy-url")
+                https_proxy = credentials("http-proxy-url")
+            }
+            steps {
+                parallel(
+                    "Build selinux rpm": {
+                        dir('selinux') {
+                            sh './build-all.sh'
+                        }
+                    }
+                )
+            }
+        }
+
         stage("Publish packages") {
             steps {
                 parallel(

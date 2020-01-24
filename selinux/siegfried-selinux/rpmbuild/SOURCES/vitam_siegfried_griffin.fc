@@ -1,0 +1,2 @@
+/vitam/bin/worker/griffins/siegfried-griffin(/.*)? gen_context(system_u:object_r:vitam_siegfried_griffin_exec_t,s0) 
+/vitam/tmp/worker/griffins/siegfried-griffin(/.*)? gen_context(system_u:object_r:vitam_siegfried_griffin_data_t,s0) 
