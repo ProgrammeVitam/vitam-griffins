@@ -23,7 +23,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- common dependencies for all modules -->
-        <java.compile.version>1.8</java.compile.version>
+        <java.compile.version>11</java.compile.version>
         <java.version>11</java.version>
         <!-- JDK version -->
         <jdk.version.rpm>java-11-openjdk-headless</jdk.version.rpm>
