@@ -108,7 +108,7 @@
                 <configuration>
                     <disabled>false</disabled>
                     <requires>
-                        <require>${java.version}</require>
+                        <require>${jdk.version.rpm}</require>
                         <require>vitam-user-${unix.user}</require>
                         <require>cups-libs</require>
                         <require>cairo</require>
