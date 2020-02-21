@@ -34,8 +34,8 @@
         <assertj.version>3.11.1</assertj.version>
         <mockito.version>2.23.4</mockito.version>
         <junit.params.version>1.1.1</junit.params.version>
-        <compiler.plugin.version>3.5.1</compiler.plugin.version>
-        <assembly.plugin.version>3.1.0</assembly.plugin.version>
+        <compiler.plugin.version>3.8.1</compiler.plugin.version>
+        <assembly.plugin.version>3.2.0</assembly.plugin.version>
         <maven.resources.version>3.1.0</maven.resources.version>
         <maven.exec.version>1.6.0</maven.exec.version>
         <maven.dependency.version>3.1.1</maven.dependency.version>
