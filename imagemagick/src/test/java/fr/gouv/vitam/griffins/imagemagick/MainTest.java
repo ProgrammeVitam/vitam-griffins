@@ -313,7 +313,7 @@ public class MainTest {
         Path batchFolder = tmpGriffinFolder.newFolder(ID, batchName).toPath();
         String inputFilesFolder = tmpGriffinFolder.newFolder(ID, batchName, inputFilesDirName).toString();
 
-        Path src = new File(Object.class.getResource(String.format("/%s/batch-reference/%s/%s", ID, inputFilesDirName, input.getName())).toURI())
+        Path src = new File(Main.class.getResource(String.format("/%s/batch-reference/%s/%s", ID, inputFilesDirName, input.getName())).toURI())
             .toPath();
         Path target = Paths.get(inputFilesFolder, input.getName());
         Files.copy(src, target, REPLACE_EXISTING);
@@ -340,7 +340,7 @@ public class MainTest {
     public void should_recursive_parse_json_struct() throws Exception {
         // Given
         BatchProcessor for_test = new BatchProcessor(Paths.get("for test"));
-        InputStream resourceAsStream = getClass().getResourceAsStream("/vitam-imagemagick-griffin/batch-reference/imagemagick_output.json");
+        InputStream resourceAsStream = Main.class.getResourceAsStream("/vitam-imagemagick-griffin/batch-reference/imagemagick_output.json");
         // When
         ArrayNode metadata = (ArrayNode) this.mapper.readTree(resourceAsStream);
         Iterator<Entry<String, JsonNode>> image = metadata.get(0).get("image").fields();
