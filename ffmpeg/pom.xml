@@ -101,7 +101,7 @@
                 <configuration>
                     <disabled>false</disabled>
                     <requires>
-                        <require>${java.version}</require>
+                        <require>${jdk.version.rpm}</require>
                         <require>ffmpeg</require>
                         <require>lame-libs</require>
                         <require>vitam-user-${unix.user}</require>

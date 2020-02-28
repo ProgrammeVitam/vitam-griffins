@@ -14,7 +14,7 @@
     <name>Vitam griffin verapdf</name>
     <properties>
         <unix.name>verapdf-griffin</unix.name>
-        <verapdf.version>1.12.1</verapdf.version>
+        <verapdf.version>1.14.105</verapdf.version>
     </properties>
 
     <dependencies>
@@ -113,7 +113,7 @@
                 <configuration>
                     <disabled>false</disabled>
                     <requires>
-                        <require>${java.version}</require>
+                        <require>${jdk.version.rpm}</require>
                         <require>vitam-user-${unix.user}</require>
                     </requires>
                     <mappings>

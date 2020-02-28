@@ -128,7 +128,7 @@ public class MainTest {
         Path batchFolder = tmpGriffinFolder.newFolder(ID, batchName).toPath();
         String inputFilesFolder = tmpGriffinFolder.newFolder(ID, batchName, inputFilesDirName).toString();
 
-        Path src = new File(Object.class.getResource(String.format("/%s/batch-reference/%s/%s", ID, inputFilesDirName, input.getName())).toURI())
+        Path src = new File(Main.class.getResource(String.format("/%s/batch-reference/%s/%s", ID, inputFilesDirName, input.getName())).toURI())
                 .toPath();
         Path target = Paths.get(inputFilesFolder, input.getName());
         Files.copy(src, target, REPLACE_EXISTING);

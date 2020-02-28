@@ -102,7 +102,7 @@
                 <configuration>
                     <disabled>false</disabled>
                     <requires>
-                        <require>${java.version}</require>
+                        <require>${jdk.version.rpm}</require>
                         <require>ImageMagick</require>
                         <require>vitam-user-${unix.user}</require>
                     </requires>
