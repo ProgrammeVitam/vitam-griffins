@@ -1,5 +1,5 @@
-/*******************************************************************************
- * Copyright French Prime minister Office/SGMAP/DINSIC/Vitam Program (2015-2019)
+/*
+ * Copyright French Prime minister Office/SGMAP/DINSIC/Vitam Program (2015-2020)
  *
  * contact.vitam@culture.gouv.fr
  *
@@ -23,7 +23,7 @@
  *
  * The fact that you are presently reading this means that you have had knowledge of the CeCILL 2.1 license and that you
  * accept its terms.
- *******************************************************************************/
+ */
 
 package fr.gouv.vitam.griffins.tesseract.pojo;
 
@@ -53,6 +53,9 @@ public class Output {
     private AnalyseResult analyseResult;
     @JsonProperty("Action")
     private ActionType action;
+    @JsonProperty("ExtractedMetadataAU")
+    private ExtractedMetadata extractedMetadataAU;
+
 
     public Output() {
     }
@@ -96,16 +99,17 @@ public class Output {
         return output;
     }
 
-    public static Output ok(Input input, String outputName, ActionType action) {
+    public static Output ok(Input input, String outputName, ActionType action, ExtractedMetadata extractedMetadata) {
         Output output = new Output();
         output.setInput(input);
         output.setOutputName(outputName);
         output.setStatus(GriffinStatus.OK);
         output.setAction(action);
+        output.setExtractedMetadataAU(extractedMetadata);
         return output;
     }
 
-    public static Output ok(Input input, String outputName, ActionType action, String stderr, String stdout, String executed) {
+    public static Output ok(Input input, String outputName, ActionType action, String stderr, String stdout, String executed, ExtractedMetadata extractedMetadata) {
         Output output = new Output();
         output.setInput(input);
         output.setOutputName(outputName);
@@ -114,6 +118,7 @@ public class Output {
         output.setError(stderr);
         output.setResult(stdout);
         output.setExecuted(executed);
+        output.setExtractedMetadataAU(extractedMetadata);
         return output;
     }
 
@@ -179,6 +184,14 @@ public class Output {
 
     public void setAnalyseResult(AnalyseResult analyseResult) {
         this.analyseResult = analyseResult;
+    }
+
+    public ExtractedMetadata getExtractedMetadataAU() {
+        return extractedMetadataAU;
+    }
+
+    public void setExtractedMetadataAU(ExtractedMetadata extractedMetadataAU) {
+        this.extractedMetadataAU = extractedMetadataAU;
     }
 
     @Override

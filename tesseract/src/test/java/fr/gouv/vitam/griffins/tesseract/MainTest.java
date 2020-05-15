@@ -1,7 +1,13 @@
 package fr.gouv.vitam.griffins.tesseract;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.gouv.vitam.griffins.tesseract.pojo.*;
+import fr.gouv.vitam.griffins.tesseract.pojo.Action;
+import fr.gouv.vitam.griffins.tesseract.pojo.BatchStatus;
+import fr.gouv.vitam.griffins.tesseract.pojo.Input;
+import fr.gouv.vitam.griffins.tesseract.pojo.Output;
+import fr.gouv.vitam.griffins.tesseract.pojo.Parameters;
+import fr.gouv.vitam.griffins.tesseract.pojo.Result;
+import fr.gouv.vitam.griffins.tesseract.pojo.Values;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -14,14 +20,19 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 import static fr.gouv.vitam.griffins.tesseract.specific.ActionType.ANALYSE;
-import static fr.gouv.vitam.griffins.tesseract.specific.ActionType.EXTRACT_GOT;
+import static fr.gouv.vitam.griffins.tesseract.specific.ActionType.EXTRACT;
+import static fr.gouv.vitam.griffins.tesseract.specific.ActionType.EXTRACT_AU;
 import static fr.gouv.vitam.griffins.tesseract.specific.ActionType.GENERATE;
 import static fr.gouv.vitam.griffins.tesseract.specific.ActionType.IDENTIFY;
-import static fr.gouv.vitam.griffins.tesseract.status.GriffinStatus.WARNING;
 import static fr.gouv.vitam.griffins.tesseract.status.GriffinStatus.KO;
+import static fr.gouv.vitam.griffins.tesseract.status.GriffinStatus.OK;
+import static fr.gouv.vitam.griffins.tesseract.status.GriffinStatus.WARNING;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,8 +40,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MainTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    static String defaultFileName="8093_311.4B.tif";
-    static String defaultFileFormat="fmt/152";
+    static final String defaultFileName = "8093_311.4B.tif";
+    static final String defaultFileFormat = "fmt/152";
 
     private String getOutputPath(Input input, Action action, BatchProcessor batchProcessor) {
         String outputName;
@@ -38,17 +49,19 @@ public class MainTest {
             case ANALYSE:
                 return null;
             case IDENTIFY:
-            case EXTRACT_GOT:
+            case EXTRACT:
             case EXTRACT_AU:
                 outputName = String.format("%s-%s.%s", action.getType().name(), input.getName(), "json");
                 break;
             case GENERATE:
-                outputName = String.format("%s-%s.%s", action.getType().name(), input.getName(), action.getValues().getExtension());
+                outputName = String
+                    .format("%s-%s.%s", action.getType().name(), input.getName(), action.getValues().getExtension());
                 break;
             default:
                 throw new IllegalStateException("Unreachable");
         }
-        return batchProcessor.batchDirectory.resolve(batchProcessor.outputFilesDirName).resolve(outputName).toString();
+        return batchProcessor.getBatchDirectory().resolve(BatchProcessor.outputFilesDirName).resolve(outputName)
+            .toString();
     }
 
     @Rule
@@ -72,8 +85,8 @@ public class MainTest {
         BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
 
         // Suppress outputfile if any
-        String outputfilename=getOutputPath(input, action, batchProcessor);
-        if (Files.isRegularFile(Paths.get(outputfilename)))
+        String outputfilename = getOutputPath(input, action, batchProcessor);
+        if (outputfilename != null && Files.isRegularFile(Paths.get(outputfilename)))
             Files.delete(Paths.get(outputfilename));
 
         // When
@@ -107,14 +120,15 @@ public class MainTest {
 
         // Then
         assertThat(status.status).isEqualTo(WARNING);
-        assertThat(Paths.get(tmpGriffonFolder.getRoot().getPath(), input.getName(), BatchProcessor.resultFileName)).exists();
+        assertThat(Paths.get(tmpGriffonFolder.getRoot().getPath(), input.getName(), BatchProcessor.resultFileName))
+            .exists();
     }
 
     @Test
     public void should_ANALYSE_metadata_error() throws Exception {
         // Given
         Input input = new Input(defaultFileName, defaultFileFormat);
-        Action action = new Action(ANALYSE, new Values("AIF",null));
+        Action action = new Action(ANALYSE, new Values("AIF", null));
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffonFolder.getRoot().toPath().resolve(input.getName());
@@ -125,14 +139,15 @@ public class MainTest {
 
         // Then
         assertThat(status.status).isEqualTo(WARNING);
-        assertThat(Paths.get(tmpGriffonFolder.getRoot().getPath(), input.getName(), BatchProcessor.resultFileName)).exists();
+        assertThat(Paths.get(tmpGriffonFolder.getRoot().getPath(), input.getName(), BatchProcessor.resultFileName))
+            .exists();
     }
 
     @Test
     public void should_NOT_EXTRACT_metadata_error() throws Exception {
         // Given
         Input input = new Input(defaultFileName, defaultFileFormat);
-        Action action = new Action(EXTRACT_GOT, new Values(Arrays.asList("test")));
+        Action action = new Action(EXTRACT, new Values(Collections.singletonList("test")));
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffonFolder.getRoot().toPath().resolve(input.getName());
@@ -143,14 +158,15 @@ public class MainTest {
 
         // Then
         assertThat(status.status).isEqualTo(WARNING);
-        assertThat(Paths.get(tmpGriffonFolder.getRoot().getPath(), input.getName(), BatchProcessor.resultFileName)).exists();
+        assertThat(Paths.get(tmpGriffonFolder.getRoot().getPath(), input.getName(), BatchProcessor.resultFileName))
+            .exists();
     }
 
     @Test
     public void should_extract_metadata() throws Exception {
         // Given
         Input input = new Input(defaultFileName, defaultFileFormat);
-        Action action = new Action(EXTRACT_GOT, new Values(Arrays.asList("high-level", "trated")));
+        Action action = new Action(EXTRACT, new Values(Arrays.asList("high-level", "trated")));
         generateBatch(action, input);
 
         Path batchDirectory = tmpGriffonFolder.getRoot().toPath().resolve(input.getName());
@@ -161,7 +177,37 @@ public class MainTest {
 
         // Then
         assertThat(status.status).isEqualTo(WARNING);
-        assertThat(Paths.get(tmpGriffonFolder.getRoot().getPath(), input.getName(), BatchProcessor.resultFileName)).exists();
+        assertThat(Paths.get(tmpGriffonFolder.getRoot().getPath(), input.getName(), BatchProcessor.resultFileName))
+            .exists();
+    }
+
+    @Test
+    public void should_extract_metadata_for_au() throws Exception {
+        // Given
+        Input input = new Input("eng_bw.png", "fmt/12");
+        Action action = new Action(EXTRACT_AU, new Values("txt", null));
+        generateBatch(action, input);
+
+        Path batchDirectory = tmpGriffonFolder.getRoot().toPath().resolve(input.getName());
+        BatchProcessor batchProcessor = new BatchProcessor(batchDirectory);
+
+        // When
+        BatchStatus status = batchProcessor.execute();
+
+        // Then
+        assertThat(status.status).isEqualTo(OK);
+        assertThat(Paths.get(tmpGriffonFolder.getRoot().getPath(), input.getName(), BatchProcessor.resultFileName))
+            .exists();
+        assertThat(getTextContent(input)).contains("Mild Splendour");
+    }
+
+    private String getTextContent(Input input) throws IOException {
+        return (String) getOutputs(input.getName())
+            .getOutputs()
+            .get(input.getName())
+            .get(0)
+            .getExtractedMetadataAU()
+            .get(BatchProcessor.TEXT_CONTENT);
     }
 
     @Test
@@ -181,16 +227,19 @@ public class MainTest {
     }
 
     private Result getOutputs(String batchName) throws IOException {
-        return objectMapper.readValue(Paths.get(tmpGriffonFolder.getRoot().getPath(),batchName, BatchProcessor.resultFileName).toFile(), Result.class);
+        return objectMapper.readValue(
+            Paths.get(tmpGriffonFolder.getRoot().getPath(), batchName, BatchProcessor.resultFileName).toFile(),
+            Result.class);
     }
 
-    private Parameters generateBatch(Action action, Input input) throws Exception {
-        String batchName=input.getName();
+    private void generateBatch(Action action, Input input) throws Exception {
+        String batchName = input.getName();
 
         Path batchFolder = tmpGriffonFolder.newFolder(batchName).toPath();
         String inputFilesFolder = tmpGriffonFolder.newFolder(batchName, BatchProcessor.inputFilesDirName).toString();
 
-        Path src = Paths.get(String.format("src/test/resources/batch-reference/%s/%s", BatchProcessor.inputFilesDirName, input.getName()));
+        Path src = Paths.get(String
+            .format("src/test/resources/batch-reference/%s/%s", BatchProcessor.inputFilesDirName, input.getName()));
         Path target = Paths.get(inputFilesFolder, input.getName());
         Files.copy(src, target, REPLACE_EXISTING);
 
@@ -201,10 +250,12 @@ public class MainTest {
         parameters.setActions(Collections.singletonList(action));
         parameters.setInputs(Collections.singletonList(input));
 
-        FileAttribute<Set<PosixFilePermission>> setFileAttribute = PosixFilePermissions.asFileAttribute(Files.getPosixFilePermissions(batchFolder, NOFOLLOW_LINKS));
-        File parametersFile = Files.createFile(Paths.get(batchFolder.toString(), BatchProcessor.parametersFileName), setFileAttribute).toFile();
+        FileAttribute<Set<PosixFilePermission>> setFileAttribute =
+            PosixFilePermissions.asFileAttribute(Files.getPosixFilePermissions(batchFolder, NOFOLLOW_LINKS));
+        File parametersFile =
+            Files.createFile(Paths.get(batchFolder.toString(), BatchProcessor.parametersFileName), setFileAttribute)
+                .toFile();
 
         objectMapper.writer().writeValue(parametersFile, parameters);
-        return parameters;
     }
 }
