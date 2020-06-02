@@ -1,5 +1,5 @@
-/*******************************************************************************
- * Copyright French Prime minister Office/SGMAP/DINSIC/Vitam Program (2015-2019)
+/*
+ * Copyright French Prime minister Office/SGMAP/DINSIC/Vitam Program (2015-2020)
  *
  * contact.vitam@culture.gouv.fr
  *
@@ -23,17 +23,16 @@
  *
  * The fact that you are presently reading this means that you have had knowledge of the CeCILL 2.1 license and that you
  * accept its terms.
- *******************************************************************************/
-
+ */
 package fr.gouv.vitam.griffins.tesseract.specific;
 
 import fr.gouv.vitam.griffins.tesseract.BatchProcessor;
 import fr.gouv.vitam.griffins.tesseract.pojo.Action;
+import fr.gouv.vitam.griffins.tesseract.pojo.ExtractedMetadata;
 import fr.gouv.vitam.griffins.tesseract.pojo.Input;
 import fr.gouv.vitam.griffins.tesseract.pojo.Output;
 import fr.gouv.vitam.griffins.tesseract.status.AnalyseResult;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -149,7 +148,7 @@ public class RawOutput {
      * @param processBuilder the ProcessBuilder
      * @param outputFileName the exception
      */
-    public RawOutput(Process process, ProcessBuilder processBuilder, String outputFileName) throws IOException {
+    public RawOutput(Process process, ProcessBuilder processBuilder, String outputFileName) {
         this.executionContext = String.join(" ", processBuilder.command());
         this.outputFileName = outputFileName;
         this.errorMessage = null;
@@ -183,7 +182,7 @@ public class RawOutput {
      * @return the output
      * @throws RuntimeException the runtime exception
      */
-    public Output postProcess(boolean debug) throws RuntimeException {
+    public Output postProcess(boolean debug, ExtractedMetadata extractedMetadata) throws RuntimeException {
         Output result;
         if (errorMessage != null) {
             return debug
@@ -194,9 +193,9 @@ public class RawOutput {
         if (exitCode!=0)
             result = Output.error(input, action.getType(), stderr,executionContext);
         else if (debug)
-            result = Output.ok(input, outputFileName, action.getType(),stderr,stdout,executionContext);
+            result = Output.ok(input, outputFileName, action.getType(),stderr,stdout,executionContext, extractedMetadata);
         else
-            result = Output.ok(input, outputFileName, action.getType());
+            result = Output.ok(input, outputFileName, action.getType(), extractedMetadata);
         result.setAnalyseResult(analyseResult);
         return result;
     }

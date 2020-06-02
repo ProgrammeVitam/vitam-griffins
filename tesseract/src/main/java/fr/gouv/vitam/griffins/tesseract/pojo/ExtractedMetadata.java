@@ -8,7 +8,7 @@
  *
  * This software is governed by the CeCILL 2.1 license under French law and abiding by the rules of distribution of free
  * software. You can use, modify and/ or redistribute the software under the terms of the CeCILL 2.1 license as
- * circulated by CEA, CNRS and INRIA at the following URL "http://www.cecill.info".
+ * circulated by CEA, CNRS and INRIA at the following URL "https://cecill.info".
  *
  * As a counterpart to the access to the source code and rights to copy, modify and redistribute granted by the license,
  * users are provided only with a limited warranty and the software's author, the holder of the economic rights, and the
@@ -24,24 +24,18 @@
  * The fact that you are presently reading this means that you have had knowledge of the CeCILL 2.1 license and that you
  * accept its terms.
  */
-package fr.gouv.vitam.griffins.tesseract.specific;
+package fr.gouv.vitam.griffins.tesseract.pojo;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * Class defining action types and associated args for standard command line generation.
- */
-public enum ActionType {
-    GENERATE(Arrays.asList("tesseract", "%inputname%", "%outputname%", "%args%")),
-    IDENTIFY(null),
-    ANALYSE(null),
-    EXTRACT(null),
-    EXTRACT_AU(Arrays.asList("tesseract", "%inputname%", "stdout", "%args%"));
+public class ExtractedMetadata extends HashMap<String, Object> {
 
-    public List<String> action;
+    public ExtractedMetadata() {
+        // Empty constructor for deserialization
+    }
 
-    ActionType(List<String> action) {
-        this.action = action;
+    public ExtractedMetadata(Map<? extends String, ?> m) {
+        super(m);
     }
 }

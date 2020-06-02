@@ -1,5 +1,5 @@
-/*******************************************************************************
- * Copyright French Prime minister Office/SGMAP/DINSIC/Vitam Program (2015-2019)
+/*
+ * Copyright French Prime minister Office/SGMAP/DINSIC/Vitam Program (2015-2020)
  *
  * contact.vitam@culture.gouv.fr
  *
@@ -23,8 +23,7 @@
  *
  * The fact that you are presently reading this means that you have had knowledge of the CeCILL 2.1 license and that you
  * accept its terms.
- *******************************************************************************/
-
+ */
 package fr.gouv.vitam.griffins.tesseract.specific;
 
 import java.util.ArrayList;
@@ -42,9 +41,8 @@ public class InnerTool {
     /**
      * Instantiates a new inner tool.
      *
-     * @throws Exception the exception
      */
-    public InnerTool() throws Exception {
+    public InnerTool() {
         // init the inner tool used
     }
 
@@ -68,16 +66,15 @@ public class InnerTool {
     }
 
     private RawOutput doAnalyse(Action action, String fileName, String format, boolean debugFlag) {
-        RawOutput result = null;
 
         // do what's needed for analysis or return error
         // throw new Exception(Main.ID+" can't do Analyse action")
 
-        return result;
+        return null;
     }
 
     private RawOutput doGenerate(Action action, String inputFileName, String format, String outputFileName, boolean debugFlag) {
-        RawOutput result = null;
+        RawOutput result;
 
         ProcessBuilder processBuilder = new ProcessBuilder(gettesseractParams(action, inputFileName, outputFileName));
         Process tesseract =null;
@@ -94,30 +91,27 @@ public class InnerTool {
     }
 
     private RawOutput doIdentify(Action action, String inputFileName, String format, String outputFileName, boolean debugFlag) {
-        RawOutput result = null;
 
         // do what's needed for identification or return error
         // throw new Exception(Main.ID+" can't do Identify action")
 
-        return result;
+        return null;
     }
 
     private RawOutput doExtractGOT(Action action, String inputFileName, String format, String outputFileName, boolean debugFlag) {
-        RawOutput result = null;
 
         // do what's needed for extraction of metadata for GOT enrichment or return error
         // throw new Exception(Main.ID+" can't do ExtractGOT action")
 
-        return result;
+        return null;
     }
 
     private RawOutput doExtractAU(Action action, String inputFileName, String format, String outputFileName, boolean debugFlag) {
-        RawOutput result = null;
 
         // do what's needed for extraction of metadata for AU enrichment or return error
         // throw new Exception(Main.ID+" can't do ExtractAU action")
 
-        return result;
+        return null;
     }
 
     /**
@@ -135,14 +129,13 @@ public class InnerTool {
         switch (action.getType()) {
             case ANALYSE:
                 return doAnalyse(action, inputFileName, format, debugFlag);
+            case EXTRACT_AU:
             case GENERATE:
                 return doGenerate(action, inputFileName, format, outputFileName, debugFlag);
             case IDENTIFY:
                 return doIdentify(action, inputFileName, format, outputFileName, debugFlag);
-            case EXTRACT_GOT:
+            case EXTRACT:
                 return doExtractGOT(action, inputFileName, format, outputFileName, debugFlag);
-            case EXTRACT_AU:
-                return doExtractAU(action, inputFileName, format, outputFileName, debugFlag);
             default:
                 return new RawOutput(new Exception(Main.ID+" can't do " + action.getType()));
         }
