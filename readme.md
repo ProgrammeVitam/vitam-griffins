@@ -17,6 +17,7 @@ Griffins are program that are able to apply conversion, transformation or identi
 - `IDENTIFY` like identify the file, and find it's PUID.
 - `GENERATE` like generate a GIF from a JPG picture.
 - `EXTRACT` like extract some EXIF data from a picture.
+- `EXTRACT_AU` like extract text content from a picture.
 
 ## Analyze result
 - `VALID_ALL` means that the file is the right format and is not corrupted.
@@ -147,24 +148,24 @@ Available and "real" examples of griffins and preservation scenario can be found
 ## Available Griffins
 ### Tesseract
 [Tesseract](https://github.com/tesseract-ocr/tesseract) is an OCR tool which can convert tiff, jpg, png...
-Example of a tesseract griffin can be found [here](cookbook/griffins-tesseract.json), and a preservation scenario can be found [here](cookbook/preservation-generate-tesseract.json), all can be used with [this SIP](cookbook/sip_tesseract.zip).
-Tesseract griffin can only do `EXTRACT` actions, and a batch example can be found [here](tesseract/src/test/resources/batch-reference).
+Example of a tesseract griffin can be found [here](cookbook/griffin_referential/griffins-tesseract.json), and a preservation scenario can be found [here](cookbook/preservation_referential/preservation-generate-tesseract.json), all can be used with [this SIP](cookbook/sip_test/sip_tesseract.zip).
+Tesseract griffin can only do  `GENERATE`, `EXTRACT` and `EXTRACT_AU` actions, and a batch example can be found [here](tesseract/src/test/resources/batch-reference).
 
 ### Siegfried
 [Siegfried](https://github.com/richardlehane/siegfried) is a tool that identifies files.
-Example of a Siegfried griffin can be found [here](cookbook/griffins-siegfried.json), and a preservation scenario can be found [here](cookbook/preservation-identification.json), all can be used with [this SIP](cookbook/sip_images.zip).
+Example of a Siegfried griffin can be found [here](cookbook/griffin_referential/griffins-siegfried.json), and a preservation scenario can be found [here](cookbook/preservation_referential/preservation-identification.json), all can be used with [this SIP](cookbook/sip_test/sip_images.zip).
 Siegfried griffin can only do `IDENTIFY` actions, and a batch example can be found [here](siegfried/src/test/resources/batch-reference).
 
 ### odfvalidator
 [ODFValidator](https://incubator.apache.org/odftoolkit/conformance/ODFValidator.html) is a java library that can validate Open Document Formats.
-Example of a odfvalidator griffin can be found [here](cookbook/griffins-odfvalidator.json), and a preservation scenario can be found [here](cookbook/preservation-analyse-odfvalidator.json), all can be used with [this SIP](cookbook/sip_libreoffice.zip).
+Example of a odfvalidator griffin can be found [here](cookbook/griffin_referential/griffins-odfvalidator.json), and a preservation scenario can be found [here](cookbook/preservation_referential/preservation-analyse-odfvalidator.json), all can be used with [this SIP](cookbook/sip_test/sip_libreoffice.zip).
 odfvalidator griffin can only do `ANALYSE` actions, and a batch example can be found [here](odfvalidator/src/test/resources/batch-reference).
 NOTE: First you have to install
       odfvalidator 1.2.0-incubating-vitam from vitam branch of vitam/odftoolkit
 
 ### libreoffice
 [LibreOffice](https://fr.libreoffice.org/) is an application which can be used to convert office files or generate pdf from them.
-Example of a Libreoffice griffin can be found [here](cookbook/griffins-libreoffice.json), and a preservation scenario can be found [here](cookbook/preservation-generate-libreoffice.json), all can be used with [this SIP](cookbook/sip_libreoffice.zip).
+Example of a Libreoffice griffin can be found [here](cookbook/griffin_referential/griffins-libreoffice.json), and a preservation scenario can be found [here](cookbook/preservation_referential/preservation-generate-libreoffice.json), all can be used with [this SIP](cookbook/sip_test/sip_libreoffice.zip).
 Libreoffice griffin can only do `GENERATE` actions, and a batch example can be found [here](libreoffice/src/test/resources/batch-reference).
 
 A list of all `FilterName` can be found bellow:
@@ -681,12 +682,12 @@ Here is an example of different possible generations:
 
 ### jhove
 [Jhove](http://jhove.openpreservation.org/) is a java library that can validate different files format.
-Example of a jhove griffin can be found [here](cookbook/griffins-jhove.json), and a preservation scenario can be found [here](cookbook/preservation-analyse-jhove.json), all can be used with [this SIP](cookbook/sip_libreoffice.zip).
+Example of a jhove griffin can be found [here](cookbook/griffin_referential/griffins-jhove.json), and a preservation scenario can be found [here](cookbook/preservation_referential/preservation-analyse-jhove.json), all can be used with [this SIP](cookbook/sip_test/sip_libreoffice.zip).
 jhove griffin can only do `ANALYSE` actions, and a batch example can be found [here](jhove/src/test/resources/batch-reference).
 
 ### Imagemagick
 [Imagemagick](https://www.imagemagick.org/) is a took that can analyze, generate, or extract data from a picture.
-Example of a Imagemagick griffin can be found [here](cookbook/griffins-imagemagick.json), and a preservation scenario can be found [here](cookbook/preservation-tranformation-webp.json), all can be used with [this SIP](cookbook/sip_images.zip).
+Example of a Imagemagick griffin can be found [here](cookbook/griffin_referential/griffins-imagemagick.json), and a preservation scenario can be found [here](cookbook/preservation_referential/preservation-tranformation-webp.json), all can be used with [this SIP](cookbook/sip_test/sip_images.zip).
 Imagemagick griffin can only do `ANALYSE | EXTRACT | GENERATE` actions, and a batch example can be found [here](imagemagick/src/test/resources/vitam-imagemagick-griffin/batch-reference).
 
 ## Dependencies
