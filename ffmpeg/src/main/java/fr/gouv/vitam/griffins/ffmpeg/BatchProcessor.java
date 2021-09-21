@@ -120,16 +120,25 @@ public class BatchProcessor {
         ProcessBuilder processBuilder = new ProcessBuilder(getParams(input, action));
 
         try {
+            File outputFile;
+            outputFile = File.createTempFile("encodingOutput-" + input.getName(), ".tmp");
+            outputFile.createNewFile();
+
+            processBuilder.redirectErrorStream(true);
 
             processBuilder.redirectInput(ProcessBuilder.Redirect.PIPE); // optional, default behavior
+            processBuilder.redirectOutput(outputFile);
 
             Process ffmpeg = processBuilder.start();
             ffmpeg.waitFor();
+            outputFile.delete();
 
             return new RawOutput(ffmpeg, processBuilder, input, getOutputname(input.getName(), action), action);
         } catch (Exception e) {
+            logger.error("{}", e);
             return new RawOutput(e, processBuilder, input, getOutputname(input.getName(), action), action);
         }
+
     }
 
     private String getOutputname(String inputname, Action actionType) {
