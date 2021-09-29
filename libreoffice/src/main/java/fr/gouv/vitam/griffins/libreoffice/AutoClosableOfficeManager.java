@@ -30,16 +30,10 @@ import org.jodconverter.office.LocalOfficeManager;
 import org.jodconverter.office.OfficeException;
 import org.jodconverter.office.OfficeManager;
 import org.jodconverter.task.OfficeTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import javax.management.timer.Timer;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class AutoClosableOfficeManager implements AutoCloseable, OfficeManager {
 
@@ -48,6 +42,8 @@ public class AutoClosableOfficeManager implements AutoCloseable, OfficeManager {
     public AutoClosableOfficeManager(int libreOffice) throws IOException {
         this.manager = LocalOfficeManager.builder()
             .portNumbers(libreOffice)
+            .processTimeout(Timer.ONE_HOUR)
+            .taskExecutionTimeout(Timer.ONE_HOUR)
             .workingDir(Files.createTempDirectory("griffin-libreoffice-").toFile())
             .install()
             .build();
