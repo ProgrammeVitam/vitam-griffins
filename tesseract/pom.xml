@@ -5,7 +5,7 @@
     <parent>
         <groupId>fr.gouv.vitam</groupId>
         <artifactId>vitam-griffins</artifactId>
-        <version>1.16.0-SNAPSHOT</version>
+        <version>1.17.0-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
     <artifactId>tesseract</artifactId>
