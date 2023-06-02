@@ -26,32 +26,51 @@ set -e
 # The fact that you are presently reading this means that you have had knowledge of the CeCILL 2.1 license and that you
 # accept its terms.
 #*******************************************************************************
-WORKING_DIR=$(dirname $0)
+if [[ $1 != 'deb' ]] && [[ $1 != 'rpm' ]] ; then
+  echo 'You must specify target to build !'
+  echo './build_repo.sh deb|rpm'
+  exit 1;
+fi
 
-SOURCES_FILE=${WORKING_DIR}/sources # Contains all the urls where download rpm
-TARGET_DIR=${WORKING_DIR}/target      # Targer dir where copying rpm dowloaded
+WORKING_DIR=$(dirname $0)/$1
+REPOSITORY=https://download.programmevitam.fr/vitam_griffins
+AUTHORISATION=""
+
+SOURCES_FILE=${WORKING_DIR}/sources # Contains all the urls where download rpm/deb
+TARGET_DIR=${WORKING_DIR}/target      # Targer dir where copying rpm/deb dowloaded
+
+if  [ ! -z $2 ] ; then
+  REPOSITORY=$2
+fi
+
 mkdir -p ${TARGET_DIR}
 
 if [ -f "${SOURCES_FILE}" ]
 then
-	cat ${SOURCES_FILE} |  
-	while read SRC_URL   
+	cat ${SOURCES_FILE} |
+	while read FILENAME
 	do
-		echo "SRC_URL : ${SRC_URL}"
-		if [[ $(echo "${SRC_URL}" | grep -E -o '^[^#]') ]] # skip is the line is commented
+		if [[ $(echo "${FILENAME}" | grep -E -o '^[^#]') ]] # skip is the line is commented
 		then
-			FILE=$(echo "${SRC_URL}" | grep -E -o '[^/]+$') # get the name of the rpm file
-			if [ -f "${TARGET_DIR}/${FILE}" ]
+		  echo "FILENAME : ${FILENAME}"
+			if [ -f "${TARGET_DIR}/${FILENAME}" ]
 			then
-			 	echo "${FILE} already exists in ${TARGET_DIR} ! Skipping..." 
-			else # if [ -f "${TARGET_DIR}/${FILE}" ]
+			 	echo "${FILENAME} already exists in ${TARGET_DIR} ! Skipping..."
+			else # if [ -f "${TARGET_DIR}/${FILENAME}" ]
+			  SRC_URL="${REPOSITORY}/$1/${FILENAME}"
 			 	echo "Downloading ${SRC_URL} into ${TARGET_DIR}..."
-			 	curl -k ${SRC_URL} -o ${TARGET_DIR}/${FILE}.tmp	  
-			 	mv ${TARGET_DIR}/${FILE}.tmp ${TARGET_DIR}/${FILE}
+			 	if [ -z $2 ] ; then
+			 	  HTTP_CODE=$(curl -k --silent -o ${TARGET_DIR}/${FILENAME}.tmp 	--write-out "%{http_code}" ${SRC_URL})
+			 	else
+			 	  HTTP_CODE=$(curl -u $3 -k --silent -o ${TARGET_DIR}/${FILENAME}.tmp 	--write-out "%{http_code}" ${SRC_URL})
+        fi
+			 	if [[ ${HTTP_CODE} -lt 200 || ${HTTP_CODE} -gt 299 ]] ; then
+            echo "Cannot find ${FILENAME} in ${SRC_URL}"
+            exit 1;
+        fi
+			 	mv ${TARGET_DIR}/${FILENAME}.tmp ${TARGET_DIR}/${FILENAME}
 			 	echo "Download done."
 			fi 
-		else #if [echo "${SRC_URL}" | grep -E -o '^[^#]']
-			echo "${SRC_URL} is commented  ! Skipping..."
 		fi
 	done
 else # if [ -f "${SOURCES_FILE}" ]
