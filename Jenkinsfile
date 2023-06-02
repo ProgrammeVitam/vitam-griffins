@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'griffins11'
+        label 'griffins'
     }
 
     environment {
@@ -17,6 +17,7 @@ pipeline {
         SERVICE_PROXY_PORT = credentials("http-proxy-port")
         SERVICE_NOPROXY = credentials("http_nonProxyHosts")
         GITHUB_ACCOUNT_TOKEN = credentials("vitam-prg-token")
+        PIC_PROD_URL = credentials("service-repository-url")
     }
 
    stages {
@@ -65,7 +66,7 @@ pipeline {
                     deleteDir()
                 }
                 withEnv(["JAVA_TOOL_OPTIONS=-Dhttp.proxyHost=${env.SERVICE_PROXY_HOST} -Dhttp.proxyPort=${env.SERVICE_PROXY_PORT} -Dhttps.proxyHost=${env.SERVICE_PROXY_HOST} -Dhttps.proxyPort=${env.SERVICE_PROXY_PORT} -Dhttp.nonProxyHosts=${env.SERVICE_NOPROXY}"]) {
-                    sh '$MVN_BASE --settings .ci/settings_internet.xml -f pom.xml clean test'
+                    sh '$MVN_BASE --settings .ci/settings.xml -f pom.xml clean test -Doffice.home=/opt/libreoffice6.2/'
                 }
             }
             post {
@@ -142,14 +143,14 @@ pipeline {
             steps {
                 parallel(
                     "Download deb packages": {
-                        dir('deb') {
-                            sh './build_repo.sh'
-                         }
+                        withCredentials([usernamePassword(credentialsId: 'app-jenkins', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                          sh './build_repo.sh deb https://repository.dev.programmevitam.fr/griffins_binaries $USERNAME:$PASSWORD'
+                        }
                     },
                     "Download rpm packages": {
-                        dir('rpm') {
-                            sh './build_repo.sh'
-                         }
+                        withCredentials([usernamePassword(credentialsId: 'app-jenkins', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                          sh './build_repo.sh rpm https://repository.dev.programmevitam.fr/griffins_binaries $USERNAME:$PASSWORD'
+                        }
                     }
                 )
             }

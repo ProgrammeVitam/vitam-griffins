@@ -53,7 +53,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>${assembly.plugin.version}</version>
+                <version>${maven.assembly.version}</version>
                 <configuration>
                     <finalName>odfvalidator</finalName>
                     <descriptorRefs>

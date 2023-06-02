@@ -28,17 +28,18 @@
         <!-- JDK version -->
         <jdk.version.rpm>java-11-openjdk-headless</jdk.version.rpm>
         <jdk.version.debian>openjdk-11-jre-headless</jdk.version.debian>
-        <jackson.version>2.9.9</jackson.version>
-        <slf4j.version>1.7.25</slf4j.version>
+        <jackson.version>2.12.6</jackson.version>
+        <slf4j.version>1.7.30</slf4j.version>
         <junit.version>4.12</junit.version>
         <assertj.version>3.11.1</assertj.version>
-        <mockito.version>2.23.4</mockito.version>
+        <mockito.version>2.28.2</mockito.version>
         <junit.params.version>1.1.1</junit.params.version>
-        <compiler.plugin.version>3.8.1</compiler.plugin.version>
-        <assembly.plugin.version>3.2.0</assembly.plugin.version>
+        <jdeb.vafer.version>1.5</jdeb.vafer.version>
+        <maven.compiler.version>3.8.1</maven.compiler.version>
+        <maven.assembly.version>3.2.0</maven.assembly.version>
         <maven.resources.version>3.1.0</maven.resources.version>
         <maven.exec.version>1.6.0</maven.exec.version>
-        <maven.dependency.version>3.1.1</maven.dependency.version>
+        <maven.dependency.version>3.3.0</maven.dependency.version>
         <unix.user>vitam</unix.user>
         <unix.group>vitam</unix.group>
     </properties>
@@ -108,7 +109,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${compiler.plugin.version}</version>
+                    <version>${maven.compiler.version}</version>
                     <configuration>
                         <source>${java.compile.version}</source>
                         <target>${java.compile.version}</target>
@@ -146,7 +147,7 @@
                 <plugin>
                     <artifactId>jdeb</artifactId>
                     <groupId>org.vafer</groupId>
-                    <version>1.5</version>
+                    <version>${jdeb.vafer.version}</version>
                     <configuration>
                         <skip>true</skip>
                         <name>vitam-${unix.name}</name>
