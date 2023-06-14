@@ -7,6 +7,18 @@ libmagickcore-6.q16-6_6.9.11.60+dfsg-1.6_amd64.deb
 libmagickwand-6.q16-6_6.9.11.60+dfsg-1.6_amd64.deb
 imagemagick-6-common_6.9.11.60+dfsg-1.6_all.deb
 
+# FFMPEG
+ffmpeg_4.1.11-0+deb10u1_amd64.deb
+libavcodec58_4.1.11-0+deb10u1_amd64.deb
+libavdevice58_4.1.11-0+deb10u1_amd64.deb
+libavfilter7_4.1.11-0+deb10u1_amd64.deb
+libavformat58_4.1.11-0+deb10u1_amd64.deb
+libavresample4_4.1.11-0+deb10u1_amd64.deb
+libavutil56_4.1.11-0+deb10u1_amd64.deb
+libpostproc55_4.1.11-0+deb10u1_amd64.deb
+libswresample3_4.1.11-0+deb10u1_amd64.deb
+libswscale5_4.1.11-0+deb10u1_amd64.deb
+
 # Other
 
 fontconfig-config_2.13.1-2_all.deb
