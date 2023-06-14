@@ -1,6 +1,33 @@
+# ImageMagick rpm files
 imagemagick-libs-7.0.10-30.x86_64.rpm
 imagemagick-7.0.10-30.x86_64.rpm
 libraqm-0.7.0-4.el7.x86_64.rpm
+
+# FFMPEG
+ffmpeg-3.4.12-1.el7.x86_64.rpm
+ffmpeg-libs-3.4.12-1.el7.x86_64.rpm
+libopencore-amr-0.1.5-2.el7.x86_64.rpm
+ocl-icd-2.2.12-1.el7.x86_64.rpm
+x265-libs-2.9-3.el7.x86_64.rpm
+zvbi-0.2.35-1.el7.x86_64.rpm
+soxr-0.1.2-1.el7.x86_64.rpm
+libmodplug-0.8.9.0-9.el7.x86_64.rpm
+libmfx-1.21-2.el7.x86_64.rpm
+x264-libs-0.148-24.20170521gitaaa9aa8.el7.x86_64.rpm
+lame-libs-3.100-1.el7.x86_64.rpm
+xvidcore-1.3.4-2.el7.x86_64.rpm
+vid.stab-1.1-4.20170830gitafc8ea9.el7.x86_64.rpm
+libass-0.13.4-6.el7.x86_64.rpm
+vo-amrwbenc-0.1.3-1.el7.x86_64.rpm
+SDL2-2.0.14-2.el7.x86_64.rpm
+libavdevice-3.4.12-1.el7.x86_64.rpm
+openal-soft-1.16.0-3.el7.x86_64.rpm
+jack-audio-connection-kit-1.9.9.5-6.el7.x86_64.rpm
+libffado-2.1.0-4.el7.x86_64.rpm
+libxml++-2.37.1-1.el7.x86_64.rpm
+
+# Other
+
 libobasis6.2-base-6.2.5.2-2.x86_64.rpm
 libobasis6.2-calc-6.2.5.2-2.x86_64.rpm
 libobasis6.2-core-6.2.5.2-2.x86_64.rpm
@@ -44,12 +71,3 @@ libreoffice6.2-math-6.2.5.2-2.x86_64.rpm
 libreoffice6.2-ure-6.2.5.2-2.x86_64.rpm
 libreoffice6.2-writer-6.2.5.2-2.x86_64.rpm
 tesseract-3.04.00-3.el7.x86_64.rpm
-ffmpeg-libs-2.8.15-2.el7.nux.x86_64.rpm
-fdk-aac-0.1.4-1.x86_64.rpm
-opencore-amr-0.1.3-3.el7.nux.x86_64.rpm
-x265-libs-1.9-1.el7.nux.x86_64.rpm
-x264-libs-0.142-11.20141221git6a301b6.el7.nux.x86_64.rpm
-xvidcore-1.3.2-5.el7.nux.x86_64.rpm
-vo-amrwbenc-0.1.2-1.el7.nux.x86_64.rpm
-libavdevice-2.8.15-2.el7.nux.x86_64.rpm
-ffmpeg-2.8.15-2.el7.nux.x86_64.rpm
