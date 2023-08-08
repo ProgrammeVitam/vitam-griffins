@@ -27,10 +27,8 @@
 
 package fr.gouv.vitam.griffins.ffmpeg;
 
-import static fr.gouv.vitam.griffins.ffmpeg.status.ActionType.GENERATE;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.gouv.vitam.griffins.ffmpeg.pojo.Action;
 import fr.gouv.vitam.griffins.ffmpeg.pojo.BatchStatus;
 import fr.gouv.vitam.griffins.ffmpeg.pojo.Input;
@@ -39,6 +37,8 @@ import fr.gouv.vitam.griffins.ffmpeg.pojo.Outputs;
 import fr.gouv.vitam.griffins.ffmpeg.pojo.Parameters;
 import fr.gouv.vitam.griffins.ffmpeg.pojo.RawOutput;
 import fr.gouv.vitam.griffins.ffmpeg.status.GriffinStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,14 +54,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static fr.gouv.vitam.griffins.ffmpeg.status.ActionType.GENERATE;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 public class BatchProcessor {
-    private static final Logger logger = LoggerFactory.getLogger(BatchProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BatchProcessor.class);
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final Pattern fileMatch = Pattern.compile("[a-zA-Z0-9_.\\-]+");
@@ -90,7 +88,8 @@ public class BatchProcessor {
 
             Files.createDirectory(batchDirectory.resolve(outputFilesDirName));
 
-            List<Output> outputs = parameters.getInputs().stream().flatMap(input -> executeActions(input, parameters)).collect(toList());
+            List<Output> outputs =
+                parameters.getInputs().stream().flatMap(input -> executeActions(input, parameters)).collect(toList());
 
             addToFile(outputs, parameters.getRequestId(), parameters.getId());
 
@@ -100,42 +99,40 @@ public class BatchProcessor {
             }
             return BatchStatus.ok(batchProcessingId, startTime);
         } catch (Exception e) {
-            logger.error("{}", e);
+            LOGGER.error("{}", e);
             return BatchStatus.error(batchProcessingId, startTime, e);
         }
     }
 
     private void addToFile(List<Output> outputs, String requestId, String id) throws IOException {
-        Map<String, List<Output>> outputsMap = outputs.stream().collect(toMap(o -> o.getInput().getName(), Collections::singletonList,
+        Map<String, List<Output>> outputsMap = outputs.stream().collect(
+            toMap(o -> o.getInput().getName(), Collections::singletonList,
                 (o, o2) -> Stream.concat(o.stream(), o2.stream()).collect(Collectors.toList())));
 
-        mapper.writer().writeValue(batchDirectory.resolve(resultFileName).toFile(), Outputs.of(requestId, id, outputsMap));
+        mapper.writer()
+            .writeValue(batchDirectory.resolve(resultFileName).toFile(), Outputs.of(requestId, id, outputsMap));
     }
 
     private Stream<Output> executeActions(Input input, Parameters parameters) {
-        return parameters.getActions().stream().map(action -> apply(action, input)).map(raw -> postProcess(raw, parameters.isDebug()));
+        return parameters.getActions().stream().map(action -> apply(action, input))
+            .map(raw -> postProcess(raw, parameters.isDebug()));
     }
 
     private RawOutput apply(Action action, Input input) {
         ProcessBuilder processBuilder = new ProcessBuilder(getParams(input, action));
 
         try {
-            File outputFile;
-            outputFile = File.createTempFile("encodingOutput-" + input.getName(), ".tmp");
-            outputFile.createNewFile();
-
-            processBuilder.redirectErrorStream(true);
-
-            processBuilder.redirectInput(ProcessBuilder.Redirect.PIPE); // optional, default behavior
+            File outputFile = File.createTempFile("encodingOutput-" + input.getName(), ".tmp");
             processBuilder.redirectOutput(outputFile);
-
-            Process ffmpeg = processBuilder.start();
-            ffmpeg.waitFor();
-            outputFile.delete();
-
-            return new RawOutput(ffmpeg, processBuilder, input, getOutputname(input.getName(), action), action);
+            try {
+                Process ffmpeg = processBuilder.start();
+                ffmpeg.waitFor();
+                return new RawOutput(ffmpeg, processBuilder, input, getOutputname(input.getName(), action), action);
+            } finally {
+                Files.deleteIfExists(outputFile.toPath());
+            }
         } catch (Exception e) {
-            logger.error("{}", e);
+            LOGGER.error("ffmpeg error", e);
             return new RawOutput(e, processBuilder, input, getOutputname(input.getName(), action), action);
         }
 
@@ -143,9 +140,11 @@ public class BatchProcessor {
 
     private String getOutputname(String inputname, Action actionType) {
         if (actionType.getType().equals(GENERATE)) {
-            return String.format("%s-%s.%s", actionType.getType().name(), inputname, actionType.getValues().getExtension());
+            return String.format("%s-%s.%s", actionType.getType().name(), inputname,
+                actionType.getValues().getExtension());
         }
-        throw new IllegalStateException(String.format("Cannot get output name for action of type %s.", actionType.getType()));
+        throw new IllegalStateException(
+            String.format("Cannot get output name for action of type %s.", actionType.getType()));
     }
 
     private List<String> getParams(Input input, Action actionType) {
@@ -168,6 +167,9 @@ public class BatchProcessor {
             actionCommand.addAll(indexOf, actionType.getValues().getArgs());
         }
 
+        actionCommand.add("-v");
+        actionCommand.add("warning");
+
         return actionCommand;
     }
 
@@ -176,15 +178,17 @@ public class BatchProcessor {
     }
 
     private String getOutputPath(Input input, Action actionType) {
-        return batchDirectory.resolve(outputFilesDirName).resolve(getOutputname(input.getName(), actionType)).toString();
+        return batchDirectory.resolve(outputFilesDirName).resolve(getOutputname(input.getName(), actionType))
+            .toString();
     }
 
     private Output postProcess(RawOutput rawOutput, boolean debug) throws RuntimeException {
         switch (rawOutput.action.getType()) {
-        case GENERATE:
-            return generate(rawOutput, debug);
-        default:
-            throw new IllegalStateException(String.format("Cannot post process data from action of type %s.", rawOutput.action.getType()));
+            case GENERATE:
+                return generate(rawOutput, debug);
+            default:
+                throw new IllegalStateException(
+                    String.format("Cannot post process data from action of type %s.", rawOutput.action.getType()));
         }
     }
 
@@ -193,7 +197,8 @@ public class BatchProcessor {
             return rawOutput.toError(debug);
         }
         String warning = GriffinStatus.WARNING.name().toLowerCase();
-        boolean outputContainsWarnings = rawOutput.stdout.toLowerCase().contains(warning) || rawOutput.stderr.toLowerCase().contains(warning);
+        boolean outputContainsWarnings =
+            rawOutput.stdout.toLowerCase().contains(warning) || rawOutput.stderr.toLowerCase().contains(warning);
         if (outputContainsWarnings) {
             return rawOutput.toWarning(debug);
         }
@@ -227,7 +232,8 @@ public class BatchProcessor {
     }
 
     private void setValueRecursively(JsonNode value) {
-        value.fields().forEachRemaining(field -> field.setValue(parseRecursiveJsonNode(field.getValue(), value.isArray())));
+        value.fields()
+            .forEachRemaining(field -> field.setValue(parseRecursiveJsonNode(field.getValue(), value.isArray())));
     }
 
     private JsonNode processValueToArray(JsonNode value) {

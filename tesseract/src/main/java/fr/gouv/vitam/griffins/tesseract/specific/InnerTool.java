@@ -26,17 +26,20 @@
  */
 package fr.gouv.vitam.griffins.tesseract.specific;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import fr.gouv.vitam.griffins.tesseract.Main;
 import fr.gouv.vitam.griffins.tesseract.pojo.Action;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class encapsulating the tool used by the griffin.
  */
 public class InnerTool {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(InnerTool.class);
 
     /**
      * Instantiates a new inner tool.
@@ -74,20 +77,16 @@ public class InnerTool {
     }
 
     private RawOutput doGenerate(Action action, String inputFileName, String format, String outputFileName, boolean debugFlag) {
-        RawOutput result;
-
         ProcessBuilder processBuilder = new ProcessBuilder(gettesseractParams(action, inputFileName, outputFileName));
         Process tesseract =null;
         try {
             tesseract = processBuilder.start();
             tesseract.waitFor();
-            result= new RawOutput(tesseract, processBuilder, outputFileName);
+            return new RawOutput(tesseract, processBuilder, outputFileName);
         } catch (Exception e) {
-            LoggerFactory.getLogger(Main.class).error("{}", e);
-            result= new RawOutput(tesseract, processBuilder,e);
+            LOGGER.error("Tesseract error", e);
+            return  new RawOutput(tesseract, processBuilder,e);
         }
-
-        return result;
     }
 
     private RawOutput doIdentify(Action action, String inputFileName, String format, String outputFileName, boolean debugFlag) {

@@ -27,12 +27,22 @@
 
 package fr.gouv.vitam.griffins.imagemagick;
 
-import static fr.gouv.vitam.griffins.imagemagick.status.ActionType.ANALYSE;
-import static fr.gouv.vitam.griffins.imagemagick.status.ActionType.EXTRACT;
-import static fr.gouv.vitam.griffins.imagemagick.status.ActionType.GENERATE;
-import static fr.gouv.vitam.griffins.imagemagick.status.ActionType.IDENTIFY;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import fr.gouv.vitam.griffins.common.OtherMetadata;
+import fr.gouv.vitam.griffins.imagemagick.pojo.Action;
+import fr.gouv.vitam.griffins.imagemagick.pojo.BatchStatus;
+import fr.gouv.vitam.griffins.imagemagick.pojo.ExtractedMetadata;
+import fr.gouv.vitam.griffins.imagemagick.pojo.Input;
+import fr.gouv.vitam.griffins.imagemagick.pojo.Output;
+import fr.gouv.vitam.griffins.imagemagick.pojo.Outputs;
+import fr.gouv.vitam.griffins.imagemagick.pojo.Parameters;
+import fr.gouv.vitam.griffins.imagemagick.pojo.RawOutput;
+import fr.gouv.vitam.griffins.imagemagick.status.AnalyseResult;
+import fr.gouv.vitam.griffins.imagemagick.status.GriffinStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,25 +63,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import fr.gouv.vitam.griffins.common.OtherMetadata;
-import fr.gouv.vitam.griffins.imagemagick.pojo.Action;
-import fr.gouv.vitam.griffins.imagemagick.pojo.BatchStatus;
-import fr.gouv.vitam.griffins.imagemagick.pojo.ExtractedMetadata;
-import fr.gouv.vitam.griffins.imagemagick.pojo.Input;
-import fr.gouv.vitam.griffins.imagemagick.pojo.Output;
-import fr.gouv.vitam.griffins.imagemagick.pojo.Outputs;
-import fr.gouv.vitam.griffins.imagemagick.pojo.Parameters;
-import fr.gouv.vitam.griffins.imagemagick.pojo.RawOutput;
-import fr.gouv.vitam.griffins.imagemagick.status.AnalyseResult;
-import fr.gouv.vitam.griffins.imagemagick.status.GriffinStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static fr.gouv.vitam.griffins.imagemagick.status.ActionType.ANALYSE;
+import static fr.gouv.vitam.griffins.imagemagick.status.ActionType.EXTRACT;
+import static fr.gouv.vitam.griffins.imagemagick.status.ActionType.GENERATE;
+import static fr.gouv.vitam.griffins.imagemagick.status.ActionType.IDENTIFY;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 public class BatchProcessor {
-    private static final Logger logger = LoggerFactory.getLogger(BatchProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BatchProcessor.class);
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final Pattern fileMatch = Pattern.compile("[a-zA-Z0-9_.\\-]+");
@@ -117,7 +117,7 @@ public class BatchProcessor {
             }
             return BatchStatus.ok(batchProcessingId, startTime);
         } catch (Exception e) {
-            logger.error("{}", e);
+            LOGGER.error("{}", e);
             return BatchStatus.error(batchProcessingId, startTime, e);
         }
     }
@@ -146,7 +146,7 @@ public class BatchProcessor {
             magick.waitFor();
             return new RawOutput(magick, processBuilder, input, getOutputname(input.getName(), action), action);
         } catch (Exception e) {
-            logger.error("{}", e);
+            LOGGER.error("Imagemagick error", e);
             return new RawOutput(e, processBuilder, input, getOutputname(input.getName(), action), action);
         }
     }
@@ -159,9 +159,11 @@ public class BatchProcessor {
             return String.format("%s-%s.%s", actionType.getType().name(), inputname, "json");
         }
         if (actionType.getType().equals(GENERATE)) {
-            return String.format("%s-%s.%s", actionType.getType().name(), inputname, actionType.getValues().getExtension());
+            return String.format("%s-%s.%s", actionType.getType().name(), inputname,
+                actionType.getValues().getExtension());
         }
-        throw new IllegalStateException(String.format("Cannot get output name for action of type %s.", actionType.getType()));
+        throw new IllegalStateException(
+            String.format("Cannot get output name for action of type %s.", actionType.getType()));
     }
 
     private List<String> getMagickParams(
@@ -199,7 +201,8 @@ public class BatchProcessor {
 
     private String getOutputPath(
         Input input, Action actionType) {
-        return batchDirectory.resolve(outputFilesDirName).resolve(getOutputname(input.getName(), actionType)).toString();
+        return batchDirectory.resolve(outputFilesDirName).resolve(getOutputname(input.getName(), actionType))
+            .toString();
     }
 
     private Output postProcess(RawOutput rawOutput, boolean debug) throws RuntimeException {
@@ -211,7 +214,8 @@ public class BatchProcessor {
             case EXTRACT:
                 return extract(rawOutput, debug);
             default:
-                throw new IllegalStateException(String.format("Cannot post process data from action of type %s.", rawOutput.action.getType()));
+                throw new IllegalStateException(
+                    String.format("Cannot post process data from action of type %s.", rawOutput.action.getType()));
         }
     }
 
@@ -226,7 +230,8 @@ public class BatchProcessor {
             return output;
         }
         String warning = GriffinStatus.WARNING.name().toLowerCase();
-        boolean outputContainsWarnings = rawOutput.stdout.toLowerCase().contains(warning) || rawOutput.stderr.toLowerCase().contains(warning);
+        boolean outputContainsWarnings =
+            rawOutput.stdout.toLowerCase().contains(warning) || rawOutput.stderr.toLowerCase().contains(warning);
         if (outputContainsWarnings) {
             output.setAnalyseResult(AnalyseResult.NOT_VALID);
             return output;
@@ -240,7 +245,8 @@ public class BatchProcessor {
             return rawOutput.toError(debug);
         }
         String warning = GriffinStatus.WARNING.name().toLowerCase();
-        boolean outputContainsWarnings = rawOutput.stdout.toLowerCase().contains(warning) || rawOutput.stderr.toLowerCase().contains(warning);
+        boolean outputContainsWarnings =
+            rawOutput.stdout.toLowerCase().contains(warning) || rawOutput.stderr.toLowerCase().contains(warning);
         if (outputContainsWarnings) {
             return rawOutput.toWarning(debug);
         }
@@ -260,19 +266,20 @@ public class BatchProcessor {
                     .map(this::transformJsonElementsToArray)
                     .map(this::transformJsonNodeToListOfObject)
                     .filter(entry -> isMetadataSelected(rawOutput, entry))
-                    .collect(Collector.of(OtherMetadata::new, (acc, entry) -> acc.put(entry.getKey(), entry.getValue()), (o1, o2) -> {
-                        o1.putAll(o2);
-                        return o1;
-                    }));
+                    .collect(Collector.of(OtherMetadata::new, (acc, entry) -> acc.put(entry.getKey(), entry.getValue()),
+                        (o1, o2) -> {
+                            o1.putAll(o2);
+                            return o1;
+                        }));
             Output output = rawOutput.toOk(debug);
 
-                String stdout = rawOutput.action.getValues().getFilteredExtractedDataObjectGroup().contains(RAW_METADATA)
+            String stdout = rawOutput.action.getValues().getFilteredExtractedDataObjectGroup().contains(RAW_METADATA)
                 ? rawOutput.stdout
-                : null ;
-                output.setExtractedMetadata(new ExtractedMetadata(result, stdout));
-                return output;
+                : null;
+            output.setExtractedMetadata(new ExtractedMetadata(result, stdout));
+            return output;
         } catch (IOException e) {
-            logger.error("{}", e);
+            LOGGER.error("{}", e);
             return rawOutput.toError(debug, e.getMessage());
         }
     }

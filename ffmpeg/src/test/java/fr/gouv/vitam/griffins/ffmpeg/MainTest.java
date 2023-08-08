@@ -46,7 +46,7 @@ public class MainTest {
     @Test
     public void should_GENERATE_mp4_from_video() throws Exception {
         // Given
-        String[] param = { "-codec:v", "libx264", "-preset", "superfast", "-crf", "99", "-profile:v", "baseline", "-level", "3.0", "-acodec", "libfdk_aac" };
+        String[] param = { "-codec:v", "libx264", "-preset", "superfast", "-crf", "99", "-profile:v", "baseline", "-level", "3.0", "-acodec", "libmp3lame" };
         Input input = new Input("vid1.mp4", "fmt/199");
         Action action = new Action(GENERATE, new Values("MP4", Arrays.asList(param)));
         generateBatch(action, input);
