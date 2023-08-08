@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'griffins'
+        label 'griffins-test'
     }
 
     environment {
@@ -40,7 +40,7 @@ pipeline {
         stage("Computing maven target") {
             when {
                 anyOf {
-                    branch "${env.GIT_BRANCH}"
+                    branch "master"
                     tag pattern: "^[1-9]+\\.[0-9]+\\.[0-9]+-?[0-9]*\$", comparator: "REGEXP"
                 }
             }
@@ -62,7 +62,7 @@ pipeline {
                 dir('${HOME}/.m2/repository') {
                     deleteDir()
                 }
-                    sh '$MVN_BASE --settings .ci/settings.xml -f pom.xml clean test '
+                    sh '$MVN_BASE --settings .ci/settings.xml -f pom.xml clean test'
             }
             post {
                 always {
@@ -132,14 +132,10 @@ pipeline {
              steps {
                 parallel(
                     "Download deb packages": {
-                        withCredentials([usernamePassword(credentialsId: 'app-jenkins', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                          sh './build_repo.sh deb https://repository.dev.programmevitam.fr/griffins_binaries $USERNAME:$PASSWORD'
-                        }
+                          sh './build_repo.sh deb http://pic-prod-repository.vitam-factory/griffins_binaries'
                     },
                     "Download rpm packages": {
-                        withCredentials([usernamePassword(credentialsId: 'app-jenkins', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                          sh './build_repo.sh rpm https://repository.dev.programmevitam.fr/griffins_binaries $USERNAME:$PASSWORD'
-                        }
+                          sh './build_repo.sh rpm http://pic-prod-repository.vitam-factory/griffins_binaries'
                     }
                 )
             }

@@ -28,20 +28,22 @@ set -e
 #*******************************************************************************
 if [[ $1 != 'deb' ]] && [[ $1 != 'rpm' ]] ; then
   echo 'You must specify target to build !'
-  echo './build_repo.sh deb|rpm'
+  echo './build_repo.sh deb|rpm [URL_TO_REPOSITORY]'
   exit 1;
 fi
 
+if  [ ! -z $2 ] ; then
+  REPOSITORY=$2
+else
+  COMMIT_HASH=$(curl -s http://pic-prod-repository.vitam-factory/griffins/${VITAM_COMMIT:-master})
+  REPOSITORY=https://pic-prod-repository.vitam-factory/griffins/${COMMIT_HASH}/
+fi
+
 WORKING_DIR=$(dirname $0)/$1
-REPOSITORY=https://download.programmevitam.fr/vitam_griffins
-AUTHORISATION=""
 
 SOURCES_FILE=${WORKING_DIR}/sources # Contains all the urls where download rpm/deb
 TARGET_DIR=${WORKING_DIR}/target      # Targer dir where copying rpm/deb dowloaded
 
-if  [ ! -z $2 ] ; then
-  REPOSITORY=$2
-fi
 
 mkdir -p ${TARGET_DIR}
 
@@ -59,11 +61,7 @@ then
 			else # if [ -f "${TARGET_DIR}/${FILENAME}" ]
 			  SRC_URL="${REPOSITORY}/$1/${FILENAME}"
 			 	echo "Downloading ${SRC_URL} into ${TARGET_DIR}..."
-			 	if [ -z $2 ] ; then
-			 	  HTTP_CODE=$(curl -k --silent -o ${TARGET_DIR}/${FILENAME}.tmp 	--write-out "%{http_code}" ${SRC_URL})
-			 	else
-			 	  HTTP_CODE=$(curl -u $3 -k --silent -o ${TARGET_DIR}/${FILENAME}.tmp 	--write-out "%{http_code}" ${SRC_URL})
-        fi
+			 	HTTP_CODE=$(curl -k --silent -o ${TARGET_DIR}/${FILENAME}.tmp 	--write-out "%{http_code}" ${SRC_URL})
 			 	if [[ ${HTTP_CODE} -lt 200 || ${HTTP_CODE} -gt 299 ]] ; then
             echo "Cannot find ${FILENAME} in ${SRC_URL}"
             exit 1;

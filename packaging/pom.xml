@@ -51,7 +51,7 @@
 							<goal>exec</goal>
 						</goals>
 						<configuration>
-							<executable>../selinux/build-all.sh</executable>
+							<executable>../selinux/build-all-docker.sh</executable>
 						</configuration>
 					</execution>					
 					<execution>
@@ -61,7 +61,10 @@
 							<goal>exec</goal>
 						</goals>
 						<configuration>
-							<executable>../rpm/build_repo.sh</executable>
+							<executable>../build_repo.sh</executable>
+							<arguments>
+								<argument>rpm</argument>
+							</arguments>
 						</configuration>
 					</execution>
 					<execution>
@@ -87,7 +90,10 @@
 							<goal>exec</goal>
 						</goals>
 						<configuration>
-							<executable>../deb/build_repo.sh</executable>
+							<executable>../build_repo.sh</executable>
+							<arguments>
+								<argument>deb</argument>
+							</arguments>
 						</configuration>
 					</execution>
 					<execution>
