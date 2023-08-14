@@ -13,9 +13,6 @@ pipeline {
         SERVICE_CHECKMARX_URL = credentials("service-checkmarx-url")
         SERVICE_REPO_SSHURL = credentials("repository-connection-string")
         SERVICE_GIT_URL = credentials("service-gitlab-url")
-        SERVICE_PROXY_HOST = credentials("http-proxy-host")
-        SERVICE_PROXY_PORT = credentials("http-proxy-port")
-        SERVICE_NOPROXY = credentials("http_nonProxyHosts")
         GITHUB_ACCOUNT_TOKEN = credentials("vitam-prg-token")
         PIC_PROD_URL = credentials("service-repository-url")
     }
@@ -43,7 +40,7 @@ pipeline {
         stage("Computing maven target") {
             when {
                 anyOf {
-                    branch "master"
+                    branch "${env.GIT_BRANCH}"
                     tag pattern: "^[1-9]+\\.[0-9]+\\.[0-9]+-?[0-9]*\$", comparator: "REGEXP"
                 }
             }
@@ -62,12 +59,10 @@ pipeline {
 
         stage ("Execute unit tests") {
             steps {
-                dir('/home/centos/.m2/repository') {
+                dir('${HOME}/.m2/repository') {
                     deleteDir()
                 }
-                withEnv(["JAVA_TOOL_OPTIONS=-Dhttp.proxyHost=${env.SERVICE_PROXY_HOST} -Dhttp.proxyPort=${env.SERVICE_PROXY_PORT} -Dhttps.proxyHost=${env.SERVICE_PROXY_HOST} -Dhttps.proxyPort=${env.SERVICE_PROXY_PORT} -Dhttp.nonProxyHosts=${env.SERVICE_NOPROXY}"]) {
-                    sh '$MVN_BASE --settings .ci/settings.xml -f pom.xml clean test -Doffice.home=/opt/libreoffice6.2/'
-                }
+                    sh '$MVN_BASE --settings .ci/settings.xml -f pom.xml clean test '
             }
             post {
                 always {
@@ -82,12 +77,10 @@ pipeline {
             }
             steps {
                 githubNotify status: "PENDING", description: "Building & testing", credentialsId: "vitam-prg-token"
-                dir('/home/centos/.m2/repository') {
+                dir('${HOME}/.m2/repository') {
                     deleteDir()
                 }
-                withEnv(["JAVA_TOOL_OPTIONS=-Dhttp.proxyHost=${env.SERVICE_PROXY_HOST} -Dhttp.proxyPort=${env.SERVICE_PROXY_PORT} -Dhttps.proxyHost=${env.SERVICE_PROXY_HOST} -Dhttps.proxyPort=${env.SERVICE_PROXY_PORT} -Dhttp.nonProxyHosts=${env.SERVICE_NOPROXY}"]) {
                     sh '$MVN_BASE --settings .ci/settings_internet.xml -f pom.xml clean test'
-                }
             }
             post {
                 always {
@@ -125,7 +118,7 @@ pipeline {
                             deleteDir()
                         }
                         checkout([$class: 'GitSCM',
-                            branches: [[name: 'oshimae']],
+                            branches: [[name: 'scaleway_j11']],
                             doGenerateSubmoduleConfigurations: false,
                             extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'vitam-build.git']],
                             submoduleCfg: [],
@@ -136,11 +129,7 @@ pipeline {
             }
         }
         stage("Download internet packages") {
-            environment {
-                http_proxy = credentials("http-proxy-url")
-                https_proxy = credentials("http-proxy-url")
-            }
-            steps {
+             steps {
                 parallel(
                     "Download deb packages": {
                         withCredentials([usernamePassword(credentialsId: 'app-jenkins', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -186,15 +175,12 @@ pipeline {
             // when {
             //     environment(name: 'CHANGED_VITAM_PRODUCT', value: 'true')
             // }
-            environment {
-                http_proxy = credentials("http-proxy-url")
-                https_proxy = credentials("http-proxy-url")
-            }
             steps {
                 parallel(
                     "Build selinux rpm": {
                         dir('selinux') {
-                            sh './build-all.sh'
+                            sh 'chmod 755 build-all-docker.sh'
+                            sh './build-all-docker.sh'
                         }
                     }
                 )
@@ -205,8 +191,12 @@ pipeline {
             steps {
                 parallel(
                     "Upload vitam-griffons packages": {
-                        sshagent (credentials: ['jenkins_sftp_to_repository']) {
-                            sh 'vitam-build.git/push_griffons_repo.sh griffins $SERVICE_REPO_SSHURL'
+                        dir('vitam-build.git') {
+                            sshagent (credentials: ['jenkins_sftp_to_repository']) {
+                                // sh 'pwd; ls -lah'
+                                // sh 'chmod 755 functions.sh'
+                                sh './push_griffons_repo.sh griffins $SERVICE_REPO_SSHURL'
+                        }
                         }
                     }
                 )
