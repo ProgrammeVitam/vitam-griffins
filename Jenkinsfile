@@ -191,7 +191,6 @@ pipeline {
                         dir('vitam-build.git') {
                             sshagent (credentials: ['jenkins_sftp_to_repository']) {
                                 // sh 'pwd; ls -lah'
-                                // sh 'chmod 755 functions.sh'
                                 sh './push_griffons_repo.sh griffins $SERVICE_REPO_SSHURL'
                         }
                         }
