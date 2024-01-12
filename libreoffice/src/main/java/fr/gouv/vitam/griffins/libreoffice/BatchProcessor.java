@@ -34,8 +34,8 @@ import fr.gouv.vitam.griffins.libreoffice.pojo.Output;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Parameters;
 import fr.gouv.vitam.griffins.libreoffice.pojo.Result;
 import fr.gouv.vitam.griffins.libreoffice.status.GriffinStatus;
-import org.jodconverter.LocalConverter;
-import org.jodconverter.office.OfficeManager;
+import org.jodconverter.local.LocalConverter;
+import org.jodconverter.core.office.OfficeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

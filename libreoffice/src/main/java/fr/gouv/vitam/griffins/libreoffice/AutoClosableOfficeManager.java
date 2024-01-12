@@ -26,10 +26,10 @@
  */
 package fr.gouv.vitam.griffins.libreoffice;
 
-import org.jodconverter.office.LocalOfficeManager;
-import org.jodconverter.office.OfficeException;
-import org.jodconverter.office.OfficeManager;
-import org.jodconverter.task.OfficeTask;
+import org.jodconverter.local.office.LocalOfficeManager;
+import org.jodconverter.core.office.OfficeException;
+import org.jodconverter.core.office.OfficeManager;
+import org.jodconverter.core.task.OfficeTask;
 
 import javax.management.timer.Timer;
 import java.io.IOException;

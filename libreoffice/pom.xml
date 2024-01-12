@@ -12,7 +12,7 @@
     <name>Vitam griffin libreoffice</name>
     <properties>
         <unix.name>libreoffice-griffin</unix.name>
-        <jodconverter-local.version>4.2.2</jodconverter-local.version>
+        <jodconverter-local.version>4.4.7</jodconverter-local.version>
     </properties>
     <dependencies>
         <dependency>
@@ -112,45 +112,45 @@
                         <require>vitam-user-${unix.user}</require>
                         <require>cups-libs</require>
                         <require>cairo</require>
-                        <require>libreoffice6.2-base</require>
-                        <require>libreoffice6.2-calc</require>
-                        <require>libreoffice6.2-dict-en</require>
-                        <require>libreoffice6.2-dict-es</require>
-                        <require>libreoffice6.2-dict-fr</require>
-                        <require>libreoffice6.2-draw</require>
-                        <require>libreoffice6.2-en-US</require>
-                        <require>libreoffice6.2-freedesktop-menus</require>
-                        <require>libreoffice6.2-impress</require>
-                        <require>libreoffice6.2-math</require>
-                        <require>libobasis6.2-base</require>
-                        <require>libobasis6.2-calc</require>
-                        <require>libobasis6.2-core</require>
-                        <require>libobasis6.2-draw</require>
-                        <require>libobasis6.2-en-US</require>
-                        <require>libobasis6.2-extension-beanshell-script-provider</require>
-                        <require>libobasis6.2-extension-javascript-script-provider</require>
-                        <require>libobasis6.2-extension-mediawiki-publisher</require>
-                        <require>libobasis6.2-extension-nlpsolver</require>
-                        <require>libobasis6.2-extension-pdf-import</require>
-                        <require>libobasis6.2-extension-report-builder</require>
-                        <require>libobasis6.2-firebird</require>
-                        <require>libobasis6.2-gnome-integration</require>
-                        <require>libobasis6.2-graphicfilter</require>
-                        <require>libobasis6.2-images</require>
-                        <require>libobasis6.2-impress</require>
-                        <require>libobasis6.2-kde-integration</require>
-                        <require>libobasis6.2-librelogo</require>
-                        <require>libobasis6.2-libreofficekit-data</require>
-                        <require>libobasis6.2-math</require>
-                        <require>libobasis6.2-ogltrans</require>
-                        <require>libobasis6.2-onlineupdate</require>
-                        <require>libobasis6.2-ooofonts</require>
-                        <require>libobasis6.2-ooolinguistic</require>
-                        <require>libobasis6.2-postgresql-sdbc</require>
-                        <require>libobasis6.2-python-script-provider</require>
-                        <require>libobasis6.2-pyuno</require>
-                        <require>libobasis6.2-writer</require>
-                        <require>libobasis6.2-xsltfilter</require>
+                        <require>libreoffice7.6-base</require>
+                        <require>libreoffice7.6-calc</require>
+                        <require>libreoffice7.6-dict-en</require>
+                        <require>libreoffice7.6-dict-es</require>
+                        <require>libreoffice7.6-dict-fr</require>
+                        <require>libreoffice7.6-draw</require>
+                        <require>libreoffice7.6-en-US</require>
+                        <require>libreoffice7.6-freedesktop-menus</require>
+                        <require>libreoffice7.6-impress</require>
+                        <require>libreoffice7.6-math</require>
+                        <require>libobasis7.6-base</require>
+                        <require>libobasis7.6-calc</require>
+                        <require>libobasis7.6-core</require>
+                        <require>libobasis7.6-draw</require>
+                        <require>libobasis7.6-en-US</require>
+                        <require>libobasis7.6-extension-beanshell-script-provider</require>
+                        <require>libobasis7.6-extension-javascript-script-provider</require>
+                        <require>libobasis7.6-extension-mediawiki-publisher</require>
+                        <require>libobasis7.6-extension-nlpsolver</require>
+                        <require>libobasis7.6-extension-pdf-import</require>
+                        <require>libobasis7.6-extension-report-builder</require>
+                        <require>libobasis7.6-firebird</require>
+                        <require>libobasis7.6-gnome-integration</require>
+                        <require>libobasis7.6-graphicfilter</require>
+                        <require>libobasis7.6-images</require>
+                        <require>libobasis7.6-impress</require>
+                        <require>libobasis7.6-kde-integration</require>
+                        <require>libobasis7.6-librelogo</require>
+                        <require>libobasis7.6-libreofficekit-data</require>
+                        <require>libobasis7.6-math</require>
+                        <require>libobasis7.6-ogltrans</require>
+                        <require>libobasis7.6-onlineupdate</require>
+                        <require>libobasis7.6-ooofonts</require>
+                        <require>libobasis7.6-ooolinguistic</require>
+                        <require>libobasis7.6-postgresql-sdbc</require>
+                        <require>libobasis7.6-python-script-provider</require>
+                        <require>libobasis7.6-pyuno</require>
+                        <require>libobasis7.6-writer</require>
+                        <require>libobasis7.6-xsltfilter</require>
                     </requires>
                     <mappings>
                         <mapping>
