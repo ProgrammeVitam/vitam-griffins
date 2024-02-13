@@ -3,6 +3,6 @@ Version: [[version]]
 Section: Application/Archiving
 Priority: low
 Architecture: all
-Depends: openjdk-11-jre-headless, vitam-user-vitam, tesseract-ocr
+Depends: vitam-user-vitam, tesseract-ocr
 Maintainer: Vitam Package Team
 Description: [[description]]

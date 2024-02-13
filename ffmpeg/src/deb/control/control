@@ -3,6 +3,6 @@ Version: [[version]]
 Section: Application/Archiving
 Priority: low
 Architecture: all
-Depends: openjdk-11-jre-headless, ffmpeg, vitam-user-vitam
+Depends: ffmpeg, vitam-user-vitam
 Maintainer: Vitam Package Team
 Description: [[description]]
