@@ -168,6 +168,8 @@ NOTE: First you have to install
 Example of a Libreoffice griffin can be found [here](cookbook/griffin_referential/griffins-libreoffice.json), and a preservation scenario can be found [here](cookbook/preservation_referential/preservation-generate-libreoffice.json), all can be used with [this SIP](cookbook/sip_test/sip_libreoffice.zip).
 Libreoffice griffin can only do `GENERATE` actions, and a batch example can be found [here](libreoffice/src/test/resources/batch-reference).
 
+Libreoffice packages are there: https://downloadarchive.documentfoundation.org/libreoffice/old/
+
 A list of all `FilterName` can be found bellow:
 - `ADO_rowset_XML`.
 - `AbiWord`.

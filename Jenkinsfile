@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'griffins-test'
+        label 'griffins'
     }
 
     environment {
@@ -128,6 +128,7 @@ pipeline {
                 )
             }
         }
+
         stage("Download internet packages") {
              steps {
                 parallel(
@@ -190,7 +191,6 @@ pipeline {
                         dir('vitam-build.git') {
                             sshagent (credentials: ['jenkins_sftp_to_repository']) {
                                 // sh 'pwd; ls -lah'
-                                // sh 'chmod 755 functions.sh'
                                 sh './push_griffons_repo.sh griffins $SERVICE_REPO_SSHURL'
                         }
                         }
@@ -198,6 +198,7 @@ pipeline {
                 )
             }
         }
+
         stage("Update symlink") {
             steps {
                 sshagent (credentials: ['jenkins_sftp_to_repository']) {
@@ -205,11 +206,12 @@ pipeline {
                 }
             }
         }
+    }
 
-        stage("Clean") {
-            steps {
-               deleteDir()
-            }
+    post {
+        always {
+            // Cleanup workspace
+            cleanWs()
         }
     }
 }

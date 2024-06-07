@@ -17,7 +17,7 @@
         <unix.name>odfvalidator-griffin</unix.name>
         <odfvalidator.version>1.2.0-incubating-SNAPSHOT</odfvalidator.version>
     </properties>
-    
+
     <repositories>
 		<repository>
 			<id>apache.smx.repo</id>
