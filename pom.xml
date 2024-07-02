@@ -23,23 +23,25 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- common dependencies for all modules -->
-        <java.compile.version>11</java.compile.version>
-        <java.version>11</java.version>
+        <java.compile.version>17</java.compile.version>
+        <java.version>17</java.version>
         <!-- JDK version -->
-        <jdk.version.rpm>java-11-openjdk-headless</jdk.version.rpm>
-        <jdk.version.debian>openjdk-11-jre-headless</jdk.version.debian>
-        <jackson.version>2.12.6</jackson.version>
-        <slf4j.version>1.7.30</slf4j.version>
-        <junit.version>4.12</junit.version>
-        <assertj.version>3.11.1</assertj.version>
-        <mockito.version>2.28.2</mockito.version>
+        <jdk.version.rpm>java-17-openjdk-headless</jdk.version.rpm>
+        <jdk.version.debian>openjdk-17-jre-headless</jdk.version.debian>
+        <jackson.version>2.17.0</jackson.version>
+        <slf4j.version>2.0.12</slf4j.version>
+        <junit.version>4.13.2</junit.version>
+        <assertj.version>3.25.3</assertj.version>
+        <mockito.version>4.11.0</mockito.version>
         <junit.params.version>1.1.1</junit.params.version>
-        <jdeb.vafer.version>1.5</jdeb.vafer.version>
-        <maven.compiler.version>3.8.1</maven.compiler.version>
-        <maven.assembly.version>3.2.0</maven.assembly.version>
-        <maven.resources.version>3.1.0</maven.resources.version>
-        <maven.exec.version>1.6.0</maven.exec.version>
-        <maven.dependency.version>3.3.0</maven.dependency.version>
+        <jdeb.vafer.version>1.10</jdeb.vafer.version>
+        <maven.compiler.version>3.13.0</maven.compiler.version>
+        <maven.assembly.version>3.7.1</maven.assembly.version>
+        <maven.resources.version>3.3.1</maven.resources.version>
+        <maven.exec.version>3.2.0</maven.exec.version>
+        <maven.dependency.version>3.6.1</maven.dependency.version>
+        <maven.surefire.version>3.2.5</maven.surefire.version>
+        <rpm-maven-plugin>2.3.0</rpm-maven-plugin>
         <unix.user>vitam</unix.user>
         <unix.group>vitam</unix.group>
     </properties>
@@ -52,7 +54,7 @@
     </organization>
 
     <prerequisites>
-        <maven>3.3.9</maven>
+        <maven>3.8.7</maven>
     </prerequisites>
 
     <profiles>
@@ -119,7 +121,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>rpm-maven-plugin</artifactId>
-                    <version>2.1.5</version>
+                    <version>${rpm-maven-plugin}</version>
                     <executions>
                         <execution>
                             <id>rpm</id>
@@ -166,7 +168,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.1</version>
+                    <version>${maven.surefire.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
