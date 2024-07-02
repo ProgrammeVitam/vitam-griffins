@@ -15,6 +15,7 @@ pipeline {
         SERVICE_GIT_URL = credentials("service-gitlab-url")
         GITHUB_ACCOUNT_TOKEN = credentials("vitam-prg-token")
         PIC_PROD_URL = credentials("service-repository-url")
+        JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
     }
 
    stages {
