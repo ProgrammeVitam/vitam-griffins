@@ -1,12 +1,12 @@
 #########################################################################################
 # Dockerfile to run vitam on one server
-# Based on CentOS
+# Based on AlmaLinux
 #
 # Maintained by Vitam
 #########################################################################################
 
-# Set the base image to Centos 7
-FROM centos:7.7.1908
+# Set the base image to almalinux/9-base
+FROM almalinux/9-base
 MAINTAINER French Prime minister Office/SGMAP/DINSIC/Vitam Program <contact.vitam@culture.gouv.fr>
 
 # Disable fastestmirror ; helps gain several seconds per yum invocation
