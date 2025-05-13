@@ -99,7 +99,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>${maven.compiler.version}</version>
 				<configuration>
                     <!-- defined in the parent pom.xml -->
 					<source>${jdk.version}</source>

@@ -23,11 +23,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- common dependencies for all modules -->
-        <java.compile.version>17</java.compile.version>
-        <java.version>17</java.version>
+        <java.compile.version>21</java.compile.version>
+        <java.version>21</java.version>
         <!-- JDK version -->
-        <jdk.version.rpm>java-17-openjdk-headless</jdk.version.rpm>
-        <jdk.version.debian>openjdk-17-jre-headless</jdk.version.debian>
+        <jdk.version.rpm>java-21-openjdk-headless</jdk.version.rpm>
+        <jdk.version.debian>openjdk-21-jre-headless</jdk.version.debian>
         <jackson.version>2.17.0</jackson.version>
         <slf4j.version>2.0.12</slf4j.version>
         <junit.version>4.13.2</junit.version>
@@ -115,6 +115,7 @@
                     <configuration>
                         <source>${java.compile.version}</source>
                         <target>${java.compile.version}</target>
+                        <release>${java.compile.version}</release>
                         <encoding>UTF-8</encoding>
                     </configuration>
                 </plugin>

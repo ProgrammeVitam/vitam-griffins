@@ -15,7 +15,6 @@ pipeline {
         SERVICE_GIT_URL = credentials("service-gitlab-url")
         GITHUB_ACCOUNT_TOKEN = credentials("vitam-prg-token")
         PIC_PROD_URL = credentials("service-repository-url")
-        JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
     }
 
    stages {
@@ -28,6 +27,10 @@ pipeline {
        }
 
         stage("Detecting changes for build") {
+            tools {
+                jdk 'java21' // java11 || java17 || java21
+                maven 'maven-3.8' // maven-3.8 || maven-3.9
+            }
             steps {
                 script {
                     writeFile file: 'deploy_goal.txt', text: "${env.DEPLOY_GOAL}"
@@ -59,11 +62,15 @@ pipeline {
         }
 
         stage ("Execute unit tests") {
+            tools {
+                jdk 'java21'
+                maven 'maven-3.9'
+            }
             steps {
                 dir('${HOME}/.m2/repository') {
                     deleteDir()
                 }
-                    sh '$MVN_BASE --settings .ci/settings.xml -f pom.xml clean test'
+                sh '$MVN_BASE --settings .ci/settings.xml -f pom.xml clean test'
             }
             post {
                 always {
@@ -106,6 +113,10 @@ pipeline {
         }
 
         stage("Build packages") {
+            tools {
+                jdk 'java21' // java11 || java17 || java21
+                maven 'maven-3.8' // maven-3.8 || maven-3.9
+            }
             environment {
                 DEPLOY_GOAL = readFile("deploy_goal.txt")
             }
@@ -119,7 +130,7 @@ pipeline {
                             deleteDir()
                         }
                         checkout([$class: 'GitSCM',
-                            branches: [[name: 'scaleway_j11']],
+                            branches: [[name: 'scaleway_j21']],
                             doGenerateSubmoduleConfigurations: false,
                             extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'vitam-build.git']],
                             submoduleCfg: [],
