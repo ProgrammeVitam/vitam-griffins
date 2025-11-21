@@ -136,10 +136,18 @@ public class BatchProcessor {
     private Output postProcess(RawOutput raw) {
         if (EXTRACT_AU.equals(raw.action.getType())) {
             ExtractedMetadata extractedMetadata = new ExtractedMetadata();
-            extractedMetadata.put(TEXT_CONTENT, raw.stdout);
+            String cleaned = removeTrailingFormFeed(raw.stdout);
+            extractedMetadata.put(TEXT_CONTENT, cleaned);
             return raw.postProcess(parameters.isDebug(), extractedMetadata);
         }
         return raw.postProcess(parameters.isDebug(), null);
+    }
+
+    private String removeTrailingFormFeed(String text) {
+        if (text == null) {
+            return null;
+        }
+        return text.replaceAll("\\f+$", "");
     }
 
     private RawOutput apply(Action action, Input input) {
