@@ -13,7 +13,7 @@
     <name>Vitam griffin siegfried</name>
     <properties>
         <unix.name>siegfried-griffin</unix.name>
-        <okhttp.version>3.12.1</okhttp.version>
+        <okhttp.version>4.9.2</okhttp.version>
     </properties>
     <dependencies>
         <dependency>
