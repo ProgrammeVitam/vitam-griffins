@@ -28,7 +28,7 @@
         <!-- JDK version -->
         <jdk.version.rpm>java-21-openjdk-headless</jdk.version.rpm>
         <jdk.version.debian>openjdk-21-jre-headless</jdk.version.debian>
-        <jackson.version>2.17.0</jackson.version>
+        <jackson.version>2.18.6</jackson.version>
         <slf4j.version>2.0.12</slf4j.version>
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.25.3</assertj.version>
